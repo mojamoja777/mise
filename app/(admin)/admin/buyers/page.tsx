@@ -4,6 +4,7 @@
 import Link from "next/link";
 import { Plus, Users } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
+import { sanitizeSearchKeyword } from "@/lib/auth";
 import { BuyerListFilter } from "@/components/admin/BuyerListFilter";
 
 type Props = {
@@ -31,11 +32,15 @@ export default async function AdminBuyersPage({ searchParams }: Props) {
   }
 
   // 検索（会社名 or お客様コードの部分一致）
+  // PostgREST の or() に渡す前にカンマ・括弧・コロンなどをサニタイズして
+  // 構文インジェクションを防ぐ
   if (q && q.trim()) {
-    const keyword = q.trim();
-    query = query.or(
-      `company_name.ilike.%${keyword}%,customer_code.ilike.%${keyword}%`
-    );
+    const keyword = sanitizeSearchKeyword(q);
+    if (keyword) {
+      query = query.or(
+        `company_name.ilike.%${keyword}%,customer_code.ilike.%${keyword}%`
+      );
+    }
   }
 
   const { data: buyers, error } = await query;

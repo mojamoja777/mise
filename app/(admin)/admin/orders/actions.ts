@@ -1,23 +1,14 @@
 "use server";
 import { revalidatePath } from "next/cache";
-import { createClient } from "@/lib/supabase/server";
+import { requireAdmin } from "@/lib/auth";
 
 export async function advanceOrderStatus(orderId: string, currentStatus: string) {
   if (currentStatus !== "pending") return { error: "承認できるのは受付中の発注のみです。" };
 
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return { error: "ログインが必要です。" };
+  const auth = await requireAdmin();
+  if (!auth.ok) return { error: auth.error };
 
-  const { data: userData } = await supabase
-    .from("users")
-    .select("role")
-    .eq("id", user.id)
-    .single();
-
-  if (userData?.role !== "admin") return { error: "管理者権限が必要です。" };
-
-  const { error } = await supabase
+  const { error } = await auth.supabase
     .from("orders")
     .update({ status: "confirmed" })
     .eq("id", orderId);
@@ -29,19 +20,20 @@ export async function advanceOrderStatus(orderId: string, currentStatus: string)
 }
 
 export async function cancelOrder(orderId: string) {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return { error: "ログインが必要です。" };
+  const auth = await requireAdmin();
+  if (!auth.ok) return { error: auth.error };
 
-  const { data: userData } = await supabase
-    .from("users")
-    .select("role")
-    .eq("id", user.id)
+  // 割り当て確定中の注文を admin が cancel できると confirm_product_allocations と競合するため
+  // status は事前にチェックする
+  const { data: order } = await auth.supabase
+    .from("orders")
+    .select("status")
+    .eq("id", orderId)
     .single();
+  if (!order) return { error: "発注が見つかりません。" };
+  if (order.status === "cancelled") return { error: "既にキャンセル済みです。" };
 
-  if (userData?.role !== "admin") return { error: "管理者権限が必要です。" };
-
-  const { error } = await supabase
+  const { error } = await auth.supabase
     .from("orders")
     .update({ status: "cancelled" })
     .eq("id", orderId);
@@ -53,27 +45,18 @@ export async function cancelOrder(orderId: string) {
 }
 
 export async function deleteOrder(orderId: string) {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return { error: "ログインが必要です。" };
-
-  const { data: userData } = await supabase
-    .from("users")
-    .select("role")
-    .eq("id", user.id)
-    .single();
-
-  if (userData?.role !== "admin") return { error: "管理者権限が必要です。" };
+  const auth = await requireAdmin();
+  if (!auth.ok) return { error: auth.error };
 
   // order_itemsを先に削除（外部キー制約）
-  const { error: itemsError } = await supabase
+  const { error: itemsError } = await auth.supabase
     .from("order_items")
     .delete()
     .eq("order_id", orderId);
 
   if (itemsError) return { error: "発注明細の削除に失敗しました。" };
 
-  const { error } = await supabase
+  const { error } = await auth.supabase
     .from("orders")
     .delete()
     .eq("id", orderId);

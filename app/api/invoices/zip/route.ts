@@ -4,7 +4,7 @@
 
 import JSZip from "jszip";
 import { NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
+import { requireAdmin } from "@/lib/auth";
 import { getTenantByBuyerId, type Tenant } from "@/lib/tenant";
 import {
   invoicePdfFileName,
@@ -26,6 +26,12 @@ export async function GET(request: Request) {
     );
   }
 
+  const auth = await requireAdmin();
+  if (!auth.ok) {
+    return NextResponse.json({ error: auth.error }, { status: 403 });
+  }
+  const supabase = auth.supabase;
+
   const [yearStr, monthStr] = month.split("-");
   const year = Number(yearStr);
   const monthNum = Number(monthStr);
@@ -34,9 +40,6 @@ export async function GET(request: Request) {
   const lastDay = new Date(Date.UTC(year, monthNum, 0)).getUTCDate();
   const periodEnd = `${year}-${pad(monthNum)}-${pad(lastDay)}`;
 
-  const supabase = await createClient();
-
-  // admin 権限チェックは RLS 経由
   const { data: invoices, error } = await supabase
     .from("invoices")
     .select(

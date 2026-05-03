@@ -2,7 +2,7 @@
 // 請求書PDFの個別ダウンロードエンドポイント（admin のみ）
 
 import { NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
+import { requireAdmin } from "@/lib/auth";
 import { getTenantByBuyerId } from "@/lib/tenant";
 import {
   invoicePdfFileName,
@@ -17,9 +17,12 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
-  const supabase = await createClient();
+  const auth = await requireAdmin();
+  if (!auth.ok) {
+    return NextResponse.json({ error: auth.error }, { status: 403 });
+  }
+  const supabase = auth.supabase;
 
-  // admin 権限チェック：RLS 経由で取得できなければ未認可
   const { data: invoice, error } = await supabase
     .from("invoices")
     .select(

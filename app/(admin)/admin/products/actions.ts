@@ -6,25 +6,20 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
+import { requireAdmin } from "@/lib/auth";
 
 /**
  * 商品登録
  */
 export async function createProduct(formData: FormData) {
-  const supabase = await createClient();
-
-  // 認証・ロール確認（RLS に加えてサーバー側でも検証）
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user || user.app_metadata?.role !== "admin") {
-    return { error: "管理者権限が必要です。" };
-  }
+  const auth = await requireAdmin();
+  if (!auth.ok) return { error: auth.error };
 
   const values = extractProductValues(formData);
   const error = await validateProductValues(values);
   if (error) return { error };
 
-  const { error: dbError } = await supabase.from("products").insert({
+  const { error: dbError } = await auth.supabase.from("products").insert({
     name: values.name,
     producer: values.producer || null,
     region: values.region || null,
@@ -54,18 +49,14 @@ export async function createProduct(formData: FormData) {
  * 商品更新
  */
 export async function updateProduct(id: string, formData: FormData) {
-  const supabase = await createClient();
-
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user || user.app_metadata?.role !== "admin") {
-    return { error: "管理者権限が必要です。" };
-  }
+  const auth = await requireAdmin();
+  if (!auth.ok) return { error: auth.error };
 
   const values = extractProductValues(formData);
   const error = await validateProductValues(values);
   if (error) return { error };
 
-  const { error: dbError } = await supabase
+  const { error: dbError } = await auth.supabase
     .from("products")
     .update({
       name: values.name,
@@ -98,14 +89,10 @@ export async function updateProduct(id: string, formData: FormData) {
  * 商品削除
  */
 export async function deleteProduct(id: string) {
-  const supabase = await createClient();
+  const auth = await requireAdmin();
+  if (!auth.ok) return { error: auth.error };
 
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user || user.app_metadata?.role !== "admin") {
-    return { error: "管理者権限が必要です。" };
-  }
-
-  const { error } = await supabase.from("products").delete().eq("id", id);
+  const { error } = await auth.supabase.from("products").delete().eq("id", id);
 
   if (error) {
     return { error: "商品の削除に失敗しました。" };

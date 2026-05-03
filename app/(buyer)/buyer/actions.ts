@@ -1,6 +1,7 @@
 "use server";
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import { requireBuyer } from "@/lib/auth";
 
 type CartItem = {
   productId: string;
@@ -63,16 +64,15 @@ export async function createOrder(
   items: CartItem[],
   note: string
 ): Promise<CreateOrderResult> {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user)
+  const auth = await requireBuyer();
+  if (!auth.ok)
     return {
-      error: "ログインが必要です。",
+      error: auth.error,
       normalOrderId: null,
       allocationOrderId: null,
     };
+  const supabase = auth.supabase;
+  const user = auth.user;
 
   if (!items.length)
     return {
@@ -224,9 +224,10 @@ export async function createOrder(
 }
 
 export async function cancelOrderByBuyer(orderId: string) {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return { error: "ログインが必要です。" };
+  const auth = await requireBuyer();
+  if (!auth.ok) return { error: auth.error };
+  const supabase = auth.supabase;
+  const user = auth.user;
 
   // 自分の注文かつpendingのみキャンセル可能
   const { data: order } = await supabase

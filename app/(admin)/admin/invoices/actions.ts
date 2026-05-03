@@ -4,7 +4,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { createClient } from "@/lib/supabase/server";
+import { requireAdmin } from "@/lib/auth";
 import { generateInvoicesForMonth } from "@/lib/invoices";
 
 /**
@@ -14,21 +14,9 @@ import { generateInvoicesForMonth } from "@/lib/invoices";
 export async function generateInvoicesAction(
   month?: string
 ): Promise<{ ok: boolean; created?: number; skipped?: number; error?: string }> {
-  const supabase = await createClient();
-
-  // admin 権限の確認（users テーブルから自分のロールを取得）
-  const { data: authUser } = await supabase.auth.getUser();
-  if (!authUser.user) return { ok: false, error: "未認証です" };
-
-  const { data: profile } = await supabase
-    .from("users")
-    .select("role")
-    .eq("id", authUser.user.id)
-    .single();
-
-  if (profile?.role !== "admin") {
-    return { ok: false, error: "管理者権限が必要です" };
-  }
+  const auth = await requireAdmin();
+  if (!auth.ok) return { ok: false, error: auth.error };
+  const supabase = auth.supabase;
 
   // 対象月を決定（未指定なら前月）
   let year: number;
@@ -80,7 +68,9 @@ export async function updateInvoiceAction(
     }>;
   }
 ): Promise<{ ok: boolean; error?: string }> {
-  const supabase = await createClient();
+  const auth = await requireAdmin();
+  if (!auth.ok) return { ok: false, error: auth.error };
+  const supabase = auth.supabase;
 
   // 合計再計算
   const totalAmount = input.items.reduce(

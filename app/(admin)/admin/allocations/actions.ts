@@ -1,7 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { createClient } from "@/lib/supabase/server";
+import { requireAdmin } from "@/lib/auth";
 
 export type AllocationDecision = {
   orderItemId: string;
@@ -25,11 +25,8 @@ export async function confirmAllocations(
   productId: string,
   decisions: AllocationDecision[]
 ): Promise<ConfirmResult> {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) return { error: "ログインが必要です。" };
+  const auth = await requireAdmin();
+  if (!auth.ok) return { error: auth.error };
 
   if (decisions.length === 0) return { error: "更新対象がありません。" };
 
@@ -39,13 +36,13 @@ export async function confirmAllocations(
     }
   }
 
-  const { error } = await supabase.rpc("confirm_product_allocations", {
+  const { error } = await auth.supabase.rpc("confirm_product_allocations", {
     p_product_id: productId,
     p_decisions: decisions.map((d) => ({
       order_item_id: d.orderItemId,
       allocated_quantity: d.allocatedQuantity,
     })),
-    p_admin_id: user.id,
+    p_admin_id: auth.user.id,
   });
 
   if (error) {
