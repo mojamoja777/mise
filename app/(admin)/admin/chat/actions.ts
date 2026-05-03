@@ -1,7 +1,12 @@
 "use server";
 
+import { createElement } from "react";
 import { revalidatePath } from "next/cache";
 import { requireAdmin } from "@/lib/auth";
+import { sendNotificationEmail } from "@/lib/mailer";
+import { ChatMessageEmail } from "@/lib/email/ChatMessage";
+import { getBuyerEmail, getTenantDisplayName } from "@/lib/email/recipients";
+import { appUrl } from "@/lib/url";
 
 type Result = { error: string | null };
 
@@ -52,6 +57,29 @@ export async function sendAdminMessage(
       { admin_id: auth.user.id, buyer_id: buyerId, last_read_at: new Date().toISOString() },
       { onConflict: "admin_id,buyer_id" }
     );
+
+  // buyer に新着通知メール（buyer が今アプリを開いていない場合の保険）
+  const [recipientEmail, senderLabel, buyerProfile] = await Promise.all([
+    getBuyerEmail(buyerId),
+    getTenantDisplayName(me.tenant_id),
+    auth.supabase
+      .from("users")
+      .select("company_name")
+      .eq("id", buyerId)
+      .single(),
+  ]);
+  if (recipientEmail) {
+    await sendNotificationEmail({
+      to: recipientEmail,
+      subject: `${senderLabel} よりメッセージが届きました`,
+      react: createElement(ChatMessageEmail, {
+        recipientName: buyerProfile.data?.company_name ?? "",
+        senderLabel,
+        body: trimmed,
+        threadUrl: appUrl("/buyer/chat"),
+      }),
+    });
+  }
 
   revalidatePath("/admin/chat");
   revalidatePath(`/admin/chat/${buyerId}`);

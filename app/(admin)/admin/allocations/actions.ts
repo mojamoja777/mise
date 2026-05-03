@@ -1,7 +1,12 @@
 "use server";
 
+import { createElement } from "react";
 import { revalidatePath } from "next/cache";
 import { requireAdmin } from "@/lib/auth";
+import { sendNotificationEmail } from "@/lib/mailer";
+import { AllocationConfirmedEmail } from "@/lib/email/AllocationConfirmed";
+import { getBuyerEmail } from "@/lib/email/recipients";
+import { appUrl } from "@/lib/url";
 
 export type AllocationDecision = {
   orderItemId: string;
@@ -36,6 +41,45 @@ export async function confirmAllocations(
     }
   }
 
+  // RPC 実行前に「どの buyer がどの希望本数だったか」を捕捉しておく（後でメール送信用）
+  type ItemContext = {
+    orderItemId: string;
+    buyerId: string;
+    buyerName: string;
+    productName: string;
+    requestedQty: number;
+  };
+  const { data: contextRows } = await auth.supabase
+    .from("order_items")
+    .select(
+      `id, quantity,
+       products!inner ( name ),
+       orders!inner (
+         buyer_id,
+         users!orders_buyer_id_fkey!inner ( company_name )
+       )`
+    )
+    .in(
+      "id",
+      decisions.map((d) => d.orderItemId)
+    );
+  const contextById = new Map<string, ItemContext>();
+  for (const row of contextRows ?? []) {
+    const order = row.orders as unknown as {
+      buyer_id: string;
+      users: { company_name: string } | null;
+    } | null;
+    const product = row.products as unknown as { name: string } | null;
+    if (!order?.buyer_id) continue;
+    contextById.set(row.id, {
+      orderItemId: row.id,
+      buyerId: order.buyer_id,
+      buyerName: order.users?.company_name ?? "—",
+      productName: product?.name ?? "(商品名不明)",
+      requestedQty: row.quantity,
+    });
+  }
+
   const { error } = await auth.supabase.rpc("confirm_product_allocations", {
     p_product_id: productId,
     p_decisions: decisions.map((d) => ({
@@ -49,6 +93,46 @@ export async function confirmAllocations(
     // Postgres 関数からの RAISE EXCEPTION メッセージはそのまま表示してよい設計
     return { error: error.message ?? "確定処理に失敗しました。" };
   }
+
+  // buyer ごとに集約してメール送信
+  type BuyerBucket = {
+    buyerName: string;
+    decisions: Array<{
+      productName: string;
+      requestedQty: number;
+      allocatedQty: number;
+    }>;
+  };
+  const buckets = new Map<string, BuyerBucket>();
+  for (const d of decisions) {
+    const ctx = contextById.get(d.orderItemId);
+    if (!ctx) continue;
+    const bucket = buckets.get(ctx.buyerId) ?? {
+      buyerName: ctx.buyerName,
+      decisions: [],
+    };
+    bucket.decisions.push({
+      productName: ctx.productName,
+      requestedQty: ctx.requestedQty,
+      allocatedQty: d.allocatedQuantity,
+    });
+    buckets.set(ctx.buyerId, bucket);
+  }
+  await Promise.all(
+    Array.from(buckets.entries()).map(async ([buyerId, bucket]) => {
+      const email = await getBuyerEmail(buyerId);
+      if (!email) return;
+      await sendNotificationEmail({
+        to: email,
+        subject: "割り当て本数確定のご連絡",
+        react: createElement(AllocationConfirmedEmail, {
+          buyerName: bucket.buyerName,
+          decisions: bucket.decisions,
+          buyerUrl: appUrl("/buyer/orders"),
+        }),
+      });
+    })
+  );
 
   revalidatePath("/admin/allocations");
   revalidatePath(`/admin/allocations/${productId}`);

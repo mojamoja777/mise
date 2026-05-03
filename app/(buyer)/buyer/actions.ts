@@ -1,7 +1,12 @@
 "use server";
+import { createElement } from "react";
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { requireBuyer } from "@/lib/auth";
+import { sendNotificationEmail } from "@/lib/mailer";
+import { OrderReceivedEmail } from "@/lib/email/OrderReceived";
+import { getAdminEmails } from "@/lib/email/recipients";
+import { appUrl } from "@/lib/url";
 
 type CartItem = {
   productId: string;
@@ -220,7 +225,82 @@ export async function createOrder(
     allocationOrderId = order.id;
   }
 
+  // admin への新着発注通知メール（失敗しても注文成功は維持）
+  await notifyAdminsOfNewOrder(supabase, user.id, {
+    note,
+    normalOrderId,
+    normalItems,
+    allocationOrderId,
+    allocationItems,
+  });
+
   return { error: null, normalOrderId, allocationOrderId };
+}
+
+async function notifyAdminsOfNewOrder(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  buyerId: string,
+  args: {
+    note: string;
+    normalOrderId: string | null;
+    normalItems: CartItem[];
+    allocationOrderId: string | null;
+    allocationItems: CartItem[];
+  }
+) {
+  const { data: profile } = await supabase
+    .from("users")
+    .select("company_name, tenant_id")
+    .eq("id", buyerId)
+    .single();
+  if (!profile) return;
+
+  const adminEmails = await getAdminEmails(profile.tenant_id);
+  if (adminEmails.length === 0) return;
+
+  const subject = (label: string) =>
+    `【${label}】${profile.company_name} 様より新規発注`;
+
+  const tasks: Promise<unknown>[] = [];
+  if (args.normalOrderId) {
+    tasks.push(
+      sendNotificationEmail({
+        to: adminEmails,
+        subject: subject("発注"),
+        react: createElement(OrderReceivedEmail, {
+          buyerName: profile.company_name,
+          orderId: args.normalOrderId,
+          isAllocation: false,
+          items: args.normalItems.map((i) => ({
+            productName: i.name,
+            quantity: i.quantity,
+          })),
+          note: args.note || null,
+          adminUrl: appUrl(`/admin/orders/${args.normalOrderId}`),
+        }),
+      })
+    );
+  }
+  if (args.allocationOrderId) {
+    tasks.push(
+      sendNotificationEmail({
+        to: adminEmails,
+        subject: subject("割り当て希望"),
+        react: createElement(OrderReceivedEmail, {
+          buyerName: profile.company_name,
+          orderId: args.allocationOrderId,
+          isAllocation: true,
+          items: args.allocationItems.map((i) => ({
+            productName: i.name,
+            quantity: i.quantity,
+          })),
+          note: args.note || null,
+          adminUrl: appUrl(`/admin/orders/${args.allocationOrderId}`),
+        }),
+      })
+    );
+  }
+  await Promise.all(tasks);
 }
 
 export async function cancelOrderByBuyer(orderId: string) {

@@ -1,7 +1,12 @@
 "use server";
 
+import { createElement } from "react";
 import { revalidatePath } from "next/cache";
 import { requireBuyer } from "@/lib/auth";
+import { sendNotificationEmail } from "@/lib/mailer";
+import { ChatMessageEmail } from "@/lib/email/ChatMessage";
+import { getAdminEmails } from "@/lib/email/recipients";
+import { appUrl } from "@/lib/url";
 
 type Result = { error: string | null };
 
@@ -37,6 +42,26 @@ export async function sendBuyerMessage(body: string): Promise<Result> {
     .from("users")
     .update({ last_chat_seen_at: new Date().toISOString() })
     .eq("id", auth.user.id);
+
+  // admin 全員に新着通知メール
+  const { data: profile } = await auth.supabase
+    .from("users")
+    .select("company_name")
+    .eq("id", auth.user.id)
+    .single();
+  const adminEmails = await getAdminEmails(me.tenant_id);
+  if (adminEmails.length > 0 && profile) {
+    await sendNotificationEmail({
+      to: adminEmails,
+      subject: `${profile.company_name} 様よりチャット新着`,
+      react: createElement(ChatMessageEmail, {
+        recipientName: "",
+        senderLabel: profile.company_name,
+        body: trimmed,
+        threadUrl: appUrl(`/admin/chat/${auth.user.id}`),
+      }),
+    });
+  }
 
   revalidatePath("/buyer/chat");
   return { error: null };
