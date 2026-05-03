@@ -111,7 +111,7 @@ export default async function AdminInvoicesPage({ searchParams }: Props) {
                   対象期間
                 </th>
                 <th className="text-right px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">
-                  合計金額
+                  合計金額（税込）
                 </th>
                 <th className="text-left px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">
                   発行日

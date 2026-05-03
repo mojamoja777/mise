@@ -36,6 +36,7 @@ export default async function AdminInvoiceDetailPage({ params }: Props) {
         vintage,
         quantity,
         unit_price,
+        tax_rate,
         sort_order
       )
     `
@@ -97,6 +98,7 @@ export default async function AdminInvoiceDetailPage({ params }: Props) {
           region: item.region,
           quantity: item.quantity,
           unit_price: Number(item.unit_price),
+          tax_rate: Number(item.tax_rate),
         }))}
         initialNote={invoice.note}
       />

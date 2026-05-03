@@ -7,6 +7,7 @@ import {
   CATEGORIES, WINE_TYPES, WINE_COUNTRIES, WINE_REGIONS,
   SAKE_PREFECTURES, SHOCHU_PREFECTURES, ALL_PREFECTURES
 } from "@/lib/product-constants";
+import { TAX_CLASSES, TAX_LABEL } from "@/lib/tax";
 
 type Product = Database["public"]["Tables"]["products"]["Row"];
 
@@ -162,6 +163,39 @@ export function ProductForm({ product, action, submitLabel }: Props) {
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">在庫数</label>
           <input name="stock" type="number" defaultValue={product?.stock ?? 0} min={0} step={1} className={inputClass} />
+        </div>
+
+        {/* 税区分 */}
+        <div className="lg:col-span-2">
+          <label className="block text-sm font-medium text-gray-700 mb-2">税区分</label>
+          <div className="flex flex-wrap gap-2">
+            {TAX_CLASSES.map((tc) => {
+              const isSelected = (product?.tax_class ?? "standard") === tc;
+              return (
+                <label key={tc} className="cursor-pointer">
+                  <input
+                    type="radio"
+                    name="tax_class"
+                    value={tc}
+                    defaultChecked={isSelected}
+                    className="sr-only peer"
+                  />
+                  <span
+                    className={`inline-block px-4 py-2 rounded-full text-sm border transition-colors ${
+                      isSelected
+                        ? "bg-[#6B1A35] text-white border-[#6B1A35]"
+                        : "border-gray-200 text-gray-600 hover:border-[#6B1A35]"
+                    }`}
+                  >
+                    {TAX_LABEL[tc]}
+                  </span>
+                </label>
+              );
+            })}
+          </div>
+          <p className="text-xs text-gray-400 mt-1">
+            酒類は標準10%が一般的。ノンアル飲料・食品は軽減8%
+          </p>
         </div>
 
         {/* コメント */}

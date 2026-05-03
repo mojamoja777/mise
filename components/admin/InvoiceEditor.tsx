@@ -1,11 +1,21 @@
 // components/admin/InvoiceEditor.tsx
 // 請求書の明細・備考を編集するフォーム（admin用）
+// 税率は明細ごとに保持し、税率別小計＋消費税＋税込総額をリアルタイム算出する
 
 "use client";
 
 import { useMemo, useState, useTransition } from "react";
 import { Plus, Trash2 } from "lucide-react";
 import { updateInvoiceAction } from "@/app/(admin)/admin/invoices/actions";
+import {
+  TAX_CLASSES,
+  TAX_LABEL,
+  TAX_RATES,
+  classForRate,
+  rateForClass,
+  summarizeTax,
+  type TaxClass,
+} from "@/lib/tax";
 
 type Item = {
   product_name: string;
@@ -13,6 +23,7 @@ type Item = {
   region: string | null;
   quantity: number;
   unit_price: number;
+  tax_rate: number;
 };
 
 type Props = {
@@ -27,10 +38,7 @@ export function InvoiceEditor({ invoiceId, initialItems, initialNote }: Props) {
   const [pending, startTransition] = useTransition();
   const [message, setMessage] = useState<string | null>(null);
 
-  const total = useMemo(
-    () => items.reduce((sum, i) => sum + i.quantity * i.unit_price, 0),
-    [items]
-  );
+  const summary = useMemo(() => summarizeTax(items), [items]);
 
   const updateItem = (index: number, patch: Partial<Item>) => {
     setItems((prev) =>
@@ -51,12 +59,12 @@ export function InvoiceEditor({ invoiceId, initialItems, initialNote }: Props) {
         region: null,
         quantity: 1,
         unit_price: 0,
+        tax_rate: TAX_RATES.standard,
       },
     ]);
   };
 
   const handleSave = () => {
-    // 必須項目のバリデーション
     for (const item of items) {
       if (!item.product_name.trim()) {
         setMessage("商品名が空の明細があります");
@@ -88,7 +96,6 @@ export function InvoiceEditor({ invoiceId, initialItems, initialNote }: Props) {
 
   return (
     <div className="space-y-6">
-      {/* 明細テーブル */}
       <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
         <div className="px-5 py-3 border-b border-gray-200 flex items-center justify-between">
           <h2 className="text-sm font-semibold text-gray-700">明細</h2>
@@ -105,20 +112,23 @@ export function InvoiceEditor({ invoiceId, initialItems, initialNote }: Props) {
           <table className="w-full text-sm">
             <thead className="bg-gray-50 border-b border-gray-200">
               <tr>
-                <th className="text-left px-4 py-2 text-xs font-semibold text-gray-500 w-[35%]">
+                <th className="text-left px-4 py-2 text-xs font-semibold text-gray-500 w-[30%]">
                   商品名
                 </th>
-                <th className="text-left px-4 py-2 text-xs font-semibold text-gray-500 w-[25%]">
+                <th className="text-left px-4 py-2 text-xs font-semibold text-gray-500 w-[22%]">
                   生産者 / 産地
                 </th>
-                <th className="text-right px-4 py-2 text-xs font-semibold text-gray-500 w-[15%]">
-                  単価
+                <th className="text-right px-4 py-2 text-xs font-semibold text-gray-500 w-[12%]">
+                  単価（税抜）
                 </th>
-                <th className="text-right px-4 py-2 text-xs font-semibold text-gray-500 w-[10%]">
+                <th className="text-right px-4 py-2 text-xs font-semibold text-gray-500 w-[8%]">
                   数量
                 </th>
+                <th className="text-left px-4 py-2 text-xs font-semibold text-gray-500 w-[12%]">
+                  税区分
+                </th>
                 <th className="text-right px-4 py-2 text-xs font-semibold text-gray-500 w-[12%]">
-                  小計
+                  小計（税抜）
                 </th>
                 <th className="w-8" />
               </tr>
@@ -126,6 +136,7 @@ export function InvoiceEditor({ invoiceId, initialItems, initialNote }: Props) {
             <tbody className="divide-y divide-gray-100">
               {items.map((item, index) => {
                 const subtotal = item.quantity * item.unit_price;
+                const currentClass = classForRate(item.tax_rate);
                 return (
                   <tr key={index}>
                     <td className="px-4 py-2">
@@ -192,6 +203,23 @@ export function InvoiceEditor({ invoiceId, initialItems, initialNote }: Props) {
                         className="w-full text-sm text-right border border-gray-200 rounded px-2 py-1 focus:outline-none focus:border-[#6B1A35]"
                       />
                     </td>
+                    <td className="px-4 py-2">
+                      <select
+                        value={currentClass}
+                        onChange={(e) =>
+                          updateItem(index, {
+                            tax_rate: rateForClass(e.target.value as TaxClass),
+                          })
+                        }
+                        className="w-full text-xs border border-gray-200 rounded px-2 py-1 focus:outline-none focus:border-[#6B1A35]"
+                      >
+                        {TAX_CLASSES.map((tc) => (
+                          <option key={tc} value={tc}>
+                            {TAX_LABEL[tc]}
+                          </option>
+                        ))}
+                      </select>
+                    </td>
                     <td className="px-4 py-2 text-right font-medium text-gray-900">
                       ¥{subtotal.toLocaleString()}
                     </td>
@@ -211,7 +239,7 @@ export function InvoiceEditor({ invoiceId, initialItems, initialNote }: Props) {
               {items.length === 0 && (
                 <tr>
                   <td
-                    colSpan={6}
+                    colSpan={7}
                     className="px-4 py-8 text-center text-sm text-gray-400"
                   >
                     明細がありません。「行を追加」から追加してください。
@@ -222,13 +250,39 @@ export function InvoiceEditor({ invoiceId, initialItems, initialNote }: Props) {
             <tfoot className="bg-gray-50 border-t border-gray-200">
               <tr>
                 <td
-                  colSpan={4}
+                  colSpan={5}
+                  className="px-4 py-2 text-right text-xs text-gray-500"
+                >
+                  税抜小計
+                </td>
+                <td className="px-4 py-2 text-right text-sm text-gray-700">
+                  ¥{summary.subtotal.toLocaleString()}
+                </td>
+                <td />
+              </tr>
+              {summary.breakdown.map((b) => (
+                <tr key={b.rate}>
+                  <td
+                    colSpan={5}
+                    className="px-4 py-1 text-right text-xs text-gray-500"
+                  >
+                    消費税（{Math.round(b.rate * 100)}%対象 ¥{b.subtotal.toLocaleString()}）
+                  </td>
+                  <td className="px-4 py-1 text-right text-sm text-gray-700">
+                    ¥{b.tax.toLocaleString()}
+                  </td>
+                  <td />
+                </tr>
+              ))}
+              <tr>
+                <td
+                  colSpan={5}
                   className="px-4 py-3 text-right text-sm font-semibold text-gray-700"
                 >
-                  合計
+                  税込合計
                 </td>
                 <td className="px-4 py-3 text-right text-base font-bold text-gray-900">
-                  ¥{total.toLocaleString()}
+                  ¥{summary.total.toLocaleString()}
                 </td>
                 <td />
               </tr>
@@ -237,7 +291,6 @@ export function InvoiceEditor({ invoiceId, initialItems, initialNote }: Props) {
         </div>
       </div>
 
-      {/* 備考 */}
       <div className="bg-white rounded-xl border border-gray-200 p-5">
         <label className="block text-sm font-semibold text-gray-700 mb-2">
           備考
@@ -251,7 +304,6 @@ export function InvoiceEditor({ invoiceId, initialItems, initialNote }: Props) {
         />
       </div>
 
-      {/* 保存 */}
       <div className="flex items-center gap-3">
         <button
           type="button"

@@ -35,6 +35,7 @@ export async function createProduct(formData: FormData) {
     type: values.type || null,
     is_allocation: values.is_allocation,
     allocation_deadline: values.allocation_deadline,
+    tax_class: values.tax_class,
   });
 
   if (dbError) {
@@ -75,6 +76,7 @@ export async function updateProduct(id: string, formData: FormData) {
       type: values.type || null,
       is_allocation: values.is_allocation,
       allocation_deadline: values.allocation_deadline,
+      tax_class: values.tax_class,
     })
     .eq("id", id);
 
@@ -124,6 +126,7 @@ type ProductValues = {
   type: string;
   is_allocation: boolean;
   allocation_deadline: string | null;
+  tax_class: "standard" | "reduced" | "exempt";
 };
 
 function extractProductValues(formData: FormData): ProductValues {
@@ -132,6 +135,11 @@ function extractProductValues(formData: FormData): ProductValues {
   const stockRaw = formData.get("stock") as string;
   const deadlineRaw = formData.get("allocation_deadline") as string | null;
   const isAllocation = formData.get("is_allocation") === "true";
+  const taxClassRaw = (formData.get("tax_class") as string) || "standard";
+  const taxClass: ProductValues["tax_class"] =
+    taxClassRaw === "reduced" || taxClassRaw === "exempt"
+      ? taxClassRaw
+      : "standard";
 
   // datetime-local のローカル時刻を ISO に変換
   const allocationDeadline =
@@ -153,6 +161,7 @@ function extractProductValues(formData: FormData): ProductValues {
     is_active: formData.get("is_active") === "true",
     is_allocation: isAllocation,
     allocation_deadline: allocationDeadline,
+    tax_class: taxClass,
   };
 }
 

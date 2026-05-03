@@ -6,6 +6,7 @@
 import { revalidatePath } from "next/cache";
 import { requireAdmin } from "@/lib/auth";
 import { generateInvoicesForMonth } from "@/lib/invoices";
+import { summarizeTax } from "@/lib/tax";
 
 /**
  * 指定月の請求書を手動生成する（admin用）
@@ -65,6 +66,7 @@ export async function updateInvoiceAction(
       region: string | null;
       quantity: number;
       unit_price: number;
+      tax_rate: number;
     }>;
   }
 ): Promise<{ ok: boolean; error?: string }> {
@@ -72,11 +74,8 @@ export async function updateInvoiceAction(
   if (!auth.ok) return { ok: false, error: auth.error };
   const supabase = auth.supabase;
 
-  // 合計再計算
-  const totalAmount = input.items.reduce(
-    (sum, item) => sum + item.quantity * item.unit_price,
-    0
-  );
+  // 税抜小計・消費税・税込総額を再計算（税率ごとに切り捨て）
+  const summary = summarizeTax(input.items);
 
   // トランザクション的に：既存明細を全削除 → 新明細を挿入 → ヘッダ更新
   const { error: deleteError } = await supabase
@@ -99,6 +98,7 @@ export async function updateInvoiceAction(
           region: item.region,
           quantity: item.quantity,
           unit_price: item.unit_price,
+          tax_rate: item.tax_rate,
           sort_order: index,
         }))
       );
@@ -110,7 +110,9 @@ export async function updateInvoiceAction(
   const { error: updateError } = await supabase
     .from("invoices")
     .update({
-      total_amount: totalAmount,
+      subtotal_amount: summary.subtotal,
+      tax_amount: summary.tax,
+      total_amount: summary.total,
       note: input.note,
     })
     .eq("id", invoiceId);

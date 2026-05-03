@@ -32,7 +32,14 @@ export type InvoicePdfData = {
   id: string;
   periodStart: string;
   periodEnd: string;
+  /** 税抜小計 */
+  subtotalAmount: number;
+  /** 消費税合計（税率別合算） */
+  taxAmount: number;
+  /** 税込総額（請求金額） */
   totalAmount: number;
+  /** 税率別の内訳（PDF の税区分表示用） */
+  taxBreakdown: Array<{ rate: number; subtotal: number; tax: number }>;
   note: string | null;
   issuedAt: string;
   updatedAt: string;
@@ -42,6 +49,7 @@ export type InvoicePdfData = {
     region: string | null;
     quantity: number;
     unitPrice: number;
+    taxRate: number;
   }>;
   buyer: {
     companyName: string;
@@ -331,9 +339,9 @@ export function InvoiceDocument({ data }: { data: InvoicePdfData }) {
           </View>
         </View>
 
-        {/* 合計金額 */}
+        {/* 合計金額（税込） */}
         <View style={styles.totalBox}>
-          <Text style={styles.totalLabel}>ご請求金額</Text>
+          <Text style={styles.totalLabel}>ご請求金額（税込）</Text>
           <Text style={styles.totalAmount}>{formatYen(data.totalAmount)}</Text>
         </View>
 
@@ -377,11 +385,47 @@ export function InvoiceDocument({ data }: { data: InvoicePdfData }) {
                 { fontSize: 10 },
               ]}
             >
-              合計（{totalQty}本）
+              税抜小計（{totalQty}本）
             </Text>
             <Text style={[styles.colQty]} />
             <Text
-              style={[styles.colSubtotal, styles.th, { fontSize: 11 }]}
+              style={[styles.colSubtotal, styles.th, { fontSize: 10 }]}
+            >
+              {formatYen(data.subtotalAmount)}
+            </Text>
+          </View>
+          {data.taxBreakdown.map((b) => (
+            <View key={b.rate} style={styles.tableFooter}>
+              <Text
+                style={[
+                  { width: "76%", textAlign: "right" },
+                  styles.th,
+                  { fontSize: 9, fontWeight: "normal", color: "#555" },
+                ]}
+              >
+                消費税（{Math.round(b.rate * 100)}%対象 {formatYen(b.subtotal)}）
+              </Text>
+              <Text style={[styles.colQty]} />
+              <Text
+                style={[styles.colSubtotal, styles.td, { fontSize: 10 }]}
+              >
+                {formatYen(b.tax)}
+              </Text>
+            </View>
+          ))}
+          <View style={styles.tableFooter}>
+            <Text
+              style={[
+                { width: "76%", textAlign: "right" },
+                styles.th,
+                { fontSize: 11 },
+              ]}
+            >
+              税込合計
+            </Text>
+            <Text style={[styles.colQty]} />
+            <Text
+              style={[styles.colSubtotal, styles.th, { fontSize: 12 }]}
             >
               {formatYen(data.totalAmount)}
             </Text>

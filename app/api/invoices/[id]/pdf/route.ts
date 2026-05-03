@@ -4,6 +4,7 @@
 import { NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/auth";
 import { getTenantByBuyerId } from "@/lib/tenant";
+import { summarizeTax } from "@/lib/tax";
 import {
   invoicePdfFileName,
   renderInvoicePdf,
@@ -46,6 +47,7 @@ export async function GET(
         region,
         quantity,
         unit_price,
+        tax_rate,
         sort_order
       )
     `
@@ -70,11 +72,24 @@ export async function GET(
 
   const tenant = await getTenantByBuyerId(supabase, invoice.buyer_id);
 
+  // 税抜小計・消費税は明細から再計算する（ヘッダの値はキャッシュとして信頼するが、
+  // 表示の整合性を最大化するため breakdown はその場で算出）
+  const summary = summarizeTax(
+    sortedItems.map((it) => ({
+      quantity: it.quantity,
+      unit_price: Number(it.unit_price),
+      tax_rate: Number(it.tax_rate),
+    }))
+  );
+
   const data: InvoicePdfData = {
     id: invoice.id,
     periodStart: invoice.period_start,
     periodEnd: invoice.period_end,
+    subtotalAmount: summary.subtotal,
+    taxAmount: summary.tax,
     totalAmount: Number(invoice.total_amount),
+    taxBreakdown: summary.breakdown,
     note: invoice.note,
     issuedAt: invoice.issued_at,
     updatedAt: invoice.updated_at,
@@ -84,6 +99,7 @@ export async function GET(
       region: item.region,
       quantity: item.quantity,
       unitPrice: Number(item.unit_price),
+      taxRate: Number(item.tax_rate),
     })),
     buyer: {
       companyName: buyer?.company_name ?? "—",

@@ -6,6 +6,7 @@ import JSZip from "jszip";
 import { NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/auth";
 import { getTenantByBuyerId, type Tenant } from "@/lib/tenant";
+import { summarizeTax } from "@/lib/tax";
 import {
   invoicePdfFileName,
   renderInvoicePdf,
@@ -64,6 +65,7 @@ export async function GET(request: Request) {
         region,
         quantity,
         unit_price,
+        tax_rate,
         sort_order
       )
     `
@@ -104,11 +106,22 @@ export async function GET(request: Request) {
       tenantCache.set(invoice.buyer_id, tenant);
     }
 
+    const summary = summarizeTax(
+      sortedItems.map((it) => ({
+        quantity: it.quantity,
+        unit_price: Number(it.unit_price),
+        tax_rate: Number(it.tax_rate),
+      }))
+    );
+
     const data: InvoicePdfData = {
       id: invoice.id,
       periodStart: invoice.period_start,
       periodEnd: invoice.period_end,
+      subtotalAmount: summary.subtotal,
+      taxAmount: summary.tax,
       totalAmount: Number(invoice.total_amount),
+      taxBreakdown: summary.breakdown,
       note: invoice.note,
       issuedAt: invoice.issued_at,
       updatedAt: invoice.updated_at,
@@ -118,6 +131,7 @@ export async function GET(request: Request) {
         region: item.region,
         quantity: item.quantity,
         unitPrice: Number(item.unit_price),
+        taxRate: Number(item.tax_rate),
       })),
       buyer: {
         companyName: buyer?.company_name ?? "—",

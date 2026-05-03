@@ -133,6 +133,7 @@ export type Database = {
           type: string | null;
           is_allocation: boolean;
           allocation_deadline: string | null;
+          tax_class: "standard" | "reduced" | "exempt";
         };
         Insert: {
           id?: string;
@@ -151,6 +152,7 @@ export type Database = {
           type?: string | null;
           is_allocation?: boolean;
           allocation_deadline?: string | null;
+          tax_class?: "standard" | "reduced" | "exempt";
           created_at?: string;
           updated_at?: string;
         };
@@ -170,6 +172,7 @@ export type Database = {
           type?: string | null;
           is_allocation?: boolean;
           allocation_deadline?: string | null;
+          tax_class?: "standard" | "reduced" | "exempt";
         };
         Relationships: [];
       };
@@ -255,6 +258,8 @@ export type Database = {
           buyer_id: string;
           period_start: string;
           period_end: string;
+          subtotal_amount: number;
+          tax_amount: number;
           total_amount: number;
           note: string | null;
           status: "issued" | "paid";
@@ -266,6 +271,8 @@ export type Database = {
           buyer_id: string;
           period_start: string;
           period_end: string;
+          subtotal_amount?: number;
+          tax_amount?: number;
           total_amount?: number;
           note?: string | null;
           status?: "issued" | "paid";
@@ -273,6 +280,8 @@ export type Database = {
           updated_at?: string;
         };
         Update: {
+          subtotal_amount?: number;
+          tax_amount?: number;
           total_amount?: number;
           note?: string | null;
           status?: "issued" | "paid";
@@ -298,6 +307,7 @@ export type Database = {
           vintage: number | null;
           quantity: number;
           unit_price: number;
+          tax_rate: number;
           sort_order: number;
         };
         Insert: {
@@ -310,6 +320,7 @@ export type Database = {
           vintage?: number | null;
           quantity: number;
           unit_price: number;
+          tax_rate?: number;
           sort_order?: number;
         };
         Update: {
@@ -319,6 +330,7 @@ export type Database = {
           vintage?: number | null;
           quantity?: number;
           unit_price?: number;
+          tax_rate?: number;
           sort_order?: number;
         };
         Relationships: [

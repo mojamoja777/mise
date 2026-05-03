@@ -3,6 +3,7 @@
 
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "@/types/database";
+import { rateForClass, summarizeTax, type TaxClass } from "@/lib/tax";
 
 /**
  * 対象月の月初（1日 00:00:00 JST）と翌月初（1日 00:00:00 JST）を返す
@@ -64,7 +65,8 @@ export async function generateInvoicesForMonth(
           name,
           producer,
           region,
-          vintage
+          vintage,
+          tax_class
         )
       )
     `
@@ -109,7 +111,6 @@ export async function generateInvoicesForMonth(
 
     // 明細を平坦化してスナップショット生成
     const items: Database["public"]["Tables"]["invoice_items"]["Insert"][] = [];
-    let totalAmount = 0;
     let sortOrder = 0;
     for (const order of buyerOrders) {
       for (const item of order.order_items) {
@@ -121,9 +122,9 @@ export async function generateInvoicesForMonth(
           producer: string | null;
           region: string | null;
           vintage: number | null;
+          tax_class: TaxClass | null;
         } | null;
-        const subtotal = item.unit_price * billableQty;
-        totalAmount += subtotal;
+        const taxRate = rateForClass(product?.tax_class ?? "standard");
         items.push({
           invoice_id: "", // 後で設定
           order_id: order.id,
@@ -133,12 +134,22 @@ export async function generateInvoicesForMonth(
           vintage: product?.vintage ?? null,
           quantity: billableQty,
           unit_price: item.unit_price,
+          tax_rate: taxRate,
           sort_order: sortOrder++,
         });
       }
     }
 
     if (items.length === 0) continue;
+
+    // 税抜小計・消費税・税込総額を税率ごとに算出
+    const { subtotal, tax, total } = summarizeTax(
+      items.map((it) => ({
+        quantity: it.quantity,
+        unit_price: Number(it.unit_price),
+        tax_rate: Number(it.tax_rate ?? 0.1),
+      }))
+    );
 
     // 請求書ヘッダを作成
     const { data: invoice, error: invoiceError } = await supabase
@@ -147,7 +158,9 @@ export async function generateInvoicesForMonth(
         buyer_id: buyerId,
         period_start: range.periodStart,
         period_end: range.periodEnd,
-        total_amount: totalAmount,
+        subtotal_amount: subtotal,
+        tax_amount: tax,
+        total_amount: total,
       })
       .select("id")
       .single();
