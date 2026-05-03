@@ -1,5 +1,10 @@
+"use client";
+
 // components/chat/MessageBubble.tsx
 // チャットメッセージの吹き出し（自分/相手で左右と色を切り替え）
+// 自分のメッセージはホバー時に編集／削除ボタンが出る
+
+import { Pencil, Trash2 } from "lucide-react";
 
 type Props = {
   body: string;
@@ -7,6 +12,8 @@ type Props = {
   editedAt: string | null;
   deletedAt: string | null;
   isMine: boolean;
+  onEdit?: () => void;
+  onDelete?: () => void;
 };
 
 function formatTime(iso: string) {
@@ -27,13 +34,17 @@ export function MessageBubble({
   editedAt,
   deletedAt,
   isMine,
+  onEdit,
+  onDelete,
 }: Props) {
   const isDeleted = deletedAt !== null;
+  const canMutate = isMine && !isDeleted && (onEdit || onDelete);
+
   return (
     <div
-      className={`flex ${isMine ? "justify-end" : "justify-start"} mb-2 px-1`}
+      className={`group flex ${isMine ? "justify-end" : "justify-start"} mb-2 px-1`}
     >
-      <div className="max-w-[78%]">
+      <div className="max-w-[78%] relative">
         <div
           className={`px-3 py-2 rounded-2xl text-sm whitespace-pre-wrap break-words ${
             isDeleted
@@ -53,6 +64,34 @@ export function MessageBubble({
           <span>{formatTime(createdAt)}</span>
           {editedAt && !isDeleted && <span>編集済</span>}
         </div>
+        {canMutate && (
+          <div
+            className={`absolute top-0 ${
+              isMine ? "-left-16" : "-right-16"
+            } opacity-0 group-hover:opacity-100 transition-opacity flex gap-1`}
+          >
+            {onEdit && (
+              <button
+                type="button"
+                onClick={onEdit}
+                className="p-1.5 rounded-md bg-white border border-gray-200 text-gray-500 hover:text-[#6B1A35] hover:border-[#6B1A35] shadow-sm"
+                aria-label="編集"
+              >
+                <Pencil className="w-3 h-3" />
+              </button>
+            )}
+            {onDelete && (
+              <button
+                type="button"
+                onClick={onDelete}
+                className="p-1.5 rounded-md bg-white border border-gray-200 text-gray-500 hover:text-red-600 hover:border-red-300 shadow-sm"
+                aria-label="削除"
+              >
+                <Trash2 className="w-3 h-3" />
+              </button>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

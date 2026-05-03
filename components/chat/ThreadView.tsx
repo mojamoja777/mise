@@ -1,13 +1,16 @@
 "use client";
 
 // components/chat/ThreadView.tsx
-// メッセージ履歴 + 入力欄 + Supabase Realtime 購読
+// メッセージ履歴 + 入力欄 + Supabase Realtime 購読 + 編集 / 削除
 // initial messages はサーバから渡され、以降は INSERT / UPDATE をリアルタイムで取り込む
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { editChatMessage, deleteChatMessage } from "@/lib/chat-mutations";
 import { MessageBubble } from "./MessageBubble";
 import { MessageComposer } from "./MessageComposer";
+import { EditableBubble } from "./EditableBubble";
 
 export type ThreadMessage = {
   id: string;
@@ -36,14 +39,15 @@ export function ThreadView({
   emptyHint,
 }: Props) {
   const [messages, setMessages] = useState<ThreadMessage[]>(initialMessages);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [, startTransition] = useTransition();
+  const router = useRouter();
   const bottomRef = useRef<HTMLDivElement>(null);
 
-  // SSR で更新された initial を反映（router.refresh 直後など）
   useEffect(() => {
     setMessages(initialMessages);
   }, [initialMessages]);
 
-  // 履歴更新時に最下部にスクロール
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "auto", block: "end" });
   }, [messages.length]);
@@ -90,6 +94,21 @@ export function ThreadView({
     };
   }, [buyerId]);
 
+  function handleEdit(id: string, body: string) {
+    return editChatMessage(id, body).then((res) => {
+      if (!res.error) router.refresh();
+      return res;
+    });
+  }
+
+  function handleDelete(id: string) {
+    if (!window.confirm("このメッセージを削除しますか？")) return;
+    startTransition(async () => {
+      const res = await deleteChatMessage(id);
+      if (!res.error) router.refresh();
+    });
+  }
+
   return (
     <div className="flex flex-col h-full bg-gray-50">
       <div className="flex-1 overflow-y-auto px-3 py-4">
@@ -99,16 +118,31 @@ export function ThreadView({
             <p>{emptyHint ?? "まだメッセージはありません"}</p>
           </div>
         ) : (
-          messages.map((m) => (
-            <MessageBubble
-              key={m.id}
-              body={m.body}
-              createdAt={m.created_at}
-              editedAt={m.edited_at}
-              deletedAt={m.deleted_at}
-              isMine={m.sender_id === currentUserId}
-            />
-          ))
+          messages.map((m) => {
+            if (editingId === m.id) {
+              return (
+                <EditableBubble
+                  key={m.id}
+                  initialBody={m.body}
+                  onSave={(b) => handleEdit(m.id, b)}
+                  onCancel={() => setEditingId(null)}
+                />
+              );
+            }
+            const isMine = m.sender_id === currentUserId;
+            return (
+              <MessageBubble
+                key={m.id}
+                body={m.body}
+                createdAt={m.created_at}
+                editedAt={m.edited_at}
+                deletedAt={m.deleted_at}
+                isMine={isMine}
+                onEdit={isMine && !m.deleted_at ? () => setEditingId(m.id) : undefined}
+                onDelete={isMine && !m.deleted_at ? () => handleDelete(m.id) : undefined}
+              />
+            );
+          })
         )}
         <div ref={bottomRef} />
       </div>
