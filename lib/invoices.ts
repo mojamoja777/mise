@@ -33,7 +33,8 @@ export function getMonthRangeJst(year: number, month: number): {
  *
  * 仕様：
  * - ordered_at が対象期間内の注文を対象
- * - status が 'cancelled' の注文は除外（確定前でも請求対象）
+ * - status が pending / confirmed のみ請求対象（cancelled と allocation_pending は除外）
+ * - 各明細は allocated_quantity > 0 のものだけ計上（割り当て 0 本＝落選を除外）
  * - 同一 buyer の同一期間に請求書が既に存在する場合はスキップ
  *
  * @returns 生成された請求書の id 一覧
@@ -45,7 +46,7 @@ export async function generateInvoicesForMonth(
 ): Promise<{ created: string[]; skipped: string[] }> {
   const range = getMonthRangeJst(year, month);
 
-  // 対象期間のキャンセル以外の注文をすべて取得（明細・商品・buyer情報を含む）
+  // 対象期間の請求対象注文を取得（明細・商品・buyer情報を含む）
   const { data: orders, error: ordersError } = await supabase
     .from("orders")
     .select(
@@ -57,6 +58,7 @@ export async function generateInvoicesForMonth(
       order_items (
         order_id,
         quantity,
+        allocated_quantity,
         unit_price,
         products (
           name,
@@ -67,7 +69,7 @@ export async function generateInvoicesForMonth(
       )
     `
     )
-    .neq("status", "cancelled")
+    .in("status", ["pending", "confirmed"])
     .gte("ordered_at", range.fromIso)
     .lt("ordered_at", range.toIso)
     .order("ordered_at", { ascending: true });
@@ -111,13 +113,16 @@ export async function generateInvoicesForMonth(
     let sortOrder = 0;
     for (const order of buyerOrders) {
       for (const item of order.order_items) {
+        // 確定本数（allocated_quantity）が 0 / NULL の明細は請求対象外
+        const billableQty = item.allocated_quantity ?? 0;
+        if (billableQty <= 0) continue;
         const product = item.products as {
           name: string;
           producer: string | null;
           region: string | null;
           vintage: number | null;
         } | null;
-        const subtotal = item.unit_price * item.quantity;
+        const subtotal = item.unit_price * billableQty;
         totalAmount += subtotal;
         items.push({
           invoice_id: "", // 後で設定
@@ -126,7 +131,7 @@ export async function generateInvoicesForMonth(
           producer: product?.producer ?? null,
           region: product?.region ?? null,
           vintage: product?.vintage ?? null,
-          quantity: item.quantity,
+          quantity: billableQty,
           unit_price: item.unit_price,
           sort_order: sortOrder++,
         });

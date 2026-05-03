@@ -343,7 +343,19 @@ export type Database = {
       };
     };
     Views: Record<string, never>;
-    Functions: Record<string, never>;
+    Functions: {
+      confirm_product_allocations: {
+        Args: {
+          p_product_id: string;
+          p_decisions: Array<{
+            order_item_id: string;
+            allocated_quantity: number;
+          }>;
+          p_admin_id: string;
+        };
+        Returns: void;
+      };
+    };
     Enums: Record<string, never>;
   };
 };

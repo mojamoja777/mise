@@ -27,12 +27,14 @@ export default async function OrderDetailPage({ params }: Props) {
       order_items (
         id,
         quantity,
+        allocated_quantity,
         unit_price,
         products (
           id,
           name,
           producer,
-          region
+          region,
+          is_allocation
         )
       )
     `
@@ -42,12 +44,14 @@ export default async function OrderDetailPage({ params }: Props) {
 
   if (!order) notFound();
 
+  const isPendingAllocation = order.status === "allocation_pending";
   const total = order.order_items.reduce(
-    (sum, item) => sum + item.unit_price * item.quantity,
+    (sum, item) =>
+      sum + item.unit_price * (item.allocated_quantity ?? item.quantity),
     0
   );
   const totalQty = order.order_items.reduce(
-    (sum, item) => sum + item.quantity,
+    (sum, item) => sum + (item.allocated_quantity ?? item.quantity),
     0
   );
 
@@ -85,27 +89,48 @@ export default async function OrderDetailPage({ params }: Props) {
       {/* 発注内容 */}
       <div className="bg-white rounded-xl border border-gray-200 p-4 mb-4">
         <h2 className="text-sm font-semibold text-gray-700 mb-3">発注内容</h2>
+        {isPendingAllocation && (
+          <p className="text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2 mb-3">
+            割り当て待ちのため、表示は希望本数です。確定後に金額が確定します。
+          </p>
+        )}
         <div className="space-y-3">
-          {order.order_items.map((item) => (
-            <div key={item.id} className="flex justify-between items-start text-sm">
-              <div className="flex-1 pr-2">
-                <p className="text-gray-900 font-medium">
-                  {(item.products as { name: string } | null)?.name ?? "—"}
-                </p>
-                <p className="text-xs text-gray-400">
-                  ¥{item.unit_price.toLocaleString()} × {item.quantity}
+          {order.order_items.map((item) => {
+            const product = item.products as {
+              name: string;
+              is_allocation?: boolean;
+            } | null;
+            const finalQty = item.allocated_quantity ?? item.quantity;
+            const showRequested =
+              isPendingAllocation && product?.is_allocation;
+            return (
+              <div key={item.id} className="flex justify-between items-start text-sm">
+                <div className="flex-1 pr-2">
+                  <p className="text-gray-900 font-medium">
+                    {product?.name ?? "—"}
+                  </p>
+                  <p className="text-xs text-gray-400">
+                    ¥{item.unit_price.toLocaleString()} ×{" "}
+                    {showRequested
+                      ? `希望 ${item.quantity}本`
+                      : `${finalQty}本`}
+                  </p>
+                </div>
+                <p className="font-semibold text-gray-900 shrink-0">
+                  {showRequested
+                    ? "—"
+                    : `¥${(item.unit_price * finalQty).toLocaleString()}`}
                 </p>
               </div>
-              <p className="font-semibold text-gray-900 shrink-0">
-                ¥{(item.unit_price * item.quantity).toLocaleString()}
-              </p>
-            </div>
-          ))}
+            );
+          })}
         </div>
         <div className="border-t border-gray-100 mt-3 pt-3 flex justify-between">
-          <span className="text-sm text-gray-600">合計 {totalQty}本</span>
+          <span className="text-sm text-gray-600">
+            {isPendingAllocation ? `希望合計 ${totalQty}本` : `合計 ${totalQty}本`}
+          </span>
           <span className="text-base font-bold text-[#3B0A1E]">
-            ¥{total.toLocaleString()}
+            {isPendingAllocation ? "—" : `¥${total.toLocaleString()}`}
           </span>
         </div>
       </div>

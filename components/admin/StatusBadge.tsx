@@ -3,12 +3,14 @@
 
 export const STATUS_LABEL: Record<string, string> = {
   pending: "受付中",
+  allocation_pending: "割り当て待ち",
   confirmed: "受付完了",
   cancelled: "キャンセル",
 };
 
 export const STATUS_CLASS: Record<string, string> = {
   pending: "bg-blue-100 text-blue-700",
+  allocation_pending: "bg-amber-100 text-amber-800",
   confirmed: "bg-yellow-100 text-yellow-700",
   cancelled: "bg-red-100 text-red-700",
 };

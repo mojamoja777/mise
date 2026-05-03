@@ -29,6 +29,7 @@ export default async function AdminPage({ searchParams }: Props) {
       ),
       order_items (
         quantity,
+        allocated_quantity,
         unit_price
       )
     `
@@ -36,7 +37,12 @@ export default async function AdminPage({ searchParams }: Props) {
     .order("ordered_at", { ascending: false });
 
   if (status) {
-    const validStatuses = ["pending", "confirmed", "cancelled"] as const;
+    const validStatuses = [
+      "pending",
+      "confirmed",
+      "cancelled",
+      "allocation_pending",
+    ] as const;
     type OrderStatus = typeof validStatuses[number];
     if ((validStatuses as readonly string[]).includes(status)) {
       query = query.eq("status", status as OrderStatus);
@@ -86,7 +92,8 @@ export default async function AdminPage({ searchParams }: Props) {
             <tbody className="divide-y divide-gray-100">
               {orders.map((order) => {
                 const total = order.order_items.reduce(
-                  (sum, item) => sum + item.unit_price * item.quantity,
+                  (sum, item) =>
+                    sum + item.unit_price * (item.allocated_quantity ?? item.quantity),
                   0
                 );
                 const buyer = order.users as { company_name: string } | null;

@@ -3,18 +3,7 @@
 
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
-
-const STATUS_LABEL: Record<string, string> = {
-  pending: "受付中",
-  confirmed: "受付完了",
-  cancelled: "キャンセル",
-};
-
-const STATUS_CLASS: Record<string, string> = {
-  pending: "bg-blue-100 text-blue-700",
-  confirmed: "bg-yellow-100 text-yellow-700",
-  cancelled: "bg-red-100 text-red-700",
-};
+import { StatusBadge } from "@/components/admin/StatusBadge";
 
 export default async function OrdersPage() {
   const supabase = await createClient();
@@ -28,6 +17,7 @@ export default async function OrdersPage() {
       ordered_at,
       order_items (
         quantity,
+        allocated_quantity,
         unit_price
       )
     `
@@ -41,12 +31,14 @@ export default async function OrdersPage() {
       {orders && orders.length > 0 ? (
         <div className="space-y-3">
           {orders.map((order) => {
+            const isPendingAllocation = order.status === "allocation_pending";
             const total = order.order_items.reduce(
-              (sum, item) => sum + item.unit_price * item.quantity,
+              (sum, item) =>
+                sum + item.unit_price * (item.allocated_quantity ?? item.quantity),
               0
             );
             const totalQty = order.order_items.reduce(
-              (sum, item) => sum + item.quantity,
+              (sum, item) => sum + (item.allocated_quantity ?? item.quantity),
               0
             );
             const date = new Date(order.ordered_at);
@@ -70,18 +62,14 @@ export default async function OrdersPage() {
                       })}
                     </p>
                   </div>
-                  <span
-                    className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${
-                      STATUS_CLASS[order.status] ?? "bg-gray-100 text-gray-500"
-                    }`}
-                  >
-                    {STATUS_LABEL[order.status] ?? order.status}
-                  </span>
+                  <StatusBadge status={order.status} />
                 </div>
                 <div className="flex justify-between items-end">
-                  <p className="text-sm text-gray-600">{totalQty}本</p>
+                  <p className="text-sm text-gray-600">
+                    {isPendingAllocation ? `希望 ${totalQty}本` : `${totalQty}本`}
+                  </p>
                   <p className="text-base font-bold text-[#3B0A1E]">
-                    ¥{total.toLocaleString()}
+                    {isPendingAllocation ? "—" : `¥${total.toLocaleString()}`}
                   </p>
                 </div>
               </Link>
