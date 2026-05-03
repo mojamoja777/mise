@@ -2,6 +2,9 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   devIndicators: false,
+  // Next.js 16 Cache Components を有効化
+  // 'use cache' / cacheTag / cacheLife を利用可能にする
+  cacheComponents: true,
   // セキュリティヘッダー
   async headers() {
     return [

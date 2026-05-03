@@ -4,7 +4,7 @@
 
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, updateTag } from "next/cache";
 import { redirect } from "next/navigation";
 import { requireAdmin } from "@/lib/auth";
 
@@ -42,6 +42,7 @@ export async function createProduct(formData: FormData) {
   }
 
   revalidatePath("/admin/products");
+  updateTag("products");
   redirect("/admin/products");
 }
 
@@ -82,6 +83,7 @@ export async function updateProduct(id: string, formData: FormData) {
   }
 
   revalidatePath("/admin/products");
+  updateTag("products");
   redirect("/admin/products");
 }
 
@@ -99,6 +101,7 @@ export async function deleteProduct(id: string) {
   }
 
   revalidatePath("/admin/products");
+  updateTag("products");
 }
 
 // ──────────────────────────────────────────────

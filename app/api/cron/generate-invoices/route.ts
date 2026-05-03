@@ -6,8 +6,6 @@ import { NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/service";
 import { generateInvoicesForMonth } from "@/lib/invoices";
 
-export const dynamic = "force-dynamic";
-
 export async function GET(request: Request) {
   // Vercel Cron の認証確認
   const authHeader = request.headers.get("authorization");

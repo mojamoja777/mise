@@ -12,7 +12,6 @@ import {
   type InvoicePdfData,
 } from "@/lib/pdf/invoice";
 
-export const dynamic = "force-dynamic";
 // 50件のPDF生成は時間がかかるのでタイムアウトを延ばす（Fluid Compute 最大300秒）
 export const maxDuration = 300;
 
