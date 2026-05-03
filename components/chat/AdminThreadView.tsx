@@ -39,7 +39,8 @@ export function AdminThreadView({ buyer, messages, currentUserId, send }: Props)
       </header>
       <div className="flex-1 min-h-0">
         <ThreadView
-          messages={messages}
+          buyerId={buyer.id}
+          initialMessages={messages}
           currentUserId={currentUserId}
           send={send}
           emptyHint="まだメッセージはありません。最初の挨拶を送ってみましょう。"

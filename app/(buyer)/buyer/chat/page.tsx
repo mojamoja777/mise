@@ -29,7 +29,8 @@ export default async function BuyerChatPage() {
       </header>
       <div className="flex-1 min-h-0">
         <ThreadView
-          messages={messages.map((m) => ({
+          buyerId={auth.user.id}
+          initialMessages={messages.map((m) => ({
             id: m.id,
             body: m.body,
             sender_id: m.sender_id,
