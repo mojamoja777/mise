@@ -5,7 +5,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ShoppingCart, ClipboardList } from "lucide-react";
+import { ShoppingCart, ClipboardList, MessageCircle } from "lucide-react";
 import { useCart } from "@/lib/cart-context";
 
 export function BuyerBottomNav() {
@@ -53,6 +53,16 @@ export function BuyerBottomNav() {
       >
         <ClipboardList className="w-5 h-5" />
         <span className="text-xs">履歴</span>
+      </Link>
+
+      <Link
+        href="/buyer/chat"
+        className={`flex flex-col items-center gap-1 transition-colors ${
+          isActive("/buyer/chat") ? "text-[#6B1A35]" : "text-gray-400"
+        }`}
+      >
+        <MessageCircle className="w-5 h-5" />
+        <span className="text-xs">チャット</span>
       </Link>
     </nav>
   );

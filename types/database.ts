@@ -19,6 +19,7 @@ export type Database = {
           address: string | null;
           phone: string | null;
           is_active: boolean;
+          last_chat_seen_at: string | null;
           created_at: string;
         };
         Insert: {
@@ -31,6 +32,7 @@ export type Database = {
           address?: string | null;
           phone?: string | null;
           is_active?: boolean;
+          last_chat_seen_at?: string | null;
           created_at?: string;
         };
         Update: {
@@ -42,6 +44,7 @@ export type Database = {
           address?: string | null;
           phone?: string | null;
           is_active?: boolean;
+          last_chat_seen_at?: string | null;
         };
         Relationships: [
           {
@@ -335,6 +338,52 @@ export type Database = {
           }
         ];
       };
+      chat_messages: {
+        Row: {
+          id: string;
+          tenant_id: string;
+          buyer_id: string;
+          sender_id: string;
+          sender_role: "admin" | "buyer";
+          body: string;
+          edited_at: string | null;
+          deleted_at: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          tenant_id: string;
+          buyer_id: string;
+          sender_id: string;
+          sender_role: "admin" | "buyer";
+          body: string;
+          edited_at?: string | null;
+          deleted_at?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          body?: string;
+          edited_at?: string | null;
+          deleted_at?: string | null;
+        };
+        Relationships: [];
+      };
+      chat_read_states: {
+        Row: {
+          admin_id: string;
+          buyer_id: string;
+          last_read_at: string;
+        };
+        Insert: {
+          admin_id: string;
+          buyer_id: string;
+          last_read_at?: string;
+        };
+        Update: {
+          last_read_at?: string;
+        };
+        Relationships: [];
+      };
     };
     Views: Record<string, never>;
     Functions: {
@@ -348,6 +397,22 @@ export type Database = {
           p_admin_id: string;
         };
         Returns: void;
+      };
+      list_admin_chat_threads: {
+        Args: {
+          p_admin_id: string;
+        };
+        Returns: Array<{
+          buyer_id: string;
+          company_name: string;
+          customer_code: string | null;
+          is_active: boolean;
+          last_body: string | null;
+          last_sender_role: "admin" | "buyer" | null;
+          last_created_at: string | null;
+          last_deleted_at: string | null;
+          unread_count: number;
+        }>;
       };
     };
     Enums: Record<string, never>;
