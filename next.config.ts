@@ -5,6 +5,13 @@ const nextConfig: NextConfig = {
   // Next.js 16 Cache Components を有効化
   // 'use cache' / cacheTag / cacheLife を利用可能にする
   cacheComponents: true,
+  // 商品登録画面のラベル写真アップロード（base64 で Server Action に送る）に備えて
+  // Server Actions の body 上限を 8MB に拡張する
+  experimental: {
+    serverActions: {
+      bodySizeLimit: "8mb",
+    },
+  },
   // セキュリティヘッダー
   async headers() {
     return [

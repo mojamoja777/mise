@@ -3,7 +3,7 @@
 
 import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
-import { ProductForm } from "@/components/admin/ProductForm";
+import { NewProductPanel } from "@/components/admin/NewProductPanel";
 import { createProduct } from "../actions";
 
 export default function NewProductPage() {
@@ -20,9 +20,7 @@ export default function NewProductPage() {
 
       <h1 className="text-2xl font-bold text-gray-900 mb-6">商品登録（新規）</h1>
 
-      <div className="bg-white rounded-xl border border-gray-200 p-6">
-        <ProductForm action={createProduct} submitLabel="登録する" />
-      </div>
+      <NewProductPanel action={createProduct} />
     </div>
   );
 }
