@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo, useEffect } from "react";
+import Image from "next/image";
 import { Search, X, ShoppingCart } from "lucide-react";
 import { useCart } from "@/lib/cart-context";
 import type { Database } from "@/types/database";
@@ -210,8 +211,13 @@ export function ProductList({ products }: { products: Product[] }) {
                   className={`bg-white rounded-xl border overflow-hidden cursor-pointer transition-all hover:shadow-md ${outOfStock ? "border-gray-100 opacity-50" : "border-gray-100"}`}>
                   <div className="relative aspect-square bg-[#FDF4F6] flex items-center justify-center overflow-hidden">
                     {product.image_url ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img src={product.image_url} alt={product.name} className="w-full h-full object-cover" />
+                      <Image
+                        src={product.image_url}
+                        alt={product.name}
+                        fill
+                        sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                        className="object-cover"
+                      />
                     ) : (
                       <span className="text-3xl">🍷</span>
                     )}
@@ -252,10 +258,15 @@ export function ProductList({ products }: { products: Product[] }) {
               </div>
               <button onClick={() => setSelected(null)} className="p-1 text-gray-400"><X className="w-5 h-5" /></button>
             </div>
-            <div className="w-full aspect-[4/3] rounded-2xl bg-[#FDF4F6] flex items-center justify-center mb-4 overflow-hidden">
+            <div className="relative w-full aspect-[4/3] rounded-2xl bg-[#FDF4F6] flex items-center justify-center mb-4 overflow-hidden">
               {selected.image_url ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={selected.image_url} alt={selected.name} className="h-full object-contain" />
+                <Image
+                  src={selected.image_url}
+                  alt={selected.name}
+                  fill
+                  sizes="(max-width: 640px) 100vw, 480px"
+                  className="object-contain"
+                />
               ) : <span className="text-6xl">🍷</span>}
             </div>
             <div className="space-y-2 mb-4">

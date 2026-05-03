@@ -29,17 +29,17 @@ export async function proxy(request: NextRequest) {
     }
   );
 
-  // セッションを取得・更新
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  // JWT のローカル検証だけで認証情報を取得（Supabase Auth に毎回往復しないため軽量）
+  // Server Action / Page では別途 supabase.auth.getUser() で改ざん防止検証を行う
+  const { data } = await supabase.auth.getClaims();
+  const claims = data?.claims;
+  const role = claims?.app_metadata?.role as "admin" | "buyer" | undefined;
 
   const pathname = request.nextUrl.pathname;
 
   // ログインページ・トップ：認証済みならロール別ページにリダイレクト
   if (pathname === "/login" || pathname === "/") {
-    if (user) {
-      const role = user.app_metadata?.role as "admin" | "buyer" | undefined;
+    if (claims) {
       if (role === "admin") {
         return NextResponse.redirect(new URL("/admin", request.url));
       }
@@ -52,20 +52,20 @@ export async function proxy(request: NextRequest) {
 
   // 管理者ページのアクセス制御
   if (pathname.startsWith("/admin")) {
-    if (!user) {
+    if (!claims) {
       return NextResponse.redirect(new URL("/login", request.url));
     }
-    if (user.app_metadata?.role !== "admin") {
+    if (role !== "admin") {
       return NextResponse.redirect(new URL("/buyer", request.url));
     }
   }
 
   // 発注者ページのアクセス制御
   if (pathname.startsWith("/buyer")) {
-    if (!user) {
+    if (!claims) {
       return NextResponse.redirect(new URL("/login", request.url));
     }
-    if (user.app_metadata?.role !== "buyer") {
+    if (role !== "buyer") {
       return NextResponse.redirect(new URL("/admin", request.url));
     }
   }
