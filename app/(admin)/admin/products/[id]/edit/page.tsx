@@ -42,7 +42,7 @@ export default async function EditProductPage({ params }: Props) {
 
       <div className="bg-white rounded-xl border border-gray-200 p-6">
         <ProductForm
-          product={product as any}
+          product={product}
           action={updateProductWithId}
           submitLabel="保存する"
         />

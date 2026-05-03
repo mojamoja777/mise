@@ -8,13 +8,7 @@ import {
   SAKE_PREFECTURES, SHOCHU_PREFECTURES, ALL_PREFECTURES
 } from "@/lib/product-constants";
 
-type Product = Database["public"]["Tables"]["products"]["Row"] & {
-  category?: string | null;
-  type?: string | null;
-  country?: string | null;
-  comment?: string | null;
-  accept_days?: number | null;
-};
+type Product = Database["public"]["Tables"]["products"]["Row"];
 
 type Props = {
   product?: Product;
@@ -26,9 +20,9 @@ export function ProductForm({ product, action, submitLabel }: Props) {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [isAllocation, setIsAllocation] = useState(!!product?.is_allocation);
-  const [category, setCategory] = useState((product as any)?.category ?? "");
+  const [category, setCategory] = useState(product?.category ?? "");
   const [country, setCountry] = useState(product?.country ?? "");
-  const [type, setType] = useState((product as any)?.type ?? "");
+  const [type, setType] = useState(product?.type ?? "");
 
   // 既存の allocation_deadline を datetime-local 用のフォーマットに変換
   const formatForDateTimeLocal = (iso: string | null | undefined) => {
@@ -173,7 +167,7 @@ export function ProductForm({ product, action, submitLabel }: Props) {
         {/* コメント */}
         <div className="lg:col-span-2">
           <label className="block text-sm font-medium text-gray-700 mb-1">コメント（酒屋メモ）</label>
-          <textarea name="comment" defaultValue={(product as any)?.comment ?? ""} rows={3} className={inputClass + " resize-none"} />
+          <textarea name="comment" defaultValue={product?.comment ?? ""} rows={3} className={inputClass + " resize-none"} />
         </div>
 
         {/* 割り当て対象 */}

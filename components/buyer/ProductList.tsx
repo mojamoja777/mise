@@ -7,12 +7,7 @@ import { useCart } from "@/lib/cart-context";
 import type { Database } from "@/types/database";
 import { WINE_TYPES, WINE_COUNTRIES, WINE_REGIONS, SAKE_PREFECTURES, SHOCHU_PREFECTURES } from "@/lib/product-constants";
 
-type Product = Database["public"]["Tables"]["products"]["Row"] & {
-  country?: string | null;
-  comment?: string | null;
-  category?: string | null;
-  type?: string | null;
-};
+type Product = Database["public"]["Tables"]["products"]["Row"];
 
 const CATEGORIES = ["ワイン", "日本酒", "焼酎", "ジン", "ウイスキー", "その他"];
 
@@ -96,11 +91,10 @@ export function ProductList({ products }: { products: Product[] }) {
             !(p.producer ?? "").toLowerCase().includes(q) &&
             !(p.region ?? "").toLowerCase().includes(q)) return false;
         }
-        const cat = (p as any).category;
-        if (activeCategory && cat !== activeCategory) return false;
+        if (activeCategory && p.category !== activeCategory) return false;
         if (activeCountry && p.country !== activeCountry) return false;
         if (activeRegion && p.region !== activeRegion) return false;
-        if (activeType && (p as any).type !== activeType) return false;
+        if (activeType && p.type !== activeType) return false;
         return true;
       })
       .sort((a, b) => {
@@ -270,10 +264,10 @@ export function ProductList({ products }: { products: Product[] }) {
               ) : <span className="text-6xl">🍷</span>}
             </div>
             <div className="space-y-2 mb-4">
-              {(selected as any).category && (
+              {selected.category && (
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-500">カテゴリ</span>
-                  <span className="text-gray-900">{(selected as any).category}{(selected as any).type ? ` / ${(selected as any).type}` : ""}</span>
+                  <span className="text-gray-900">{selected.category}{selected.type ? ` / ${selected.type}` : ""}</span>
                 </div>
               )}
               {(selected.country || selected.region) && (
@@ -327,10 +321,10 @@ export function ProductList({ products }: { products: Product[] }) {
                 )}
               </div>
             )}
-            {(selected as any).comment && (
+            {selected.comment && (
               <div className="bg-gray-50 rounded-xl p-3 mb-4">
                 <p className="text-xs text-gray-500 font-medium mb-1">酒屋からのコメント</p>
-                <p className="text-sm text-gray-700">{(selected as any).comment}</p>
+                <p className="text-sm text-gray-700">{selected.comment}</p>
               </div>
             )}
             {/* 数量選択・カート追加 */}

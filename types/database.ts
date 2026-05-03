@@ -126,8 +126,6 @@ export type Database = {
           updated_at: string;
           country: string | null;
           comment: string | null;
-          accept_days: number | null;
-          accept_deadline: string | null;
           category: string | null;
           type: string | null;
           is_allocation: boolean;
@@ -146,8 +144,6 @@ export type Database = {
           is_active?: boolean;
           country?: string | null;
           comment?: string | null;
-          accept_days?: number | null;
-          accept_deadline?: string | null;
           category?: string | null;
           type?: string | null;
           is_allocation?: boolean;
@@ -167,8 +163,6 @@ export type Database = {
           is_active?: boolean;
           country?: string | null;
           comment?: string | null;
-          accept_days?: number | null;
-          accept_deadline?: string | null;
           category?: string | null;
           type?: string | null;
           is_allocation?: boolean;
