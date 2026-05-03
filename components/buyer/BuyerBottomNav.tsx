@@ -8,7 +8,12 @@ import { usePathname } from "next/navigation";
 import { ShoppingCart, ClipboardList, MessageCircle } from "lucide-react";
 import { useCart } from "@/lib/cart-context";
 
-export function BuyerBottomNav() {
+type Props = {
+  /** admin からの未読チャット件数 */
+  chatUnread?: number;
+};
+
+export function BuyerBottomNav({ chatUnread = 0 }: Props) {
   const pathname = usePathname();
   const { totalItems, hydrated } = useCart();
 
@@ -57,11 +62,18 @@ export function BuyerBottomNav() {
 
       <Link
         href="/buyer/chat"
-        className={`flex flex-col items-center gap-1 transition-colors ${
+        className={`relative flex flex-col items-center gap-1 transition-colors ${
           isActive("/buyer/chat") ? "text-[#6B1A35]" : "text-gray-400"
         }`}
       >
-        <MessageCircle className="w-5 h-5" />
+        <div className="relative">
+          <MessageCircle className="w-5 h-5" />
+          {chatUnread > 0 && (
+            <span className="absolute -top-1 -right-2 bg-[#B8860B] text-white text-xs font-bold rounded-full w-4 h-4 flex items-center justify-center leading-none">
+              {chatUnread > 9 ? "9+" : chatUnread}
+            </span>
+          )}
+        </div>
         <span className="text-xs">チャット</span>
       </Link>
     </nav>

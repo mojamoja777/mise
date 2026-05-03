@@ -40,3 +40,32 @@ export async function fetchAdminThreads(
   });
   return data ?? [];
 }
+
+/**
+ * admin のグローバルバッジ用に、全 buyer の未読合計を返す。
+ */
+export async function countAdminChatUnread(
+  supabase: SupabaseClient<Database>,
+  adminId: string
+): Promise<number> {
+  const threads = await fetchAdminThreads(supabase, adminId);
+  return threads.reduce((sum, t) => sum + t.unread_count, 0);
+}
+
+/**
+ * buyer のボトムナビ用に、admin からの未読件数を返す。
+ */
+export async function countBuyerChatUnread(
+  supabase: SupabaseClient<Database>,
+  buyerId: string,
+  lastSeenAt: string | null
+): Promise<number> {
+  const { count } = await supabase
+    .from("chat_messages")
+    .select("id", { count: "exact", head: true })
+    .eq("buyer_id", buyerId)
+    .eq("sender_role", "admin")
+    .is("deleted_at", null)
+    .gt("created_at", lastSeenAt ?? "1970-01-01T00:00:00Z");
+  return count ?? 0;
+}

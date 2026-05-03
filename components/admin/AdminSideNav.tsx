@@ -21,7 +21,12 @@ const settingsItems = [
   { href: "/admin/settings", label: "設定", icon: Settings, exact: false },
 ];
 
-export function AdminSideNav() {
+type Props = {
+  /** チャット未読合計（admin の全 buyer 合算） */
+  chatUnread?: number;
+};
+
+export function AdminSideNav({ chatUnread = 0 }: Props) {
   const pathname = usePathname();
 
   return (
@@ -39,6 +44,7 @@ export function AdminSideNav() {
       <nav className="flex-1 space-y-1">
         {navItems.map(({ href, label, icon: Icon, exact }) => {
           const isActive = exact ? pathname === href : pathname.startsWith(href);
+          const showChatBadge = href === "/admin/chat" && chatUnread > 0;
           return (
             <Link
               key={href}
@@ -50,7 +56,12 @@ export function AdminSideNav() {
               }`}
             >
               <Icon className="w-4 h-4" />
-              {label}
+              <span className="flex-1">{label}</span>
+              {showChatBadge && (
+                <span className="inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 text-[10px] font-bold rounded-full bg-[#B8860B] text-white">
+                  {chatUnread > 99 ? "99+" : chatUnread}
+                </span>
+              )}
             </Link>
           );
         })}
