@@ -10,7 +10,7 @@ import { useCart } from "@/lib/cart-context";
 
 export function BuyerBottomNav() {
   const pathname = usePathname();
-  const { totalItems } = useCart();
+  const { totalItems, hydrated } = useCart();
 
   const isActive = (href: string) => pathname === href || pathname.startsWith(href + "/");
 
@@ -36,7 +36,7 @@ export function BuyerBottomNav() {
       >
         <div className="relative">
           <ShoppingCart className="w-5 h-5" />
-          {totalItems > 0 && (
+          {hydrated && totalItems > 0 && (
             <span className="absolute -top-1 -right-2 bg-[#B8860B] text-white text-xs font-bold rounded-full w-4 h-4 flex items-center justify-center leading-none">
               {totalItems > 9 ? "9+" : totalItems}
             </span>

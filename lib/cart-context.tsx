@@ -39,6 +39,8 @@ type CartContextType = {
   clearCart: () => void;
   totalItems: number;
   totalPrice: number;
+  /** localStorage からの復元が完了したか。SSR の 0 → Client の N のちらつき抑制に使う */
+  hydrated: boolean;
 };
 
 const CartContext = createContext<CartContextType | null>(null);
@@ -65,6 +67,25 @@ export function CartProvider({ children }: { children: ReactNode }) {
     if (!hydrated) return;
     localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
   }, [items, hydrated]);
+
+  // 別タブで更新があった場合に取り込む
+  useEffect(() => {
+    function onStorage(e: StorageEvent) {
+      if (e.key !== STORAGE_KEY) return;
+      if (!e.newValue) {
+        setItems([]);
+        return;
+      }
+      try {
+        const next = JSON.parse(e.newValue);
+        if (Array.isArray(next)) setItems(next);
+      } catch {
+        // 壊れた値は無視
+      }
+    }
+    window.addEventListener("storage", onStorage);
+    return () => window.removeEventListener("storage", onStorage);
+  }, []);
 
   const addItem = useCallback((product: AddItemInput) => {
     const addQty = product.quantity ?? 1;
@@ -132,6 +153,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         clearCart,
         totalItems,
         totalPrice,
+        hydrated,
       }}
     >
       {children}
