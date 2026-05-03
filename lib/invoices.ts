@@ -1,9 +1,28 @@
 // lib/invoices.ts
 // 請求書集計ロジック（Cron と手動生成の両方から利用）
 
+import { createElement } from "react";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "@/types/database";
 import { rateForClass, summarizeTax, type TaxClass } from "@/lib/tax";
+import { sendNotificationEmail } from "@/lib/mailer";
+import { InvoiceIssuedEmail } from "@/lib/email/InvoiceIssued";
+import { getBuyerEmail } from "@/lib/email/recipients";
+import { appUrl } from "@/lib/url";
+
+/**
+ * 期間終了日 + 支払いサイト日数 で支払期限の ISO 文字列を返す。
+ * payment_terms_days が未設定なら null。
+ */
+export function computeDueDateIso(
+  periodEnd: string,
+  paymentTermsDays: number | null | undefined
+): string | null {
+  if (paymentTermsDays == null) return null;
+  const date = new Date(`${periodEnd}T00:00:00Z`);
+  date.setUTCDate(date.getUTCDate() + paymentTermsDays);
+  return date.toISOString();
+}
 
 /**
  * 対象月の月初（1日 00:00:00 JST）と翌月初（1日 00:00:00 JST）を返す
@@ -184,6 +203,24 @@ export async function generateInvoicesForMonth(
     }
 
     created.push(invoice.id);
+
+    // 請求書発行通知メール（失敗しても処理続行）
+    const buyerName =
+      (buyerOrders[0].users as unknown as { company_name: string } | null)
+        ?.company_name ?? "—";
+    const buyerEmail = await getBuyerEmail(buyerId);
+    if (buyerEmail) {
+      await sendNotificationEmail({
+        to: buyerEmail,
+        subject: `${year}年${month}月分の請求書を発行しました`,
+        react: createElement(InvoiceIssuedEmail, {
+          buyerName,
+          periodLabel: `${year}年${month}月分`,
+          totalAmount: total,
+          invoiceUrl: appUrl(`/buyer/invoices/${invoice.id}`),
+        }),
+      });
+    }
   }
 
   return { created, skipped };

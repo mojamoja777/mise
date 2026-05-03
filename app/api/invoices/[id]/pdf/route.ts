@@ -2,9 +2,10 @@
 // 請求書PDFの個別ダウンロードエンドポイント（admin のみ）
 
 import { NextResponse } from "next/server";
-import { requireAdmin } from "@/lib/auth";
+import { requireAuth } from "@/lib/auth";
 import { getTenantByBuyerId } from "@/lib/tenant";
 import { summarizeTax } from "@/lib/tax";
+import { computeDueDateIso } from "@/lib/invoices";
 import {
   invoicePdfFileName,
   renderInvoicePdf,
@@ -16,11 +17,12 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
-  const auth = await requireAdmin();
+  const auth = await requireAuth();
   if (!auth.ok) {
-    return NextResponse.json({ error: auth.error }, { status: 403 });
+    return NextResponse.json({ error: auth.error }, { status: 401 });
   }
   const supabase = auth.supabase;
+  const role = auth.user.app_metadata?.role as "admin" | "buyer" | undefined;
 
   const { data: invoice, error } = await supabase
     .from("invoices")
@@ -59,6 +61,11 @@ export async function GET(
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
 
+  // buyer は自分宛の請求書のみ取得可能
+  if (role === "buyer" && invoice.buyer_id !== auth.user.id) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
+
   const buyer = invoice.users as {
     company_name: string;
     customer_code: string | null;
@@ -82,6 +89,9 @@ export async function GET(
     }))
   );
 
+  // 支払期限 = period_end + tenant.payment_terms_days
+  const dueDate = computeDueDateIso(invoice.period_end, tenant?.payment_terms_days);
+
   const data: InvoicePdfData = {
     id: invoice.id,
     periodStart: invoice.period_start,
@@ -90,6 +100,7 @@ export async function GET(
     taxAmount: summary.tax,
     totalAmount: Number(invoice.total_amount),
     taxBreakdown: summary.breakdown,
+    dueDate,
     note: invoice.note,
     issuedAt: invoice.issued_at,
     updatedAt: invoice.updated_at,
@@ -118,6 +129,8 @@ export async function GET(
       invoiceNumber: tenant?.invoice_number ?? null,
       bankInfo: tenant?.bank_info ?? null,
       representative: tenant?.representative ?? null,
+      logoUrl: tenant?.logo_url ?? null,
+      stampUrl: tenant?.stamp_url ?? null,
     },
   };
 

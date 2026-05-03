@@ -71,6 +71,7 @@ export type Database = {
           bank_info: string | null;
           representative: string | null;
           logo_url: string | null;
+          stamp_url: string | null;
           primary_color: string | null;
           payment_terms_days: number;
           created_at: string;
@@ -90,6 +91,7 @@ export type Database = {
           bank_info?: string | null;
           representative?: string | null;
           logo_url?: string | null;
+          stamp_url?: string | null;
           primary_color?: string | null;
           payment_terms_days?: number;
           created_at?: string;
@@ -108,6 +110,7 @@ export type Database = {
           bank_info?: string | null;
           representative?: string | null;
           logo_url?: string | null;
+          stamp_url?: string | null;
           primary_color?: string | null;
           payment_terms_days?: number;
         };

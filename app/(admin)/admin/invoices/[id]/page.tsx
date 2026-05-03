@@ -6,6 +6,8 @@ import Link from "next/link";
 import { ChevronLeft, FileText } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { InvoiceEditor } from "@/components/admin/InvoiceEditor";
+import { computeDueDateIso } from "@/lib/invoices";
+import { getTenantByBuyerId } from "@/lib/tenant";
 
 type Props = {
   params: Promise<{ id: string }>;
@@ -20,6 +22,7 @@ export default async function AdminInvoiceDetailPage({ params }: Props) {
     .select(
       `
       id,
+      buyer_id,
       period_start,
       period_end,
       total_amount,
@@ -55,6 +58,12 @@ export default async function AdminInvoiceDetailPage({ params }: Props) {
       new Date(invoice.issued_at).getTime() >
     60_000;
 
+  const tenant = await getTenantByBuyerId(supabase, invoice.buyer_id);
+  const dueDate = computeDueDateIso(
+    invoice.period_end,
+    tenant?.payment_terms_days
+  );
+
   return (
     <div className="p-8 max-w-4xl">
       <Link
@@ -74,6 +83,16 @@ export default async function AdminInvoiceDetailPage({ params }: Props) {
             {buyer?.company_name ?? "—"} / {invoice.period_start} 〜{" "}
             {invoice.period_end}
           </p>
+          {dueDate && (
+            <p className="text-xs text-gray-500 mt-1">
+              お支払期限：
+              {new Date(dueDate).toLocaleDateString("ja-JP", {
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+              })}
+            </p>
+          )}
           {revised && (
             <p className="text-xs text-red-600 mt-1">
               最終更新：

@@ -6,6 +6,7 @@ import path from "path";
 import {
   Document,
   Font,
+  Image,
   Page,
   StyleSheet,
   Text,
@@ -58,6 +59,8 @@ export type InvoicePdfData = {
     address: string | null;
     phone: string | null;
   };
+  /** 支払期限（period_end + payment_terms_days）。null なら表示しない */
+  dueDate: string | null;
   tenant: {
     companyName: string;
     displayName: string;
@@ -68,6 +71,8 @@ export type InvoicePdfData = {
     invoiceNumber: string | null;
     bankInfo: string | null;
     representative: string | null;
+    logoUrl: string | null;
+    stampUrl: string | null;
   };
 };
 
@@ -233,6 +238,29 @@ const styles = StyleSheet.create({
     fontSize: 8,
     color: "#b91c1c",
   },
+  logo: {
+    height: 36,
+    objectFit: "contain",
+    marginBottom: 8,
+  },
+  issuerHeader: {
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    alignItems: "flex-end",
+    gap: 8,
+  },
+  stamp: {
+    width: 56,
+    height: 56,
+    objectFit: "contain",
+    marginLeft: 8,
+  },
+  dueRow: {
+    fontSize: 10,
+    fontWeight: "bold",
+    color: "#3B0A1E",
+    marginTop: 4,
+  },
 });
 
 function formatYen(amount: number): string {
@@ -262,8 +290,14 @@ export function InvoiceDocument({ data }: { data: InvoicePdfData }) {
       <Page size="A4" style={styles.page}>
         {/* ヘッダー */}
         <View style={styles.header}>
+          {data.tenant.logoUrl && (
+            <Image src={data.tenant.logoUrl} style={styles.logo} />
+          )}
           <Text style={styles.title}>請 求 書</Text>
           <Text style={styles.issuedDate}>発行日：{formatDate(data.issuedAt)}</Text>
+          {data.dueDate && (
+            <Text style={styles.dueRow}>お支払期限：{formatDate(data.dueDate)}</Text>
+          )}
           {wasRevised && (
             <Text style={styles.revisedBadge}>
               ※ 修正日：{formatDate(data.updatedAt)}
@@ -302,39 +336,44 @@ export function InvoiceDocument({ data }: { data: InvoicePdfData }) {
               対象期間：{formatPeriod(data.periodStart, data.periodEnd)}
             </Text>
           </View>
-          <View style={styles.issuerBlock}>
-            <Text style={styles.issuerName}>
-              {data.tenant.displayName || data.tenant.companyName}
-            </Text>
-            {data.tenant.companyName &&
-              data.tenant.companyName !== data.tenant.displayName && (
-                <Text style={styles.issuerMeta}>{data.tenant.companyName}</Text>
+          <View style={styles.issuerHeader}>
+            <View style={styles.issuerBlock}>
+              <Text style={styles.issuerName}>
+                {data.tenant.displayName || data.tenant.companyName}
+              </Text>
+              {data.tenant.companyName &&
+                data.tenant.companyName !== data.tenant.displayName && (
+                  <Text style={styles.issuerMeta}>{data.tenant.companyName}</Text>
+                )}
+              {(data.tenant.postalCode || data.tenant.address) && (
+                <Text style={styles.issuerMeta}>
+                  {[
+                    data.tenant.postalCode && `〒${data.tenant.postalCode}`,
+                    data.tenant.address,
+                  ]
+                    .filter(Boolean)
+                    .join(" ")}
+                </Text>
               )}
-            {(data.tenant.postalCode || data.tenant.address) && (
-              <Text style={styles.issuerMeta}>
-                {[
-                  data.tenant.postalCode && `〒${data.tenant.postalCode}`,
-                  data.tenant.address,
-                ]
-                  .filter(Boolean)
-                  .join(" ")}
-              </Text>
-            )}
-            {data.tenant.phone && (
-              <Text style={styles.issuerMeta}>TEL: {data.tenant.phone}</Text>
-            )}
-            {data.tenant.fax && (
-              <Text style={styles.issuerMeta}>FAX: {data.tenant.fax}</Text>
-            )}
-            {data.tenant.invoiceNumber && (
-              <Text style={styles.issuerMeta}>
-                登録番号: {data.tenant.invoiceNumber}
-              </Text>
-            )}
-            {data.tenant.representative && (
-              <Text style={styles.issuerMeta}>
-                代表者: {data.tenant.representative}
-              </Text>
+              {data.tenant.phone && (
+                <Text style={styles.issuerMeta}>TEL: {data.tenant.phone}</Text>
+              )}
+              {data.tenant.fax && (
+                <Text style={styles.issuerMeta}>FAX: {data.tenant.fax}</Text>
+              )}
+              {data.tenant.invoiceNumber && (
+                <Text style={styles.issuerMeta}>
+                  登録番号: {data.tenant.invoiceNumber}
+                </Text>
+              )}
+              {data.tenant.representative && (
+                <Text style={styles.issuerMeta}>
+                  代表者: {data.tenant.representative}
+                </Text>
+              )}
+            </View>
+            {data.tenant.stampUrl && (
+              <Image src={data.tenant.stampUrl} style={styles.stamp} />
             )}
           </View>
         </View>

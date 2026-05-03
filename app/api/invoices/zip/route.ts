@@ -7,6 +7,7 @@ import { NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/auth";
 import { getTenantByBuyerId, type Tenant } from "@/lib/tenant";
 import { summarizeTax } from "@/lib/tax";
+import { computeDueDateIso } from "@/lib/invoices";
 import {
   invoicePdfFileName,
   renderInvoicePdf,
@@ -122,6 +123,7 @@ export async function GET(request: Request) {
       taxAmount: summary.tax,
       totalAmount: Number(invoice.total_amount),
       taxBreakdown: summary.breakdown,
+      dueDate: computeDueDateIso(invoice.period_end, tenant?.payment_terms_days),
       note: invoice.note,
       issuedAt: invoice.issued_at,
       updatedAt: invoice.updated_at,
@@ -150,6 +152,8 @@ export async function GET(request: Request) {
         invoiceNumber: tenant?.invoice_number ?? null,
         bankInfo: tenant?.bank_info ?? null,
         representative: tenant?.representative ?? null,
+        logoUrl: tenant?.logo_url ?? null,
+        stampUrl: tenant?.stamp_url ?? null,
       },
     };
     const pdf = await renderInvoicePdf(data);

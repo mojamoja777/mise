@@ -5,7 +5,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ShoppingCart, ClipboardList, MessageCircle } from "lucide-react";
+import { ShoppingCart, ClipboardList, MessageCircle, FileText } from "lucide-react";
 import { useCart } from "@/lib/cart-context";
 
 type Props = {
@@ -24,7 +24,11 @@ export function BuyerBottomNav({ chatUnread = 0 }: Props) {
       <Link
         href="/buyer"
         className={`flex flex-col items-center gap-1 transition-colors ${
-          isActive("/buyer") && !isActive("/buyer/cart") && !isActive("/buyer/orders")
+          isActive("/buyer") &&
+          !isActive("/buyer/cart") &&
+          !isActive("/buyer/orders") &&
+          !isActive("/buyer/chat") &&
+          !isActive("/buyer/invoices")
             ? "text-[#6B1A35]"
             : "text-gray-400"
         }`}
@@ -58,6 +62,16 @@ export function BuyerBottomNav({ chatUnread = 0 }: Props) {
       >
         <ClipboardList className="w-5 h-5" />
         <span className="text-xs">履歴</span>
+      </Link>
+
+      <Link
+        href="/buyer/invoices"
+        className={`flex flex-col items-center gap-1 transition-colors ${
+          isActive("/buyer/invoices") ? "text-[#6B1A35]" : "text-gray-400"
+        }`}
+      >
+        <FileText className="w-5 h-5" />
+        <span className="text-xs">請求書</span>
       </Link>
 
       <Link

@@ -26,6 +26,8 @@ export function TenantSettingsForm({ tenant }: Props) {
     invoice_number: tenant.invoice_number ?? "",
     bank_info: tenant.bank_info ?? "",
     representative: tenant.representative ?? "",
+    logo_url: tenant.logo_url ?? "",
+    stamp_url: tenant.stamp_url ?? "",
     payment_terms_days: tenant.payment_terms_days,
   });
   const [pending, startTransition] = useTransition();
@@ -195,6 +197,50 @@ export function TenantSettingsForm({ tenant }: Props) {
             }
             className={`${inputClass} max-w-[120px]`}
           />
+        </Field>
+      </Section>
+
+      {/* PDFブランディング */}
+      <Section title="請求書PDFブランディング">
+        <Field
+          label="ロゴ画像URL"
+          hint="請求書ヘッダ左上に表示されます。透過PNG推奨（高さ60px相当）"
+        >
+          <input
+            type="url"
+            value={form.logo_url}
+            onChange={(e) => update("logo_url", e.target.value)}
+            placeholder="https://..."
+            className={inputClass}
+          />
+          {form.logo_url && (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={form.logo_url}
+              alt="ロゴ プレビュー"
+              className="mt-2 h-12 object-contain border border-gray-200 rounded p-1 bg-white"
+            />
+          )}
+        </Field>
+        <Field
+          label="印影画像URL"
+          hint="請求書発行元の右下に重ねて表示されます。透過PNG推奨（120px四方）"
+        >
+          <input
+            type="url"
+            value={form.stamp_url}
+            onChange={(e) => update("stamp_url", e.target.value)}
+            placeholder="https://..."
+            className={inputClass}
+          />
+          {form.stamp_url && (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={form.stamp_url}
+              alt="印影 プレビュー"
+              className="mt-2 h-16 w-16 object-contain border border-gray-200 rounded p-1 bg-white"
+            />
+          )}
         </Field>
       </Section>
 
