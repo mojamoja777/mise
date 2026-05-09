@@ -279,7 +279,7 @@ function Section({
   children: React.ReactNode;
 }) {
   return (
-    <div className="bg-white rounded-xl border border-rule p-5">
+    <div className="card-float p-5">
       <h2 className="text-sm font-semibold text-ink-2 mb-4">{title}</h2>
       <div className="space-y-4">{children}</div>
     </div>

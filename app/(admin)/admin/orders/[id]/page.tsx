@@ -97,7 +97,7 @@ export default async function AdminOrderDetailPage({ params }: Props) {
       {/* 2カラムレイアウト */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 mb-6">
         {/* 発注内容 */}
-        <div className="bg-white rounded-xl border border-rule p-5">
+        <div className="card-ledger p-5">
           <h2 className="text-sm font-semibold text-ink-2 mb-4">発注内容</h2>
           {isPendingAllocation && (
             <p className="text-xs text-amber bg-amber-bg border border-amber rounded-lg px-3 py-2 mb-3">
@@ -157,7 +157,7 @@ export default async function AdminOrderDetailPage({ params }: Props) {
 
         {/* 顧客・備考情報 */}
         <div className="space-y-4">
-          <div className="bg-white rounded-xl border border-rule p-5">
+          <div className="card-ledger p-5">
             <h2 className="text-sm font-semibold text-ink-2 mb-3">顧客情報</h2>
             <p className="text-sm font-medium text-ink">
               {buyer?.company_name ?? "—"}
@@ -165,13 +165,13 @@ export default async function AdminOrderDetailPage({ params }: Props) {
           </div>
 
           {order.note && (
-            <div className="bg-white rounded-xl border border-rule p-5">
+            <div className="card-ledger p-5">
               <h2 className="text-sm font-semibold text-ink-2 mb-2">備考</h2>
               <p className="text-sm text-ink-2 leading-relaxed">{order.note}</p>
             </div>
           )}
 
-          <div className="bg-white rounded-xl border border-rule p-5">
+          <div className="card-ledger p-5">
             <h2 className="text-sm font-semibold text-ink-2 mb-2">更新日時</h2>
             <p className="text-xs text-ink-3">
               {new Date(order.updated_at).toLocaleDateString("ja-JP", {
@@ -187,7 +187,7 @@ export default async function AdminOrderDetailPage({ params }: Props) {
       </div>
 
       {/* アクション */}
-      <div className="bg-white rounded-xl border border-rule p-5 mb-4">
+      <div className="card-ledger p-5 mb-4">
         <h2 className="text-sm font-semibold text-ink-2 mb-4">
           ステータス変更
         </h2>
@@ -199,7 +199,7 @@ export default async function AdminOrderDetailPage({ params }: Props) {
 
       {/* 伝票発行 */}
       {order.status !== "cancelled" && (
-        <div className="bg-white rounded-xl border border-rule p-5 mb-4">
+        <div className="card-ledger p-5 mb-4">
           <h2 className="text-sm font-semibold text-ink-2 mb-4">伝票</h2>
           <Link
             href={`/admin/orders/${order.id}/slip`}

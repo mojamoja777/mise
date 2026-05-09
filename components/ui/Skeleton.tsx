@@ -37,7 +37,7 @@ export function SkeletonTable({
   cols?: number;
 }) {
   return (
-    <div className="bg-white rounded-xl border border-rule overflow-hidden">
+    <div className="card-float overflow-hidden">
       <div className="bg-paper-2 border-b border-rule px-5 py-3 flex gap-5">
         {Array.from({ length: cols }).map((_, i) => (
           <Skeleton key={i} className="h-3 flex-1" />
@@ -62,7 +62,7 @@ export function SkeletonCardGrid({ count = 8 }: { count?: number }) {
       {Array.from({ length: count }).map((_, i) => (
         <div
           key={i}
-          className="bg-white rounded-xl border border-rule overflow-hidden"
+          className="card-float overflow-hidden"
         >
           <Skeleton className="aspect-square rounded-none" />
           <div className="p-2.5 space-y-2">

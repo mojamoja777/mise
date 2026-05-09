@@ -7,7 +7,7 @@ export default function BuyerInvoicesLoading() {
       {Array.from({ length: 4 }).map((_, i) => (
         <div
           key={i}
-          className="bg-white rounded-xl border border-rule p-4"
+          className="card-float p-4"
         >
           <SkeletonText lines={2} />
         </div>

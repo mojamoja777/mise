@@ -98,7 +98,7 @@ export function AdminProductList({
     <div className="flex gap-6">
       {/* サイドバー */}
       <div className="w-44 flex-shrink-0">
-        <div className="bg-white rounded-xl border border-rule overflow-hidden">
+        <div className="card-float overflow-hidden">
           <div className="px-3 py-2.5 bg-paper-2 border-b border-rule">
             <p className="text-xs font-semibold text-ink-3 uppercase tracking-wide">カテゴリ</p>
           </div>
@@ -167,7 +167,7 @@ export function AdminProductList({
           </div>
         )}
 
-        <div className="bg-white rounded-xl border border-rule overflow-hidden">
+        <div className="card-float overflow-hidden">
           {filtered.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-20 text-ink-3">
               <span className="text-4xl mb-3">🍶</span>

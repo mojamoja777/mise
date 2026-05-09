@@ -81,7 +81,7 @@ export default async function AdminAllocationDetailPage({ params }: Props) {
         割り当て一覧に戻る
       </Link>
 
-      <div className="bg-white rounded-xl border border-rule p-6 mb-6">
+      <div className="card-float p-6 mb-6">
         <div className="flex items-start justify-between gap-4">
           <div>
             <h1 className="text-xl font-bold text-ink">
@@ -183,7 +183,7 @@ export default async function AdminAllocationDetailPage({ params }: Props) {
           }))}
         />
       ) : (
-        <div className="bg-white rounded-xl border border-rule px-6 py-10 text-center text-sm text-ink-3">
+        <div className="card-float px-6 py-10 text-center text-sm text-ink-3">
           按分待ちのリクエストはありません
         </div>
       )}

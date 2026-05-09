@@ -71,7 +71,7 @@ export default async function EditProductPage({ params }: Props) {
         </span>
       </header>
 
-      <div className="bg-white rounded-xl border border-rule p-6">
+      <div className="card-float p-6">
         <ProductForm
           product={product}
           action={updateProductWithId}

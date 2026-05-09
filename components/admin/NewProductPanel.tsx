@@ -313,7 +313,7 @@ export function NewProductPanel({ action }: Props) {
         </div>
       )}
 
-      <div className="bg-white rounded-xl border border-rule p-6">
+      <div className="card-float p-6">
         <ProductForm
           key={formKey}
           product={seed ? (seed as Product) : undefined}

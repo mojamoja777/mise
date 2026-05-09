@@ -114,7 +114,7 @@ export default async function BuyerInvoiceDetailPage({ params }: Props) {
         </a>
       </header>
 
-      <div className="bg-white rounded-xl border border-rule p-4 mb-4">
+      <div className="card-ledger p-4 mb-4">
         <h2 className="text-xs font-semibold text-ink-3 mb-2">明細</h2>
         <div className="space-y-3">
           {sortedItems.map((it) => (
@@ -133,7 +133,7 @@ export default async function BuyerInvoiceDetailPage({ params }: Props) {
         </div>
       </div>
 
-      <div className="bg-white rounded-xl border border-rule p-4 mb-4">
+      <div className="card-ledger p-4 mb-4">
         <div className="flex justify-between text-sm mb-1">
           <span className="text-ink-3">税抜小計</span>
           <span className="text-ink-2">
@@ -167,7 +167,7 @@ export default async function BuyerInvoiceDetailPage({ params }: Props) {
       </div>
 
       {tenant?.bank_info && (
-        <div className="bg-white rounded-xl border border-rule p-4 mb-4">
+        <div className="card-ledger p-4 mb-4">
           <h2 className="text-xs font-semibold text-ink-3 mb-1">お振込先</h2>
           <pre className="text-xs text-ink-2 whitespace-pre-wrap font-sans">
             {tenant.bank_info}
@@ -176,7 +176,7 @@ export default async function BuyerInvoiceDetailPage({ params }: Props) {
       )}
 
       {invoice.note && (
-        <div className="bg-white rounded-xl border border-rule p-4">
+        <div className="card-ledger p-4">
           <h2 className="text-xs font-semibold text-ink-3 mb-1">備考</h2>
           <p className="text-sm text-ink-2">{invoice.note}</p>
         </div>

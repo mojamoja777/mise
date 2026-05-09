@@ -96,7 +96,7 @@ export function InvoiceEditor({ invoiceId, initialItems, initialNote }: Props) {
 
   return (
     <div className="space-y-6">
-      <div className="bg-white rounded-xl border border-rule overflow-hidden">
+      <div className="card-float overflow-hidden">
         <div className="px-5 py-3 border-b border-rule flex items-center justify-between">
           <h2 className="text-sm font-semibold text-ink-2">明細</h2>
           <button
@@ -291,7 +291,7 @@ export function InvoiceEditor({ invoiceId, initialItems, initialNote }: Props) {
         </div>
       </div>
 
-      <div className="bg-white rounded-xl border border-rule p-5">
+      <div className="card-float p-5">
         <label className="block text-sm font-semibold text-ink-2 mb-2">
           備考
         </label>

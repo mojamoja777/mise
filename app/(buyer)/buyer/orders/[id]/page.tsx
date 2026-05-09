@@ -141,7 +141,7 @@ export default async function OrderDetailPage({ params }: Props) {
 
       {/* Items */}
       <h2 className="font-serif text-2xl mb-4 tracking-tight">明細</h2>
-      <div className="bg-paper border border-rule overflow-hidden mb-6">
+      <div className="card-ledger overflow-hidden mb-6">
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-plate">
@@ -202,7 +202,7 @@ export default async function OrderDetailPage({ params }: Props) {
       </div>
 
       {order.note && (
-        <div className="bg-paper border border-rule p-5 mb-4">
+        <div className="card-ledger p-5 mb-4">
           <p className="caps mb-2">備考</p>
           <p className="font-italic-serif text-sm text-ink-2 leading-relaxed">{order.note}</p>
         </div>
