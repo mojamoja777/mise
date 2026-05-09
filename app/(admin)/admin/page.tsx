@@ -1,62 +1,16 @@
+// app/(admin)/admin/page.tsx
+// 管理者 - ダッシュボード
+// 注文の確認は /admin/orders へ。ここは「概況」と将来の経営判断ウィジェット用。
+
 import Link from "next/link";
-import { Suspense } from "react";
+import { TrendingUp, BarChart3, PieChart, Activity } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
-import { OrderFilter } from "@/components/admin/OrderFilter";
 import { PlateCorner } from "@/components/ui/PlateCorner";
-import { StatusDot } from "@/components/ui/StatusDot";
-import { Tag } from "@/components/ui/Tag";
-import { Emblem } from "@/components/ui/Emblem";
-import { Button } from "@/components/ui/Button";
 
-type Props = {
-  searchParams: Promise<{ status?: string }>;
-};
-
-const ORDER_STATUSES = ["pending", "confirmed", "cancelled", "allocation_pending"] as const;
-type OrderStatus = typeof ORDER_STATUSES[number];
-
-function isOrderStatus(value: string): value is OrderStatus {
-  return (ORDER_STATUSES as readonly string[]).includes(value);
-}
-
-function formatTime(date: string) {
-  const d = new Date(date);
-  const today = new Date();
-  if (d.toDateString() === today.toDateString()) {
-    return d.toLocaleTimeString("ja-JP", { hour: "2-digit", minute: "2-digit" });
-  }
-  return d.toLocaleDateString("ja-JP", { month: "numeric", day: "numeric" });
-}
-
-export default async function AdminDashboard({ searchParams }: Props) {
-  const { status } = await searchParams;
+export default async function AdminDashboard() {
   const supabase = await createClient();
 
-  let query = supabase
-    .from("orders")
-    .select(
-      `
-      id,
-      status,
-      ordered_at,
-      users!orders_buyer_id_fkey!inner ( company_name ),
-      order_items (
-        quantity,
-        allocated_quantity,
-        unit_price
-      )
-    `,
-    )
-    .order("ordered_at", { ascending: false })
-    .limit(50);
-
-  if (status && isOrderStatus(status)) {
-    query = query.eq("status", status);
-  }
-
-  const { data: orders, error } = await query;
-
-  // KPI counts
+  // 概況用 KPI
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   const todayIso = today.toISOString();
@@ -75,7 +29,6 @@ export default async function AdminDashboard({ searchParams }: Props) {
       .select("order_items(unit_price, quantity, allocated_quantity)")
       .gte("ordered_at", todayIso)
       .neq("status", "cancelled"),
-    // 在庫 ≤ 3 の販売中商品（割当商品は対象外、希望本数 vs 在庫が独立のため）
     supabase
       .from("products")
       .select("id, name, producer, stock, region, vintage")
@@ -114,7 +67,7 @@ export default async function AdminDashboard({ searchParams }: Props) {
             <p className="caps">Today · Dashboard</p>
             <h1 className="font-serif text-5xl mt-2 tracking-tight">ダッシュボード</h1>
             <p className="font-italic-serif mt-1 text-base text-ink-3">
-              本日の概況と最新の注文
+              本日の概況と経営指標
             </p>
           </div>
           <div className="text-right pr-24">
@@ -128,22 +81,28 @@ export default async function AdminDashboard({ searchParams }: Props) {
         </div>
       </header>
 
-      {/* Stats strip */}
+      {/* Stats strip — 当日の概況 */}
       <div className="grid grid-cols-4 gap-0 double-rule mb-10">
-        <div className="p-5 border-r border-rule">
+        <Link
+          href="/admin/orders?status=pending"
+          className="p-5 border-r border-rule hover:bg-paper-2 transition-colors"
+        >
           <p className="caps">受付中</p>
           <p className="font-serif text-5xl mt-2 plate-num text-plate">
             {String(pendingCount.count ?? 0).padStart(2, "0")}
           </p>
-          <p className="text-xs mt-2 font-italic-serif text-ink-3">確認待ちの新規発注</p>
-        </div>
-        <div className="p-5 border-r border-rule">
+          <p className="text-xs mt-2 font-italic-serif text-ink-3">確認待ちの新規発注 →</p>
+        </Link>
+        <Link
+          href="/admin/allocations"
+          className="p-5 border-r border-rule hover:bg-paper-2 transition-colors"
+        >
           <p className="caps">割り当て待ち</p>
           <p className="font-serif text-5xl mt-2 plate-num text-amber">
             {String(allocPendingCount.count ?? 0).padStart(2, "0")}
           </p>
-          <p className="text-xs mt-2 font-italic-serif text-ink-3">締切後の按分処理</p>
-        </div>
+          <p className="text-xs mt-2 font-italic-serif text-ink-3">締切後の按分処理 →</p>
+        </Link>
         <div className="p-5 border-r border-rule">
           <p className="caps">本日の売上</p>
           <p className="font-serif text-5xl mt-2 plate-num">
@@ -153,11 +112,14 @@ export default async function AdminDashboard({ searchParams }: Props) {
             {todayRevenue.data?.length ?? 0} 件
           </p>
         </div>
-        <div className="p-5">
+        <Link
+          href="/admin/chat"
+          className="p-5 hover:bg-paper-2 transition-colors"
+        >
           <p className="caps">未読チャット</p>
           <p className="font-serif text-5xl mt-2 plate-num">—</p>
-          <p className="text-xs mt-2 font-italic-serif text-ink-3">サイドバーに表示</p>
-        </div>
+          <p className="text-xs mt-2 font-italic-serif text-ink-3">サイドバーに表示 →</p>
+        </Link>
       </div>
 
       {/* Low-stock signal — 在庫 ≤ 3 の販売中商品があれば横並びで警告 */}
@@ -204,125 +166,37 @@ export default async function AdminDashboard({ searchParams }: Props) {
 
       <p className="ornament my-10" />
 
-      {/* 注文一覧（最新 50 件、フル一覧は /admin/orders へ）*/}
-      <div className="flex items-baseline justify-between border-b border-rule pb-3.5 mb-5">
-        <div>
-          <p className="caps">Plate IV · Recent Orders</p>
-          <h2 className="font-serif text-3xl mt-1">注文一覧</h2>
-        </div>
-        <div className="flex items-center gap-3">
-          <Suspense>
-            <OrderFilter />
-          </Suspense>
-          <Link
-            href="/admin/orders"
-            className="caps text-ink-3 hover:text-plate transition-colors"
-          >
-            すべて見る →
-          </Link>
-        </div>
-      </div>
-
-      {error && (
-        <div className="border border-crimson bg-crimson-bg text-crimson text-sm px-4 py-3 mb-4">
-          発注の取得に失敗しました。
-        </div>
-      )}
-
-      {orders && orders.length > 0 ? (
-        <table className="w-full">
-          <thead>
-            <tr className="border-b border-plate">
-              <th className="w-8" />
-              <th className="text-left py-2.5 caps w-16">時刻</th>
-              <th className="text-left py-2.5 caps w-48">差出</th>
-              <th className="text-left py-2.5 caps">件名</th>
-              <th className="text-right py-2.5 caps w-32">金額</th>
-              <th className="w-32" />
-            </tr>
-          </thead>
-          <tbody>
-            {orders.map((order) => {
-              const items = (order.order_items ?? []) as Array<{
-                unit_price: number;
-                quantity: number;
-                allocated_quantity: number | null;
-              }>;
-              const total = items.reduce(
-                (s, it) => s + it.unit_price * (it.allocated_quantity ?? it.quantity),
-                0,
-              );
-              const buyer = order.users as { company_name: string } | null;
-              const dotVariant: React.ComponentProps<typeof StatusDot>["variant"] =
-                order.status === "pending"
-                  ? "plate"
-                  : order.status === "allocation_pending"
-                  ? "amber"
-                  : order.status === "cancelled"
-                  ? "crimson"
-                  : "forest";
-              const tagVariant: React.ComponentProps<typeof Tag>["variant"] = dotVariant;
-              const tagLabel =
-                order.status === "pending"
-                  ? "新規発注"
-                  : order.status === "allocation_pending"
-                  ? "割当待ち"
-                  : order.status === "cancelled"
-                  ? "キャンセル"
-                  : "確定済";
-              const isFresh = order.status === "pending";
-              const subject = `${buyer?.company_name ?? "—"} · ${items.reduce(
-                (s, it) => s + it.quantity,
-                0,
-              )} 本`;
-              return (
-                <tr
-                  key={order.id}
-                  className="border-b border-rule hover:bg-paper-2 transition-colors"
-                >
-                  <td className="pl-1">
-                    <StatusDot variant={dotVariant} pulse={isFresh} />
-                  </td>
-                  <td className="text-xs font-italic-serif text-ink-3 py-3">
-                    {formatTime(order.ordered_at)}
-                  </td>
-                  <td className="py-3">
-                    <Link
-                      href={`/admin/orders/${order.id}`}
-                      className="flex items-center gap-3 hover:text-plate"
-                    >
-                      <Emblem size={28} variant={dotVariant}>
-                        {(buyer?.company_name ?? "—").slice(0, 1)}
-                      </Emblem>
-                      <span className="font-serif tracking-tight">
-                        {buyer?.company_name ?? "—"}
-                      </span>
-                    </Link>
-                  </td>
-                  <td className="py-3">
-                    <Tag variant={tagVariant}>{tagLabel}</Tag>
-                    <span className="ml-3 text-sm text-ink-2">{subject}</span>
-                  </td>
-                  <td className="text-right plate-num text-plate">¥{total.toLocaleString()}</td>
-                  <td className="text-right pr-1">
-                    <Link href={`/admin/orders/${order.id}`}>
-                      <Button variant={isFresh ? "primary" : "default"} size="sm">
-                        {isFresh ? "確認 ⏎" : "詳細"}
-                      </Button>
-                    </Link>
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      ) : (
-        <div className="border border-rule bg-paper-2 flex flex-col items-center justify-center py-20 text-ink-3">
-          <p className="font-italic-serif text-lg">
-            {status ? "該当する発注がありません" : "便りはまだ届いていません"}
+      {/* 経営指標プレースホルダ — 将来 BI ウィジェットを並べる空き地 */}
+      <section className="mb-10">
+        <div className="border-b border-rule pb-3.5 mb-5">
+          <p className="caps">Plate IV · Business Intelligence</p>
+          <h2 className="font-serif text-3xl mt-1 tracking-tight">経営指標</h2>
+          <p className="font-italic-serif text-sm mt-1 text-ink-3">
+            判断材料になる数値・傾向を集約します（順次追加予定）
           </p>
         </div>
-      )}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          {[
+            { icon: TrendingUp, title: "月次売上推移", desc: "過去 12 ヶ月の月次売上をグラフで表示" },
+            { icon: PieChart, title: "顧客別売上構成", desc: "tier × 売上シェア、上位飲食店ランキング" },
+            { icon: BarChart3, title: "商品別回転率", desc: "在庫回転日数、滞留商品の特定" },
+            { icon: Activity, title: "割当オペレーション", desc: "希望比 vs 実割当、店別の充足率" },
+          ].map((w) => (
+            <div
+              key={w.title}
+              className="card-float p-5 opacity-60 border-dashed"
+              aria-disabled="true"
+            >
+              <w.icon className="w-5 h-5 text-plate" />
+              <p className="font-serif text-base mt-3 tracking-tight">{w.title}</p>
+              <p className="font-italic-serif text-xs mt-1 text-ink-3 leading-relaxed">
+                {w.desc}
+              </p>
+              <p className="caps text-[10px] mt-3 text-ink-4">Coming soon</p>
+            </div>
+          ))}
+        </div>
+      </section>
 
       <p className="ornament mt-10" />
 
@@ -330,7 +204,7 @@ export default async function AdminDashboard({ searchParams }: Props) {
         <span className="font-italic-serif">
           Mise · 株式会社○○ · 通信販売酒類小売業免許
         </span>
-        <span className="caps">Plate № 04 — Message Box</span>
+        <span className="caps">Plate № 04 — Dashboard</span>
       </footer>
     </div>
   );
