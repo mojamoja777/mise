@@ -90,6 +90,7 @@ export function CommandPalette({ role }: Props) {
         className="w-full max-w-2xl rounded-xl border border-rule bg-paper-cream shadow-2xl overflow-hidden"
         onClick={(e) => e.stopPropagation()}
         label="Global search"
+        shouldFilter={false}
       >
         <div className="flex items-center gap-3 px-4 py-3 border-b border-rule">
           <Search className="w-4 h-4 text-ink-3 shrink-0" />
