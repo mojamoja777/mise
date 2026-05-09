@@ -53,7 +53,7 @@ export function AdminProductList({
   const [openCommentProduct, setOpenCommentProduct] = useState<Product | null>(null);
   const [hoverImage, setHoverImage] = useState<{ url: string; alt: string; x: number; y: number } | null>(null);
 
-  function showHoverImage(e: React.MouseEvent<HTMLDivElement>, url: string, alt: string) {
+  function showHoverImage(e: React.MouseEvent<HTMLElement>, url: string, alt: string) {
     const rect = e.currentTarget.getBoundingClientRect();
     const PREVIEW = 576; // w-[576px]（旧 w-72 = 288px の 2 倍）
     const GAP = 12;
@@ -199,14 +199,16 @@ export function AdminProductList({
                   return (
                     <tr key={product.id} className={`transition-colors ${outOfStock ? "bg-paper-2 opacity-60" : "hover:bg-paper-2"}`}>
                       <td className="px-3 py-3">
-                        <div
-                          className="w-12 h-12 rounded-lg bg-paper-2 overflow-hidden flex items-center justify-center"
+                        <Link
+                          href={`/admin/products/${product.id}`}
+                          className="block w-12 h-12 rounded-lg bg-paper-2 overflow-hidden flex items-center justify-center"
                           onMouseEnter={
                             product.image_url
                               ? (e) => showHoverImage(e, product.image_url!, product.name)
                               : undefined
                           }
                           onMouseLeave={() => setHoverImage(null)}
+                          title="詳細を見る"
                         >
                           {product.image_url ? (
                             // eslint-disable-next-line @next/next/no-img-element
@@ -218,10 +220,14 @@ export function AdminProductList({
                           ) : (
                             <span className="text-ink-4 text-lg">🍶</span>
                           )}
-                        </div>
+                        </Link>
                       </td>
                       <td className="px-3 py-3">
-                        <div className="flex items-center gap-1.5 flex-wrap">
+                        <Link
+                          href={`/admin/products/${product.id}`}
+                          className="flex items-center gap-1.5 flex-wrap hover:text-plate transition-colors"
+                          title="詳細を見る"
+                        >
                           {product.type && typeColor && (
                             <span className={`text-[11px] px-1.5 py-0.5 rounded border ${typeColor}`}>{product.type}</span>
                           )}
@@ -246,7 +252,7 @@ export function AdminProductList({
                               {allocationExpired ? "割当（締切済）" : "割当対象"}
                             </span>
                           )}
-                        </div>
+                        </Link>
                         {product.producer && (
                           <div className="text-xs text-ink-3 mt-0.5 truncate max-w-[28ch]" title={product.producer}>
                             {product.producer}
