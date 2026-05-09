@@ -111,10 +111,10 @@ export default async function AdminDashboard({ searchParams }: Props) {
       <header className="border-b border-rule pb-5 mb-7">
         <div className="flex items-baseline justify-between">
           <div>
-            <p className="caps">Today · Message Box</p>
-            <h1 className="font-serif text-5xl mt-2 tracking-tight">メッセージボックス</h1>
+            <p className="caps">Today · Dashboard</p>
+            <h1 className="font-serif text-5xl mt-2 tracking-tight">ダッシュボード</h1>
             <p className="font-italic-serif mt-1 text-base text-ink-3">
-              Today's correspondence — 受信した便り
+              本日の概況と最新の注文
             </p>
           </div>
           <div className="text-right pr-24">
@@ -204,15 +204,23 @@ export default async function AdminDashboard({ searchParams }: Props) {
 
       <p className="ornament my-10" />
 
-      {/* Inbox header */}
+      {/* 注文一覧（最新 50 件、フル一覧は /admin/orders へ）*/}
       <div className="flex items-baseline justify-between border-b border-rule pb-3.5 mb-5">
         <div>
-          <p className="caps">Plate IV · Correspondence</p>
-          <h2 className="font-serif text-3xl mt-1">受信した便り</h2>
+          <p className="caps">Plate IV · Recent Orders</p>
+          <h2 className="font-serif text-3xl mt-1">注文一覧</h2>
         </div>
-        <Suspense>
-          <OrderFilter />
-        </Suspense>
+        <div className="flex items-center gap-3">
+          <Suspense>
+            <OrderFilter />
+          </Suspense>
+          <Link
+            href="/admin/orders"
+            className="caps text-ink-3 hover:text-plate transition-colors"
+          >
+            すべて見る →
+          </Link>
+        </div>
       </div>
 
       {error && (

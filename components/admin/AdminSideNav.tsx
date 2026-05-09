@@ -2,12 +2,13 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Inbox, FileText, MessageCircle, Settings, Sparkles, Users, Wine } from "lucide-react";
+import { LayoutDashboard, ClipboardList, FileText, MessageCircle, Settings, Sparkles, Users, Wine } from "lucide-react";
 import { LogoutButton } from "@/components/LogoutButton";
 import { StatusDot } from "@/components/ui";
 
 const navItems = [
-  { href: "/admin", label: "メッセージボックス", icon: Inbox, exact: true },
+  { href: "/admin", label: "ダッシュボード", icon: LayoutDashboard, exact: true },
+  { href: "/admin/orders", label: "注文一覧", icon: ClipboardList, exact: false },
   { href: "/admin/allocations", label: "割り当て", icon: Sparkles, exact: false },
   { href: "/admin/chat", label: "チャット", icon: MessageCircle, exact: false },
 ];
@@ -30,7 +31,7 @@ export function AdminSideNav({ chatUnread = 0 }: Props) {
   const pathname = usePathname();
 
   const renderItem = (
-    { href, label, icon: Icon, exact }: { href: string; label: string; icon: typeof Inbox; exact: boolean }
+    { href, label, icon: Icon, exact }: { href: string; label: string; icon: typeof LayoutDashboard; exact: boolean }
   ) => {
     const isActive = exact ? pathname === href : pathname.startsWith(href);
     const showChatBadge = href === "/admin/chat" && chatUnread > 0;
