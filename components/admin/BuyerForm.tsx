@@ -91,7 +91,8 @@ export function BuyerForm({ mode, initial }: Props) {
           internal_note: form.internal_note || null,
         });
         if (result.ok) {
-          setMessage("保存しました");
+          // 保存後は顧客台帳へ戻る
+          router.push("/admin/buyers");
         } else {
           setMessage(`エラー：${result.error}`);
         }
