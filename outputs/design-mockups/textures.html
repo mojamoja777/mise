@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Mise — Washi Texture 比較 (SVG turbulence 版)</title>
+<style>
+  :root {
+    --paper: #e8e2d4;
+    --paper-warm: #e8e2d4;
+    --paper-pale: #f1ece0;
+    --ink: #1c1a17;
+    --ink-3: #6a6258;
+    --plate: #1c3a5c;
+    --rule: #c9beaa;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Hiragino Mincho ProN", serif;
+    color: var(--ink);
+    background: var(--paper);
+  }
+
+  .wrap {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    height: 100vh;
+    width: 100vw;
+  }
+
+  .cell {
+    position: relative;
+    padding: 32px 40px;
+    border-right: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .cell:nth-child(2n) { border-right: none; }
+  .cell:nth-child(n+3) { border-bottom: none; }
+
+  /* === Pattern 5: Soft fiber (低周波・繊維感ほのか) === */
+  .p5 {
+    background-color: var(--paper-warm);
+    background-image:
+      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='2' stitchTiles='stitch' seed='5'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.16 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+    background-size: 220px 220px;
+  }
+
+  /* === Pattern 6: Medium washi (中周波・推奨レベルの和紙感) === */
+  .p6 {
+    background-color: var(--paper-warm);
+    background-image:
+      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch' seed='3'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.22 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+    background-size: 200px 200px;
+  }
+
+  /* === Pattern 7: Strong crinkle (大胆・凹凸を強く) === */
+  .p7 {
+    background-color: var(--paper-warm);
+    background-image:
+      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.55' numOctaves='3' stitchTiles='stitch' seed='7'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.32 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+    background-size: 240px 240px;
+  }
+
+  /* === Pattern 8: White paper (リファレンス画像寄りの白和紙) === */
+  .p8 {
+    background-color: var(--paper-pale);
+    background-image:
+      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.78' numOctaves='3' stitchTiles='stitch' seed='2'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.20 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+    background-size: 220px 220px;
+  }
+
+  .cell-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 12px;
+  }
+  .label {
+    text-transform: uppercase;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    color: var(--ink-3);
+  }
+  .name {
+    font-family: "Times New Roman", serif;
+    font-size: 36px;
+    font-weight: normal;
+    margin-top: 16px;
+    letter-spacing: -0.01em;
+  }
+  .desc {
+    margin-top: 6px;
+    font-size: 14px;
+    color: var(--ink-3);
+    font-style: italic;
+  }
+
+  .sample-card {
+    background: rgba(255, 255, 255, 0.55);
+    border: 1px solid var(--rule);
+    padding: 18px 22px;
+    margin-top: 24px;
+    backdrop-filter: blur(2px);
+  }
+  .sample-card .row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-size: 13px;
+    color: var(--ink-3);
+    margin-bottom: 6px;
+  }
+  .sample-card .row:last-child { margin-bottom: 0; }
+  .sample-card .num-val {
+    font-family: "Times New Roman", serif;
+    font-style: italic;
+    font-size: 22px;
+    color: var(--plate);
+  }
+
+  .footer {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--ink-3);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+  }
+  .swatch {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 1px solid var(--rule);
+  }
+
+  .corner {
+    position: absolute;
+    top: 16px;
+    right: 20px;
+    border: 1px solid var(--ink);
+    padding: 2px 8px;
+    font-family: "Times New Roman", serif;
+    font-style: italic;
+    font-size: 14px;
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <!-- Pattern 5: Soft fiber -->
+  <section class="cell p5">
+    <div class="corner">№ 05</div>
+    <div>
+      <div class="cell-header">
+        <div>
+          <p class="label">Pattern 05 — Soft</p>
+          <h2 class="name">柔繊維（じゅうせんい）</h2>
+          <p class="desc">SVG 乱流の低周波。広い濃淡と細かい繊維感が混ざる、ほのかな立体感。</p>
+        </div>
+      </div>
+
+      <div class="sample-card">
+        <div class="row"><span class="label">label</span><span class="num-val">¥4,590</span></div>
+        <div class="row"><span class="label">stock</span><span>10 本</span></div>
+        <div class="row"><span class="label">vintage</span><span>2020</span></div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <span class="swatch" style="background: var(--paper-warm)"></span>
+      paper #e8e2d4 + SVG noise (freq 0.65, opacity 0.16)
+    </div>
+  </section>
+
+  <!-- Pattern 6: Medium washi -->
+  <section class="cell p6">
+    <div class="corner">№ 06</div>
+    <div>
+      <div class="cell-header">
+        <div>
+          <p class="label">Pattern 06 — Medium ★ 推奨</p>
+          <h2 class="name">和紙（わし）</h2>
+          <p class="desc">SVG 乱流の中周波。手漉き和紙の繊維感がはっきり、でも文字の読みやすさは保つ。</p>
+        </div>
+      </div>
+
+      <div class="sample-card">
+        <div class="row"><span class="label">label</span><span class="num-val">¥4,590</span></div>
+        <div class="row"><span class="label">stock</span><span>10 本</span></div>
+        <div class="row"><span class="label">vintage</span><span>2020</span></div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <span class="swatch" style="background: var(--paper-warm)"></span>
+      paper + SVG noise (freq 0.85, opacity 0.22)
+    </div>
+  </section>
+
+  <!-- Pattern 7: Strong crinkle -->
+  <section class="cell p7">
+    <div class="corner">№ 07</div>
+    <div>
+      <div class="cell-header">
+        <div>
+          <p class="label">Pattern 07 — Strong</p>
+          <h2 class="name">凹凸（おうとつ）</h2>
+          <p class="desc">SVG 乱流の高オクターブ。皺・繊維・斑がはっきり、本物の和紙の凹凸感を強く出す。</p>
+        </div>
+      </div>
+
+      <div class="sample-card">
+        <div class="row"><span class="label">label</span><span class="num-val">¥4,590</span></div>
+        <div class="row"><span class="label">stock</span><span>10 本</span></div>
+        <div class="row"><span class="label">vintage</span><span>2020</span></div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <span class="swatch" style="background: var(--paper-warm)"></span>
+      paper + SVG noise (freq 0.55, octaves 3, opacity 0.32)
+    </div>
+  </section>
+
+  <!-- Pattern 8: White washi (closer to user's reference image) -->
+  <section class="cell p8">
+    <div class="corner">№ 08</div>
+    <div>
+      <div class="cell-header">
+        <div>
+          <p class="label">Pattern 08 — White</p>
+          <h2 class="name">白和紙（しろわし）</h2>
+          <p class="desc">参考画像に近い、白寄りの和紙質感。明度が高く、清潔感と繊維感の両立。</p>
+        </div>
+      </div>
+
+      <div class="sample-card">
+        <div class="row"><span class="label">label</span><span class="num-val">¥4,590</span></div>
+        <div class="row"><span class="label">stock</span><span>10 本</span></div>
+        <div class="row"><span class="label">vintage</span><span>2020</span></div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <span class="swatch" style="background: var(--paper-pale)"></span>
+      paper-pale #f1ece0 + SVG noise (freq 0.78, octaves 3)
+    </div>
+  </section>
+
+</div>
+
+</body>
+</html>

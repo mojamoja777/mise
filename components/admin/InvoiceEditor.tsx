@@ -102,7 +102,7 @@ export function InvoiceEditor({ invoiceId, initialItems, initialNote }: Props) {
           <button
             type="button"
             onClick={addItem}
-            className="inline-flex items-center gap-1 text-xs text-[#1c3a5c] hover:underline"
+            className="inline-flex items-center gap-1 text-xs text-plate hover:underline"
           >
             <Plus className="w-3.5 h-3.5" />
             行を追加
@@ -146,7 +146,7 @@ export function InvoiceEditor({ invoiceId, initialItems, initialNote }: Props) {
                         onChange={(e) =>
                           updateItem(index, { product_name: e.target.value })
                         }
-                        className="w-full text-sm border border-rule rounded px-2 py-1 focus:outline-none focus:border-[#1c3a5c]"
+                        className="w-full text-sm border border-rule rounded px-2 py-1 focus:outline-none focus:border-plate"
                       />
                     </td>
                     <td className="px-4 py-2">
@@ -160,7 +160,7 @@ export function InvoiceEditor({ invoiceId, initialItems, initialNote }: Props) {
                               producer: e.target.value || null,
                             })
                           }
-                          className="w-1/2 text-xs border border-rule rounded px-2 py-1 focus:outline-none focus:border-[#1c3a5c]"
+                          className="w-1/2 text-xs border border-rule rounded px-2 py-1 focus:outline-none focus:border-plate"
                         />
                         <input
                           type="text"
@@ -171,7 +171,7 @@ export function InvoiceEditor({ invoiceId, initialItems, initialNote }: Props) {
                               region: e.target.value || null,
                             })
                           }
-                          className="w-1/2 text-xs border border-rule rounded px-2 py-1 focus:outline-none focus:border-[#1c3a5c]"
+                          className="w-1/2 text-xs border border-rule rounded px-2 py-1 focus:outline-none focus:border-plate"
                         />
                       </div>
                     </td>
@@ -186,7 +186,7 @@ export function InvoiceEditor({ invoiceId, initialItems, initialNote }: Props) {
                             unit_price: Number(e.target.value),
                           })
                         }
-                        className="w-full text-sm text-right border border-rule rounded px-2 py-1 focus:outline-none focus:border-[#1c3a5c]"
+                        className="w-full text-sm text-right border border-rule rounded px-2 py-1 focus:outline-none focus:border-plate"
                       />
                     </td>
                     <td className="px-4 py-2">
@@ -200,7 +200,7 @@ export function InvoiceEditor({ invoiceId, initialItems, initialNote }: Props) {
                             quantity: Number(e.target.value),
                           })
                         }
-                        className="w-full text-sm text-right border border-rule rounded px-2 py-1 focus:outline-none focus:border-[#1c3a5c]"
+                        className="w-full text-sm text-right border border-rule rounded px-2 py-1 focus:outline-none focus:border-plate"
                       />
                     </td>
                     <td className="px-4 py-2">
@@ -211,7 +211,7 @@ export function InvoiceEditor({ invoiceId, initialItems, initialNote }: Props) {
                             tax_rate: rateForClass(e.target.value as TaxClass),
                           })
                         }
-                        className="w-full text-xs border border-rule rounded px-2 py-1 focus:outline-none focus:border-[#1c3a5c]"
+                        className="w-full text-xs border border-rule rounded px-2 py-1 focus:outline-none focus:border-plate"
                       >
                         {TAX_CLASSES.map((tc) => (
                           <option key={tc} value={tc}>
@@ -300,7 +300,7 @@ export function InvoiceEditor({ invoiceId, initialItems, initialNote }: Props) {
           onChange={(e) => setNote(e.target.value)}
           rows={3}
           placeholder="請求書に記載する備考（任意）"
-          className="w-full text-sm border border-rule rounded-lg px-3 py-2 focus:outline-none focus:border-[#1c3a5c]"
+          className="w-full text-sm border border-rule rounded-lg px-3 py-2 focus:outline-none focus:border-plate"
         />
       </div>
 
@@ -309,7 +309,7 @@ export function InvoiceEditor({ invoiceId, initialItems, initialNote }: Props) {
           type="button"
           onClick={handleSave}
           disabled={pending}
-          className="bg-[#1c3a5c] text-white px-6 py-2 rounded-lg text-sm hover:bg-[#0e2238] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          className="bg-plate text-white px-6 py-2 rounded-lg text-sm hover:bg-plate-deep disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
           {pending ? "保存中..." : "変更を保存"}
         </button>

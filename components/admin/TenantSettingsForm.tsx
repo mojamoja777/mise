@@ -250,7 +250,7 @@ export function TenantSettingsForm({ tenant }: Props) {
           type="button"
           onClick={handleSave}
           disabled={pending}
-          className="bg-[#1c3a5c] text-white px-6 py-2 rounded-lg text-sm hover:bg-[#0e2238] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          className="bg-plate text-white px-6 py-2 rounded-lg text-sm hover:bg-plate-deep disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
           {pending ? "保存中..." : "変更を保存"}
         </button>
@@ -269,7 +269,7 @@ export function TenantSettingsForm({ tenant }: Props) {
 }
 
 const inputClass =
-  "w-full text-sm border border-rule rounded-lg px-3 py-2 focus:outline-none focus:border-[#1c3a5c]";
+  "w-full text-sm border border-rule rounded-lg px-3 py-2 focus:outline-none focus:border-plate";
 
 function Section({
   title,

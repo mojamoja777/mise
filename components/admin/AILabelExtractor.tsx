@@ -118,7 +118,7 @@ export default function AILabelExtractor({ onExtracted, onFilesChange }: Props) 
   };
 
   return (
-    <div className="border border-[#1c3a5c]/20 rounded-xl p-6 mb-6 bg-gradient-to-br from-[#ddd5c2] to-amber-50">
+    <div className="border border-plate/20 rounded-xl p-6 mb-6 bg-gradient-to-br from-paper-2 to-amber-50">
       <h3 className="text-base font-semibold text-ink mb-1">
         📷 ラベル写真から自動入力
       </h3>
@@ -143,8 +143,8 @@ export default function AILabelExtractor({ onExtracted, onFilesChange }: Props) 
                      file:mr-4 file:py-2 file:px-4
                      file:rounded-md file:border-0
                      file:text-sm file:font-semibold
-                     file:bg-[#1c3a5c] file:text-white
-                     hover:file:bg-[#0e2238]
+                     file:bg-plate file:text-white
+                     hover:file:bg-plate-deep
                      disabled:opacity-50"
         />
         <p className="text-xs text-ink-3 mt-1">
@@ -184,7 +184,7 @@ export default function AILabelExtractor({ onExtracted, onFilesChange }: Props) 
         type="button"
         onClick={handleExtract}
         disabled={loading || files.length === 0}
-        className="px-5 py-2 bg-[#1c3a5c] text-white text-sm font-medium rounded-md hover:bg-[#0e2238] disabled:bg-gray-300 disabled:cursor-not-allowed"
+        className="px-5 py-2 bg-plate text-white text-sm font-medium rounded-md hover:bg-plate-deep disabled:bg-gray-300 disabled:cursor-not-allowed"
       >
         {loading ? "解析 + コメント生成中… (15〜30秒)" : "AI で抽出する"}
       </button>

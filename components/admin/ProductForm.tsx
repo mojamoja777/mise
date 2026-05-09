@@ -78,7 +78,7 @@ export function ProductForm({
     return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
   };
 
-  const inputClass = "w-full border border-rule rounded-lg px-4 py-3 text-sm text-ink focus:outline-none focus:ring-2 focus:ring-[#1c3a5c]";
+  const inputClass = "w-full border border-rule rounded-lg px-4 py-3 text-sm text-ink focus:outline-none focus:ring-2 focus:ring-plate";
   const selectClass = inputClass;
 
   const isWine = category === "ワイン";
@@ -256,7 +256,7 @@ export function ProductForm({
             {CATEGORIES.map((c) => (
               <label key={c} className="cursor-pointer">
                 <input type="radio" name="category" value={c} className="sr-only" checked={category === c} onChange={() => setCategory(c)} required />
-                <span className={`inline-block px-4 py-2 rounded-full text-sm border transition-colors ${category === c ? "bg-[#1c3a5c] text-white border-[#1c3a5c]" : "border-rule text-ink-2 hover:border-[#1c3a5c]"}`} onClick={() => setCategory(c)}>{c}</span>
+                <span className={`inline-block px-4 py-2 rounded-full text-sm border transition-colors ${category === c ? "bg-plate text-white border-plate" : "border-rule text-ink-2 hover:border-plate"}`} onClick={() => setCategory(c)}>{c}</span>
               </label>
             ))}
           </div>
@@ -270,7 +270,7 @@ export function ProductForm({
               {WINE_TYPES.map((t) => (
                 <label key={t} className="cursor-pointer">
                   <input type="radio" name="type" value={t} className="sr-only" checked={type === t} onChange={() => setType(t)} />
-                  <span className={`inline-block px-4 py-2 rounded-full text-sm border transition-colors ${type === t ? "bg-[#1c3a5c] text-white border-[#1c3a5c]" : "border-rule text-ink-2 hover:border-[#1c3a5c]"}`} onClick={() => setType(t)}>{t}</span>
+                  <span className={`inline-block px-4 py-2 rounded-full text-sm border transition-colors ${type === t ? "bg-plate text-white border-plate" : "border-rule text-ink-2 hover:border-plate"}`} onClick={() => setType(t)}>{t}</span>
                 </label>
               ))}
             </div>
@@ -376,8 +376,8 @@ export function ProductForm({
                   <span
                     className={`inline-block px-4 py-2 rounded-full text-sm border transition-colors ${
                       isSelected
-                        ? "bg-[#1c3a5c] text-white border-[#1c3a5c]"
-                        : "border-rule text-ink-2 hover:border-[#1c3a5c]"
+                        ? "bg-plate text-white border-plate"
+                        : "border-rule text-ink-2 hover:border-plate"
                     }`}
                   >
                     {TAX_LABEL[tc]}
@@ -412,7 +412,7 @@ export function ProductForm({
                 <p className="text-xs text-ink-3 mt-0.5">希少ワイン等の手動配分商品。受付期間中は希望本数のみ受け付け、締切後にオーナーが按分決定します</p>
               </div>
               <button type="button" onClick={() => setIsAllocation(!isAllocation)}
-                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${isAllocation ? "bg-[#1c3a5c]" : "bg-gray-300"}`}>
+                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${isAllocation ? "bg-plate" : "bg-gray-300"}`}>
                 <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${isAllocation ? "translate-x-6" : "translate-x-1"}`} />
               </button>
             </div>
@@ -427,7 +427,7 @@ export function ProductForm({
                   type="datetime-local"
                   defaultValue={formatForDateTimeLocal(product?.allocation_deadline)}
                   required={isAllocation}
-                  className="border border-rule rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1c3a5c]"
+                  className="border border-rule rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-plate"
                 />
                 <p className="text-xs text-ink-3 mt-1">締切日時を過ぎると新規注文を受け付けません</p>
               </div>
@@ -447,11 +447,11 @@ export function ProductForm({
           <label className="block text-sm font-medium text-ink-2 mb-2">販売状態</label>
           <div className="flex gap-6">
             <label className="flex items-center gap-2 cursor-pointer">
-              <input type="radio" name="is_active" value="true" defaultChecked={product?.is_active !== false} className="accent-[#1c3a5c]" />
+              <input type="radio" name="is_active" value="true" defaultChecked={product?.is_active !== false} className="accent-plate" />
               <span className="text-sm text-ink-2">販売中</span>
             </label>
             <label className="flex items-center gap-2 cursor-pointer">
-              <input type="radio" name="is_active" value="false" defaultChecked={product?.is_active === false} className="accent-[#1c3a5c]" />
+              <input type="radio" name="is_active" value="false" defaultChecked={product?.is_active === false} className="accent-plate" />
               <span className="text-sm text-ink-2">非表示</span>
             </label>
           </div>
@@ -472,7 +472,7 @@ export function ProductForm({
           type="button"
           onClick={() => submitWithStatus("draft")}
           disabled={loading}
-          className="px-6 py-2.5 text-sm font-medium border border-[#1c3a5c] text-[#1c3a5c] rounded-xl hover:bg-[#ddd5c2] disabled:opacity-50 transition-colors"
+          className="px-6 py-2.5 text-sm font-medium border border-plate text-plate rounded-xl hover:bg-paper-2 disabled:opacity-50 transition-colors"
         >
           {submittingStatus === "draft" ? "保存中..." : draftButtonLabel}
         </button>
@@ -480,7 +480,7 @@ export function ProductForm({
           type="button"
           onClick={() => submitWithStatus("published")}
           disabled={loading}
-          className="px-6 py-2.5 text-sm font-medium bg-[#1c3a5c] text-white rounded-xl hover:bg-[#0e2238] disabled:opacity-50 transition-colors shadow-sm"
+          className="px-6 py-2.5 text-sm font-medium bg-plate text-white rounded-xl hover:bg-plate-deep disabled:opacity-50 transition-colors shadow-sm"
         >
           {submittingStatus === "published" ? "保存中..." : publishButtonLabel}
         </button>

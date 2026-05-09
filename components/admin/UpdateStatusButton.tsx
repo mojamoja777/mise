@@ -30,7 +30,7 @@ export function UpdateStatusButton({ orderId, currentStatus }: Props) {
       <button
         onClick={handleClick}
         disabled={loading}
-        className="px-5 py-2.5 bg-[#1c3a5c] text-white text-sm font-medium rounded-xl hover:bg-[#0e2238] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        className="px-5 py-2.5 bg-plate text-white text-sm font-medium rounded-xl hover:bg-plate-deep disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
       >
         {loading ? "処理中..." : "受注承認"}
       </button>

@@ -17,7 +17,7 @@ export function PrintButton() {
       </button>
       <button
         onClick={() => window.print()}
-        className="flex items-center gap-1.5 bg-[#1c3a5c] text-white px-4 py-2 rounded-lg text-sm hover:bg-[#0e2238] shadow-sm transition-colors cursor-pointer"
+        className="flex items-center gap-1.5 bg-plate text-white px-4 py-2 rounded-lg text-sm hover:bg-plate-deep shadow-sm transition-colors cursor-pointer"
       >
         <Printer className="w-4 h-4" />
         印刷する

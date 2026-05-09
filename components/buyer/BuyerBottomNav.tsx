@@ -82,7 +82,7 @@ export function BuyerBottomNav({ chatUnread = 0, buyerId = null }: Props) {
           !isActive("/buyer/orders") &&
           !isActive("/buyer/chat") &&
           !isActive("/buyer/invoices")
-            ? "text-[#1c3a5c]"
+            ? "text-plate"
             : "text-ink-3"
         }`}
       >
@@ -93,13 +93,13 @@ export function BuyerBottomNav({ chatUnread = 0, buyerId = null }: Props) {
       <Link
         href="/buyer/cart"
         className={`relative flex flex-col items-center gap-1 transition-colors ${
-          isActive("/buyer/cart") ? "text-[#1c3a5c]" : "text-ink-3"
+          isActive("/buyer/cart") ? "text-plate" : "text-ink-3"
         }`}
       >
         <div className="relative">
           <ShoppingCart className="w-5 h-5" />
           {mounted && hydrated && totalItems > 0 && (
-            <span className="absolute -top-1 -right-2 bg-[#B8860B] text-white text-xs font-bold rounded-full w-4 h-4 flex items-center justify-center leading-none">
+            <span className="absolute -top-1 -right-2 bg-gold text-white text-xs font-bold rounded-full w-4 h-4 flex items-center justify-center leading-none">
               {totalItems > 9 ? "9+" : totalItems}
             </span>
           )}
@@ -110,7 +110,7 @@ export function BuyerBottomNav({ chatUnread = 0, buyerId = null }: Props) {
       <Link
         href="/buyer/orders"
         className={`flex flex-col items-center gap-1 transition-colors ${
-          isActive("/buyer/orders") ? "text-[#1c3a5c]" : "text-ink-3"
+          isActive("/buyer/orders") ? "text-plate" : "text-ink-3"
         }`}
       >
         <ClipboardList className="w-5 h-5" />
@@ -120,7 +120,7 @@ export function BuyerBottomNav({ chatUnread = 0, buyerId = null }: Props) {
       <Link
         href="/buyer/invoices"
         className={`flex flex-col items-center gap-1 transition-colors ${
-          isActive("/buyer/invoices") ? "text-[#1c3a5c]" : "text-ink-3"
+          isActive("/buyer/invoices") ? "text-plate" : "text-ink-3"
         }`}
       >
         <FileText className="w-5 h-5" />
@@ -130,13 +130,13 @@ export function BuyerBottomNav({ chatUnread = 0, buyerId = null }: Props) {
       <Link
         href="/buyer/chat"
         className={`relative flex flex-col items-center gap-1 transition-colors ${
-          isActive("/buyer/chat") ? "text-[#1c3a5c]" : "text-ink-3"
+          isActive("/buyer/chat") ? "text-plate" : "text-ink-3"
         }`}
       >
         <div className="relative">
           <MessageCircle className="w-5 h-5" />
           {mounted && totalChatUnread > 0 && (
-            <span className="absolute -top-1 -right-2 bg-[#B8860B] text-white text-xs font-bold rounded-full w-4 h-4 flex items-center justify-center leading-none">
+            <span className="absolute -top-1 -right-2 bg-gold text-white text-xs font-bold rounded-full w-4 h-4 flex items-center justify-center leading-none">
               {totalChatUnread > 9 ? "9+" : totalChatUnread}
             </span>
           )}

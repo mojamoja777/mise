@@ -104,7 +104,7 @@ export function AdminProductList({
           </div>
           <button
             onClick={() => { setActiveCategory(""); setOpenCategories([]); setActiveCountry(""); setActiveRegion(""); setActiveType(""); }}
-            className={`w-full text-left px-3 py-2 text-sm transition-colors ${!activeCategory ? "text-[#1c3a5c] font-medium bg-[#ddd5c2]" : "text-ink-2 hover:bg-paper-2"}`}>
+            className={`w-full text-left px-3 py-2 text-sm transition-colors ${!activeCategory ? "text-plate font-medium bg-paper-2" : "text-ink-2 hover:bg-paper-2"}`}>
             すべて
           </button>
           {CATEGORIES.map(cat => {
@@ -115,7 +115,7 @@ export function AdminProductList({
             return (
               <div key={cat} className="border-t border-rule">
                 <button onClick={() => toggleCategory(cat)}
-                  className={`w-full flex items-center justify-between px-3 py-2 text-sm transition-colors ${isActive ? "text-[#1c3a5c] font-medium bg-[#ddd5c2]" : "text-ink-2 hover:bg-paper-2"}`}>
+                  className={`w-full flex items-center justify-between px-3 py-2 text-sm transition-colors ${isActive ? "text-plate font-medium bg-paper-2" : "text-ink-2 hover:bg-paper-2"}`}>
                   {cat}
                   <span className={`text-xs text-ink-3 transition-transform ${isOpen ? "rotate-90" : ""}`}>▶</span>
                 </button>
@@ -124,12 +124,12 @@ export function AdminProductList({
                     {WINE_COUNTRIES.map(c => (
                       <div key={c}>
                         <button onClick={() => { setActiveCountry(c === activeCountry ? "" : c); setActiveRegion(""); }}
-                          className={`w-full text-left px-5 py-1.5 text-xs transition-colors ${activeCountry === c ? "text-[#1c3a5c] font-medium" : "text-ink-3 hover:text-ink"}`}>
+                          className={`w-full text-left px-5 py-1.5 text-xs transition-colors ${activeCountry === c ? "text-plate font-medium" : "text-ink-3 hover:text-ink"}`}>
                           {c}
                         </button>
                         {activeCountry === c && regionList.length > 1 && regionList.map(r => (
                           <button key={r} onClick={() => setActiveRegion(r === activeRegion ? "" : r)}
-                            className={`w-full text-left pl-8 pr-3 py-1 text-xs ${activeRegion === r ? "text-[#1c3a5c] font-medium" : "text-ink-3 hover:text-ink-2"}`}>
+                            className={`w-full text-left pl-8 pr-3 py-1 text-xs ${activeRegion === r ? "text-plate font-medium" : "text-ink-3 hover:text-ink-2"}`}>
                             {r}
                           </button>
                         ))}
@@ -141,7 +141,7 @@ export function AdminProductList({
                   <div className="bg-paper-2 pb-1">
                     {prefList.map(p => (
                       <button key={p} onClick={() => setActiveRegion(p === activeRegion ? "" : p)}
-                        className={`w-full text-left px-5 py-1.5 text-xs ${activeRegion === p ? "text-[#1c3a5c] font-medium" : "text-ink-3 hover:text-ink"}`}>
+                        className={`w-full text-left px-5 py-1.5 text-xs ${activeRegion === p ? "text-plate font-medium" : "text-ink-3 hover:text-ink"}`}>
                         {p}
                       </button>
                     ))}
@@ -160,7 +160,7 @@ export function AdminProductList({
           <div className="flex gap-2 flex-wrap mb-4">
             {["すべて", ...WINE_TYPES].map(t => (
               <button key={t} onClick={() => setActiveType(t === "すべて" ? "" : t)}
-                className={`px-3 py-1.5 rounded-full text-xs border transition-colors ${(t === "すべて" && !activeType) || activeType === t ? "bg-[#1c3a5c] text-white border-[#1c3a5c]" : "border-rule text-ink-2 hover:border-[#1c3a5c]"}`}>
+                className={`px-3 py-1.5 rounded-full text-xs border transition-colors ${(t === "すべて" && !activeType) || activeType === t ? "bg-plate text-white border-plate" : "border-rule text-ink-2 hover:border-plate"}`}>
                 {t}
               </button>
             ))}
@@ -270,11 +270,11 @@ export function AdminProductList({
                             onClick={() => setOpenCommentProduct(product)}
                             aria-label="コメント全文を表示"
                             title={product.comment.slice(0, 60) + (product.comment.length > 60 ? "…" : "")}
-                            className="relative inline-flex items-center justify-center w-9 h-9 rounded-lg text-ink-3 hover:text-[#1c3a5c] hover:bg-[#ddd5c2] transition-colors"
+                            className="relative inline-flex items-center justify-center w-9 h-9 rounded-lg text-ink-3 hover:text-plate hover:bg-paper-2 transition-colors"
                           >
                             <MessageSquareText className="w-4 h-4" />
                             <span
-                              className="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-[#1c3a5c]"
+                              className="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-plate"
                               aria-hidden="true"
                             />
                           </button>
@@ -299,7 +299,7 @@ export function AdminProductList({
                           ) : (
                             <>
                               <Link href={`/admin/products/${product.id}/edit`}
-                                className="p-2 text-ink-3 hover:text-[#1c3a5c] hover:bg-[#ddd5c2] rounded-lg transition-colors">
+                                className="p-2 text-ink-3 hover:text-plate hover:bg-paper-2 rounded-lg transition-colors">
                                 <Pencil className="w-4 h-4" />
                               </Link>
                               <DeleteProductButton id={product.id} productName={product.name} />
@@ -389,7 +389,7 @@ function CommentDialog({
         <div className="px-6 py-3 border-t border-rule flex justify-end">
           <Link
             href={`/admin/products/${product.id}/edit`}
-            className="text-sm text-[#1c3a5c] hover:underline"
+            className="text-sm text-plate hover:underline"
           >
             編集ページへ →
           </Link>
