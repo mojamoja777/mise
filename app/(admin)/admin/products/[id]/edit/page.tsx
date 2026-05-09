@@ -8,6 +8,7 @@ import { createClient } from "@/lib/supabase/server";
 import { ProductForm } from "@/components/admin/ProductForm";
 import type { ExistingImage } from "@/components/admin/ProductImagesGrid";
 import { updateProduct } from "../../actions";
+import { PlateCorner } from "@/components/ui/PlateCorner";
 
 type Props = {
   params: Promise<{ id: string }>;
@@ -40,28 +41,35 @@ export default async function EditProductPage({ params }: Props) {
   const updateProductWithId = updateProduct.bind(null, id);
 
   return (
-    <div className="p-8 max-w-3xl">
-      {/* パンくずナビ */}
+    <div className="px-10 pt-7 pb-10 relative max-w-4xl">
+      <PlateCorner number="06" />
+
       <Link
         href="/admin/products"
-        className="flex items-center gap-1 text-sm text-ink-3 hover:text-[#1c3a5c] mb-6 transition-colors"
+        className="flex items-center gap-1 text-sm text-ink-3 hover:text-plate mb-4 transition-colors"
       >
         <ChevronLeft className="w-4 h-4" />
         商品一覧へ戻る
       </Link>
 
-      <div className="flex items-center gap-3 mb-6">
-        <h1 className="text-2xl font-bold text-ink">商品編集</h1>
+      <header className="border-b border-rule pb-5 mb-7 flex items-end justify-between">
+        <div>
+          <p className="caps">Plate VI · Cellar / Edit</p>
+          <h1 className="font-serif text-5xl mt-2 tracking-tight">商品編集</h1>
+          <p className="font-italic-serif text-base mt-2 text-ink-3">
+            既存の商品情報を編集します
+          </p>
+        </div>
         <span
           className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${
             product.status === "published"
-              ? "bg-green-100 text-green-700"
+              ? "bg-forest-bg text-forest"
               : "bg-paper-2 text-ink-3"
           }`}
         >
           {product.status === "published" ? "公開中" : "下書き"}
         </span>
-      </div>
+      </header>
 
       <div className="bg-white rounded-xl border border-rule p-6">
         <ProductForm
@@ -71,6 +79,8 @@ export default async function EditProductPage({ params }: Props) {
           productId={id}
         />
       </div>
+
+      <p className="ornament mt-10" />
     </div>
   );
 }

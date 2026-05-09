@@ -6,6 +6,7 @@ import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { AllocationForm } from "@/components/admin/AllocationForm";
+import { PlateCorner } from "@/components/ui/PlateCorner";
 
 type Props = {
   params: Promise<{ productId: string }>;
@@ -69,10 +70,12 @@ export default async function AdminAllocationDetailPage({ params }: Props) {
     : false;
 
   return (
-    <div className="p-8 max-w-5xl mx-auto">
+    <div className="px-10 pt-7 pb-10 relative max-w-5xl mx-auto">
+      <PlateCorner number="05" />
+
       <Link
         href="/admin/allocations"
-        className="inline-flex items-center gap-1 text-sm text-ink-3 hover:text-[#1c3a5c] mb-4"
+        className="inline-flex items-center gap-1 text-sm text-ink-3 hover:text-plate mb-4 transition-colors"
       >
         <ChevronLeft className="w-4 h-4" />
         割り当て一覧に戻る
@@ -184,6 +187,8 @@ export default async function AdminAllocationDetailPage({ params }: Props) {
           按分待ちのリクエストはありません
         </div>
       )}
+
+      <p className="ornament mt-10" />
     </div>
   );
 }

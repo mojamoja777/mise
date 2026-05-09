@@ -21,9 +21,10 @@ export default async function BuyerChatPage() {
 
   return (
     <div className="flex flex-col h-[calc(100vh-3.5rem-4rem)]">
-      <header className="px-4 py-2 border-b border-rule bg-white shrink-0">
-        <h1 className="text-sm font-semibold text-ink">お問い合わせ</h1>
-        <p className="text-[11px] text-ink-3 mt-0.5">
+      <header className="px-4 sm:px-6 py-3 border-b border-rule bg-paper shrink-0">
+        <p className="caps">Plate X · Inquiry</p>
+        <h1 className="font-serif text-2xl mt-0.5 tracking-tight">お問い合わせ</h1>
+        <p className="font-italic-serif text-xs mt-1 text-ink-3">
           酒屋とのやり取りをここで行います。返信には時間がかかる場合があります。
         </p>
       </header>

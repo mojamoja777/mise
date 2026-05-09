@@ -8,6 +8,7 @@ import { createClient } from "@/lib/supabase/server";
 import { InvoiceEditor } from "@/components/admin/InvoiceEditor";
 import { computeDueDateIso } from "@/lib/invoices";
 import { getTenantByBuyerId } from "@/lib/tenant";
+import { PlateCorner } from "@/components/ui/PlateCorner";
 
 type Props = {
   params: Promise<{ id: string }>;
@@ -65,23 +66,24 @@ export default async function AdminInvoiceDetailPage({ params }: Props) {
   );
 
   return (
-    <div className="p-8 max-w-4xl">
+    <div className="px-10 pt-7 pb-10 relative max-w-5xl">
+      <PlateCorner number="09" />
+
       <Link
         href="/admin/invoices"
-        className="inline-flex items-center gap-1 text-sm text-ink-3 hover:text-ink-2 mb-4"
+        className="inline-flex items-center gap-1 text-sm text-ink-3 hover:text-plate mb-4 transition-colors"
       >
         <ChevronLeft className="w-4 h-4" />
         請求書一覧に戻る
       </Link>
 
-      <div className="flex items-start justify-between mb-6">
+      <header className="border-b border-rule pb-5 mb-7 flex items-end justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-ink">
-            請求書 #{invoice.id.slice(0, 8).toUpperCase()}
-          </h1>
-          <p className="text-sm text-ink-2 mt-1">
-            {buyer?.company_name ?? "—"} / {invoice.period_start} 〜{" "}
-            {invoice.period_end}
+          <p className="caps">Plate IX · Invoice Detail</p>
+          <h1 className="font-serif text-5xl mt-2 tracking-tight">請求書</h1>
+          <p className="font-italic-serif text-sm mt-2 text-ink-3">
+            #{invoice.id.slice(0, 8).toUpperCase()} · {buyer?.company_name ?? "—"} ·{" "}
+            {invoice.period_start} 〜 {invoice.period_end}
           </p>
           {dueDate && (
             <p className="text-xs text-ink-3 mt-1">
@@ -102,12 +104,12 @@ export default async function AdminInvoiceDetailPage({ params }: Props) {
         </div>
         <a
           href={`/api/invoices/${invoice.id}/pdf`}
-          className="inline-flex items-center gap-1.5 bg-[#1c3a5c] text-white px-4 py-2 rounded-lg text-sm hover:bg-[#0e2238] transition-colors"
+          className="inline-flex items-center gap-1.5 bg-plate text-paper px-4 py-2 rounded-lg text-sm hover:opacity-90 transition-opacity"
         >
           <FileText className="w-4 h-4" />
           PDFダウンロード
         </a>
-      </div>
+      </header>
 
       <InvoiceEditor
         invoiceId={invoice.id}
@@ -121,6 +123,8 @@ export default async function AdminInvoiceDetailPage({ params }: Props) {
         }))}
         initialNote={invoice.note}
       />
+
+      <p className="ornament mt-10" />
     </div>
   );
 }

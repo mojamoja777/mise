@@ -7,6 +7,7 @@ import { ChevronLeft, FileText } from "lucide-react";
 import { requireBuyer } from "@/lib/auth";
 import { computeDueDateIso } from "@/lib/invoices";
 import { summarizeTax } from "@/lib/tax";
+import { PlateCorner } from "@/components/ui/PlateCorner";
 
 type Props = {
   params: Promise<{ id: string }>;
@@ -82,37 +83,36 @@ export default async function BuyerInvoiceDetailPage({ params }: Props) {
   );
 
   return (
-    <div className="px-4 py-4 max-w-3xl mx-auto">
+    <div className="px-4 sm:px-6 py-6 max-w-3xl mx-auto relative">
+      <PlateCorner number="07" />
+
       <Link
         href="/buyer/invoices"
-        className="flex items-center gap-1 text-sm text-ink-3 hover:text-[#1c3a5c] mb-4"
+        className="flex items-center gap-1 text-sm text-ink-3 hover:text-plate mb-4 transition-colors"
       >
         <ChevronLeft className="w-4 h-4" />
         請求書一覧へ戻る
       </Link>
 
-      <div className="flex items-start justify-between mb-4">
+      <header className="border-b border-rule pb-5 mb-6 flex items-end justify-between">
         <div>
-          <h1 className="text-lg font-semibold text-ink">
-            {invoice.period_start.slice(0, 7).replace("-", "年")}月分 請求書
+          <p className="caps">Plate VII · Invoice</p>
+          <h1 className="font-serif text-3xl mt-2 tracking-tight">
+            {invoice.period_start.slice(0, 7).replace("-", "年")}月分
           </h1>
-          <p className="text-xs text-ink-3 font-mono">
+          <p className="font-italic-serif text-sm mt-1 text-ink-3">
             #{invoice.id.slice(0, 8).toUpperCase()}
+            {tenant?.display_name ? ` · 発行元 ${tenant.display_name}` : ""}
           </p>
-          {tenant?.display_name && (
-            <p className="text-xs text-ink-3 mt-1">
-              発行元：{tenant.display_name}
-            </p>
-          )}
         </div>
         <a
           href={`/api/invoices/${invoice.id}/pdf`}
-          className="inline-flex items-center gap-1.5 bg-[#1c3a5c] text-white px-3 py-1.5 rounded-lg text-xs hover:bg-[#0e2238] transition-colors"
+          className="inline-flex items-center gap-1.5 bg-plate text-paper px-3 py-1.5 rounded-lg text-xs hover:opacity-90 transition-opacity"
         >
           <FileText className="w-3.5 h-3.5" />
           PDF
         </a>
-      </div>
+      </header>
 
       <div className="bg-white rounded-xl border border-rule p-4 mb-4">
         <h2 className="text-xs font-semibold text-ink-3 mb-2">明細</h2>
@@ -181,6 +181,8 @@ export default async function BuyerInvoiceDetailPage({ params }: Props) {
           <p className="text-sm text-ink-2">{invoice.note}</p>
         </div>
       )}
+
+      <p className="ornament mt-10" />
     </div>
   );
 }

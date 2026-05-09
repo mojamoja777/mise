@@ -8,6 +8,7 @@ import { createClient } from "@/lib/supabase/server";
 import { StatusBadge } from "@/components/admin/StatusBadge";
 import { UpdateStatusButton } from "@/components/admin/UpdateStatusButton";
 import { CancelOrderButton } from "@/components/admin/CancelOrderButton";
+import { PlateCorner } from "@/components/ui/PlateCorner";
 
 type Props = {
   params: Promise<{ id: string }>;
@@ -62,24 +63,25 @@ export default async function AdminOrderDetailPage({ params }: Props) {
   );
 
   return (
-    <div className="p-8 max-w-4xl">
+    <div className="px-10 pt-7 pb-10 relative max-w-5xl">
+      <PlateCorner number="08" />
+
       {/* パンくずナビ */}
       <Link
         href="/admin"
-        className="flex items-center gap-1 text-sm text-ink-3 hover:text-[#1c3a5c] mb-6 transition-colors"
+        className="flex items-center gap-1 text-sm text-ink-3 hover:text-plate mb-4 transition-colors"
       >
         <ChevronLeft className="w-4 h-4" />
         発注一覧へ戻る
       </Link>
 
-      {/* ヘッダー */}
-      <div className="flex items-center justify-between mb-6">
+      {/* Plate ヘッダー */}
+      <header className="border-b border-rule pb-5 mb-7 flex items-end justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-ink">発注詳細</h1>
-          <p className="text-xs text-ink-3 font-mono mt-0.5">
-            #{order.id.slice(0, 8).toUpperCase()}
-          </p>
-          <p className="text-xs text-ink-3">
+          <p className="caps">Plate VIII · Order Detail</p>
+          <h1 className="font-serif text-5xl mt-2 tracking-tight">発注詳細</h1>
+          <p className="font-italic-serif text-sm mt-2 text-ink-3">
+            #{order.id.slice(0, 8).toUpperCase()} ·{" "}
             {new Date(order.ordered_at).toLocaleDateString("ja-JP", {
               year: "numeric",
               month: "2-digit",
@@ -90,7 +92,7 @@ export default async function AdminOrderDetailPage({ params }: Props) {
           </p>
         </div>
         <StatusBadge status={order.status} />
-      </div>
+      </header>
 
       {/* 2カラムレイアウト */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 mb-6">
@@ -215,6 +217,8 @@ export default async function AdminOrderDetailPage({ params }: Props) {
           この発注はキャンセルされました。
         </div>
       )}
+
+      <p className="ornament mt-10" />
     </div>
   );
 }
