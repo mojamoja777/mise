@@ -7,7 +7,7 @@
   --font-mono: var(--font-plex-mono), "JetBrains Mono", monospace;
 
   /* Paper / Ink */
-  --color-paper-cream: #fbf7eb;  /* 本文ベース。最も明るい紙トーン */
+  --color-paper-cream: #fcf3da;  /* 本文ベース。明るい暖色（蜜・キャンドル光寄り）*/
   --color-paper-pale: #f1ece0;  /* サイドバーや軽量パネル用 */
   --color-paper: #e8e2d4;
   --color-paper-2: #ddd5c2;
