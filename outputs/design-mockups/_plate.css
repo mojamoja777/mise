@@ -1,0 +1,280 @@
+/* Mise · Plate — engraved botanical plate, on paper */
+:root {
+  /* Paper / ink — same family as Editorial */
+  --paper: #e8e2d4;
+  --paper-2: #ddd5c2;
+  --paper-3: #d4cab3;
+  --paper-deep: #c8bea0;
+  --ink: #16110d;
+  --ink-2: #3f3528;
+  --ink-3: #6a5f4d;
+  --ink-4: #9c917c;
+  --rule: #c1b69b;
+  --rule-strong: #998d72;
+
+  /* Brand shift: ink-blue takes primary, bordeaux is secondary */
+  --plate: #1c3a5c;        /* deep ink-blue · primary */
+  --plate-deep: #0e2238;
+  --plate-soft: #4a6b8e;
+  --vermilion: #b13a2a;     /* 朱 · highlights, wine */
+  --bordeaux: #5a1428;      /* secondary, only for wine context */
+  --gold: #8a6a1a;
+  --gold-deep: #5d4710;
+
+  /* Status (clear, ink-stamp colors) */
+  --forest: #2d6a3d;
+  --forest-bg: #c9d9c8;
+  --amber: #b07515;
+  --amber-bg: #ead7a8;
+  --crimson: #962020;
+  --crimson-bg: #ecc6c0;
+  --slate: #4a5566;        /* info — replaces navy since plate IS navy */
+  --slate-bg: #c8ccd2;
+  --violet: #4d2e6e;
+  --violet-bg: #d6c8e0;
+}
+
+* { box-sizing: border-box; }
+html, body { background: var(--paper); }
+body {
+  color: var(--ink);
+  font-family: "Inter Tight", "Inter", "Noto Sans JP", sans-serif;
+  font-feature-settings: "tnum","ss01","ss02";
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Fraunces SOFT — modern editorial serif, optical sized */
+.serif {
+  font-family: "Fraunces", "Noto Serif JP", serif;
+  font-weight: 400;
+  font-variation-settings: "SOFT" 100, "WONK" 0;
+  letter-spacing: -0.01em;
+}
+.serif-tight { font-family: "Fraunces", "Noto Serif JP", serif; font-weight: 500; font-variation-settings: "SOFT" 50, "WONK" 0; letter-spacing: -0.015em; }
+.serif-italic { font-family: "Fraunces", "Noto Serif JP", serif; font-style: italic; font-variation-settings: "SOFT" 100; }
+.mincho { font-family: "Noto Serif JP", serif; font-weight: 500; }
+
+/* Mono — IBM Plex Mono for technical info */
+.mono { font-family: "IBM Plex Mono", "JetBrains Mono", monospace; }
+.tabular { font-variant-numeric: tabular-nums; }
+
+/* Tiny labels — small caps, lower contrast */
+.caps {
+  text-transform: uppercase;
+  letter-spacing: 0.24em;
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--ink-3);
+}
+
+/* Paper grain */
+.grain {
+  background-image:
+    radial-gradient(rgba(0,0,0,.022) 1px, transparent 1px),
+    radial-gradient(rgba(0,0,0,.018) 1px, transparent 1px);
+  background-size: 3px 3px, 5px 5px;
+  background-position: 0 0, 1px 2px;
+}
+
+/* Plate corner — page-marker like an engraving plate */
+.plate-corner {
+  position: absolute;
+  top: 16px; right: 16px;
+  display: inline-flex; align-items: baseline; gap: 8px;
+  font-family: "Fraunces", serif; font-style: italic;
+  color: var(--ink-3);
+}
+.plate-corner .num {
+  font-size: 22px;
+  color: var(--plate);
+  font-style: normal; font-weight: 500;
+  border: 1px solid var(--plate);
+  padding: 0 8px;
+}
+
+/* Lines */
+.rule { border-color: var(--rule); }
+.rule-strong { border-color: var(--rule-strong); }
+.rule-plate { border-color: var(--plate); }
+.hairline { background: var(--rule); height: 1px; }
+.hairline-gold { background: var(--gold); height: 1px; }
+.hairline-plate { background: var(--plate); height: 1px; }
+.double-rule {
+  border-top: 1px solid var(--rule-strong);
+  border-bottom: 1px solid var(--rule-strong);
+  height: 4px;
+  position: relative;
+}
+.double-rule::after {
+  content: "";
+  position: absolute; left: 0; right: 0; top: 50%; height: 1px;
+  background: var(--rule);
+  transform: translateY(-50%);
+}
+
+/* Surfaces */
+.surface { background: var(--paper); }
+.surface-2 { background: var(--paper-2); }
+.surface-3 { background: var(--paper-3); }
+.card { background: var(--paper); border: 1px solid var(--rule); }
+.card-plate { background: var(--paper); border: 1px solid var(--plate); }
+.card-inset { background: var(--paper-2); border: 1px solid var(--rule); }
+
+/* Status dots */
+.dot { width: 8px; height: 8px; border-radius: 999px; display: inline-block; }
+.dot-forest   { background: var(--forest); }
+.dot-amber    { background: var(--amber); }
+.dot-crimson  { background: var(--crimson); }
+.dot-plate    { background: var(--plate); }
+.dot-vermilion{ background: var(--vermilion); }
+.dot-violet   { background: var(--violet); }
+.dot-slate    { background: var(--slate); }
+.dot-ink      { background: var(--ink-3); }
+
+/* Tags — outline-first, fewer fills */
+.tag {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-family: "Fraunces", serif; font-style: italic; font-weight: 400;
+  font-size: 11px;
+  padding: 1px 8px;
+  border: 1px solid var(--rule-strong);
+  color: var(--ink-2);
+  background: transparent;
+}
+.tag-forest    { border-color: var(--forest); color: var(--forest); }
+.tag-amber     { border-color: var(--amber); color: var(--amber); }
+.tag-crimson   { border-color: var(--crimson); color: var(--crimson); }
+.tag-plate     { border-color: var(--plate); color: var(--plate); }
+.tag-vermilion { border-color: var(--vermilion); color: var(--vermilion); }
+.tag-violet    { border-color: var(--violet); color: var(--violet); }
+
+/* Filled variant — used sparingly for primary action */
+.tag-fill-plate { background: var(--plate); color: var(--paper); border-color: var(--plate); }
+
+/* Plate emblem — small monogram circle with double border */
+.emblem {
+  width: 36px; height: 36px; border-radius: 999px;
+  border: 1px solid var(--plate);
+  color: var(--plate);
+  display: inline-flex; align-items: center; justify-content: center;
+  font-family: "Fraunces", "Noto Serif JP", serif; font-weight: 500;
+  position: relative;
+}
+.emblem::after {
+  content: ""; position: absolute; inset: 2px;
+  border-radius: 999px; border: 1px solid var(--plate);
+  opacity: 0.4;
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 12px; padding: 7px 14px;
+  border: 1px solid var(--rule-strong);
+  background: var(--paper);
+  color: var(--ink);
+  letter-spacing: 0.02em;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all .15s ease;
+}
+.btn:hover { background: var(--paper-2); border-color: var(--ink-3); }
+.btn-primary {
+  background: var(--plate); border-color: var(--plate); color: var(--paper);
+  font-family: "Fraunces", serif; font-weight: 500; letter-spacing: 0.04em;
+}
+.btn-primary:hover { background: var(--plate-deep); border-color: var(--plate-deep); }
+.btn-vermilion {
+  background: var(--vermilion); border-color: var(--vermilion); color: var(--paper);
+}
+.btn-ghost { background: transparent; border-color: transparent; }
+.btn-ghost:hover { background: var(--paper-2); border-color: var(--rule); }
+
+/* Inputs */
+.input {
+  background: var(--paper);
+  border: 1px solid var(--rule-strong);
+  padding: 7px 10px;
+  font-size: 13px;
+  color: var(--ink);
+  outline: none;
+  font-family: inherit;
+}
+.input:focus { border-color: var(--plate); }
+
+/* kbd */
+kbd {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 10px; padding: 2px 5px;
+  border: 1px solid var(--rule-strong);
+  color: var(--ink-2); background: var(--paper-2);
+}
+
+.scroll::-webkit-scrollbar { width: 8px; height: 8px; }
+.scroll::-webkit-scrollbar-thumb { background: var(--rule-strong); }
+.row:hover { background: var(--paper-2); }
+
+/* Botanical / engraving ornaments */
+.ornament {
+  display: inline-block;
+  font-family: "Fraunces", serif;
+  font-style: italic;
+  color: var(--plate);
+  letter-spacing: 0.4em;
+}
+.ornament::before { content: "—  ❦  —"; }
+
+/* Numbers — italic Fraunces, like engraved plate captions */
+.plate-num {
+  font-family: "Fraunces", serif;
+  font-style: italic;
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Schematic / botanical bottle silhouette in CSS */
+.bottle {
+  width: 60px; height: 140px;
+  position: relative;
+  border: 1.5px solid var(--plate);
+  border-radius: 6px 6px 4px 4px;
+}
+.bottle::before {
+  content: ""; position: absolute;
+  width: 14px; height: 28px; top: -28px; left: 50%; transform: translateX(-50%);
+  border-left: 1.5px solid var(--plate);
+  border-right: 1.5px solid var(--plate);
+  border-top: 1.5px solid var(--plate);
+  border-radius: 3px 3px 0 0;
+}
+.bottle::after {
+  content: ""; position: absolute;
+  width: 38px; height: 28px; bottom: 30px; left: 50%; transform: translateX(-50%);
+  border-bottom: 1px solid var(--plate);
+  opacity: 0.7;
+}
+
+/* Page-chrome shared with editorial */
+.page-chrome {
+  display: flex; align-items: baseline; justify-content: space-between;
+  padding-bottom: 14px; border-bottom: 1px solid var(--rule);
+  margin-bottom: 28px;
+}
+
+/* Ledger table */
+.ledger { width: 100%; }
+.ledger thead th {
+  text-align: left; padding: 10px 0;
+  font-weight: 500; font-size: 10px;
+  text-transform: uppercase; letter-spacing: 0.2em;
+  color: var(--ink-3);
+  border-bottom: 1px solid var(--plate);
+}
+.ledger tbody td {
+  padding: 12px 0;
+  border-bottom: 1px solid var(--rule);
+  vertical-align: middle;
+}
+
+@keyframes ink-pulse { 0%,100%{opacity:1;} 50%{opacity:0.4;} }
+.pulse { animation: ink-pulse 2.5s ease-in-out infinite; }

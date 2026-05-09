@@ -25,6 +25,9 @@ type Props = {
     address: string | null;
     phone: string | null;
     is_active: boolean;
+    tier?: "gold" | "silver" | "bronze";
+    taste_tags?: string[];
+    internal_note?: string | null;
   };
 };
 
@@ -37,6 +40,9 @@ export function BuyerForm({ mode, initial }: Props) {
     postal_code: initial?.postal_code ?? "",
     address: initial?.address ?? "",
     phone: initial?.phone ?? "",
+    tier: (initial?.tier ?? "bronze") as "gold" | "silver" | "bronze",
+    taste_tags_input: (initial?.taste_tags ?? []).join(", "),
+    internal_note: initial?.internal_note ?? "",
   });
   const [pending, startTransition] = useTransition();
   const [message, setMessage] = useState<string | null>(null);
@@ -47,6 +53,11 @@ export function BuyerForm({ mode, initial }: Props) {
   const update = (key: keyof typeof form, value: string) => {
     setForm((prev) => ({ ...prev, [key]: value }));
   };
+
+  const tasteTagsArray = form.taste_tags_input
+    .split(/[,、]/)
+    .map((s) => s.trim())
+    .filter(Boolean);
 
   const handleSubmit = () => {
     startTransition(async () => {
@@ -75,6 +86,9 @@ export function BuyerForm({ mode, initial }: Props) {
           postal_code: form.postal_code || null,
           address: form.address || null,
           phone: form.phone || null,
+          tier: form.tier,
+          taste_tags: tasteTagsArray,
+          internal_note: form.internal_note || null,
         });
         if (result.ok) {
           setMessage("保存しました");
@@ -115,11 +129,11 @@ export function BuyerForm({ mode, initial }: Props) {
             disabled={mode === "edit"}
             placeholder="buyer@example.com"
             className={`${inputClass} ${
-              mode === "edit" ? "bg-gray-50 text-gray-500" : ""
+              mode === "edit" ? "bg-paper-2 text-ink-3" : ""
             }`}
           />
           {mode === "edit" && (
-            <p className="text-xs text-gray-400 mt-1">
+            <p className="text-xs text-ink-3 mt-1">
               メールアドレスは編集できません
             </p>
           )}
@@ -178,6 +192,69 @@ export function BuyerForm({ mode, initial }: Props) {
         </Field>
       </Section>
 
+      {/* 顧客カルテ（mode === edit のみ） */}
+      {mode === "edit" && (
+        <Section title="顧客カルテ">
+          <Field
+            label="ティア"
+            hint="割当の優先度や AI 提案の判断材料に使われます"
+          >
+            <div className="flex gap-2">
+              {(["gold", "silver", "bronze"] as const).map((t) => (
+                <button
+                  key={t}
+                  type="button"
+                  onClick={() => setForm((p) => ({ ...p, tier: t }))}
+                  className={`px-4 py-1.5 text-sm border transition-colors capitalize ${
+                    form.tier === t
+                      ? "bg-plate text-paper border-plate"
+                      : "bg-paper border-rule-strong text-ink-2 hover:border-plate"
+                  }`}
+                >
+                  {t}
+                </button>
+              ))}
+            </div>
+          </Field>
+          <Field
+            label="嗜好タグ"
+            hint="カンマまたは、で区切る（例: Champagne, Bourgogne 白, 純米大吟醸）"
+          >
+            <input
+              type="text"
+              value={form.taste_tags_input}
+              onChange={(e) => update("taste_tags_input", e.target.value)}
+              placeholder="Champagne, Bourgogne 白"
+              className={inputClass}
+            />
+            {tasteTagsArray.length > 0 && (
+              <div className="mt-2 flex flex-wrap gap-1.5">
+                {tasteTagsArray.map((t, i) => (
+                  <span
+                    key={i}
+                    className="inline-flex items-center px-2 py-0.5 text-[11px] border border-rule-strong text-ink-2 font-italic-serif"
+                  >
+                    {t}
+                  </span>
+                ))}
+              </div>
+            )}
+          </Field>
+          <Field
+            label="店主メモ"
+            hint="この内容は買い手側からは見えません"
+          >
+            <textarea
+              value={form.internal_note}
+              onChange={(e) => update("internal_note", e.target.value)}
+              rows={4}
+              placeholder="例: 月初の発注が多い。Egly 系の入荷時は優先案内"
+              className={inputClass + " resize-y leading-relaxed"}
+            />
+          </Field>
+        </Section>
+      )}
+
       {/* 初期パスワード表示 */}
       {generatedPassword && (
         <div className="bg-yellow-50 border border-yellow-300 rounded-xl p-5">
@@ -185,7 +262,7 @@ export function BuyerForm({ mode, initial }: Props) {
             初期パスワード（一度だけ表示されます）
           </p>
           <div className="flex items-center gap-2">
-            <code className="flex-1 bg-white border border-yellow-200 rounded px-3 py-2 font-mono text-base text-gray-900">
+            <code className="flex-1 bg-white border border-yellow-200 rounded px-3 py-2 font-mono text-base text-ink">
               {generatedPassword}
             </code>
             <button
@@ -194,7 +271,7 @@ export function BuyerForm({ mode, initial }: Props) {
                 navigator.clipboard.writeText(generatedPassword);
                 alert("コピーしました");
               }}
-              className="p-2 text-yellow-700 hover:bg-yellow-100 rounded"
+              className="p-2 text-amber hover:bg-amber-bg rounded"
               aria-label="パスワードをコピー"
             >
               <Copy className="w-4 h-4" />
@@ -213,7 +290,7 @@ export function BuyerForm({ mode, initial }: Props) {
           type="button"
           onClick={handleSubmit}
           disabled={pending}
-          className="bg-[#6B1A35] text-white px-6 py-2 rounded-lg text-sm hover:bg-[#5a1630] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          className="bg-[#1c3a5c] text-white px-6 py-2 rounded-lg text-sm hover:bg-[#0e2238] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
           {pending
             ? "処理中..."
@@ -229,7 +306,7 @@ export function BuyerForm({ mode, initial }: Props) {
             disabled={pending}
             className={`px-4 py-2 rounded-lg text-sm border transition-colors disabled:opacity-50 ${
               initial.is_active
-                ? "border-red-300 text-red-600 hover:bg-red-50"
+                ? "border-red-300 text-crimson hover:bg-crimson-bg"
                 : "border-green-300 text-green-700 hover:bg-green-50"
             }`}
           >
@@ -240,7 +317,7 @@ export function BuyerForm({ mode, initial }: Props) {
         {message && (
           <span
             className={`text-sm ${
-              message.startsWith("エラー") ? "text-red-600" : "text-green-600"
+              message.startsWith("エラー") ? "text-crimson" : "text-green-600"
             }`}
           >
             {message}
@@ -252,7 +329,7 @@ export function BuyerForm({ mode, initial }: Props) {
 }
 
 const inputClass =
-  "w-full text-sm border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:border-[#6B1A35]";
+  "w-full text-sm border border-rule rounded-lg px-3 py-2 focus:outline-none focus:border-[#1c3a5c]";
 
 function Section({
   title,
@@ -262,8 +339,8 @@ function Section({
   children: React.ReactNode;
 }) {
   return (
-    <div className="bg-white rounded-xl border border-gray-200 p-5">
-      <h2 className="text-sm font-semibold text-gray-700 mb-4">{title}</h2>
+    <div className="bg-white rounded-xl border border-rule p-5">
+      <h2 className="text-sm font-semibold text-ink-2 mb-4">{title}</h2>
       <div className="space-y-4">{children}</div>
     </div>
   );
@@ -282,12 +359,12 @@ function Field({
 }) {
   return (
     <div>
-      <label className="block text-xs font-medium text-gray-600 mb-1">
+      <label className="block text-xs font-medium text-ink-2 mb-1">
         {label}
-        {required && <span className="text-red-500 ml-1">*</span>}
+        {required && <span className="text-crimson ml-1">*</span>}
       </label>
       {children}
-      {hint && <p className="text-xs text-gray-400 mt-1">{hint}</p>}
+      {hint && <p className="text-xs text-ink-3 mt-1">{hint}</p>}
     </div>
   );
 }

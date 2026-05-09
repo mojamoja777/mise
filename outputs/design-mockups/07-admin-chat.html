@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mise — Admin · Chat</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+JP:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="_shared.css" />
+</head>
+<body class="scanlines vignette">
+
+<div class="flex h-screen relative" style="z-index: 2;">
+
+  <aside class="w-14 border-r line bg-[var(--bg)] flex flex-col items-center py-3 gap-3 flex-shrink-0">
+    <div class="w-8 h-8 rounded-md bg-[var(--bg-2)] flex items-center justify-center"><span class="dot dot-glow" style="background: var(--phosphor);"></span></div>
+    <div class="w-full border-t line"></div>
+    <button class="w-9 h-9 rounded-md hover:bg-[var(--bg-2)] flex items-center justify-center text-[var(--text-3)]">⌂</button>
+    <button class="w-9 h-9 rounded-md hover:bg-[var(--bg-2)] flex items-center justify-center text-[var(--text-3)]">◉</button>
+    <button class="w-9 h-9 rounded-md hover:bg-[var(--bg-2)] flex items-center justify-center text-[var(--text-3)]">▦</button>
+    <button class="w-9 h-9 rounded-md bg-[var(--bg-3)] flex items-center justify-center text-[var(--bordeaux)]">⏵</button>
+    <button class="w-9 h-9 rounded-md hover:bg-[var(--bg-2)] flex items-center justify-center text-[var(--text-3)]">¥</button>
+  </aside>
+
+  <section class="flex-1 flex min-w-0 overflow-hidden">
+
+    <!-- Threads -->
+    <div class="w-72 border-r line bg-[var(--bg)] flex flex-col flex-shrink-0">
+      <div class="h-12 border-b line flex items-center px-4 gap-2">
+        <span class="text-sm">Chat</span>
+        <span class="tag tag-phosphor ml-auto">4 unread</span>
+      </div>
+      <div class="px-3 py-2 border-b line">
+        <input class="input w-full" placeholder="search · all threads" />
+      </div>
+      <div class="flex-1 overflow-y-auto scroll text-sm">
+
+        <div class="px-4 py-3 border-b line cursor-pointer flex gap-3 bg-[var(--bg-2)]">
+          <div class="w-8 h-8 rounded bg-[var(--bg-3)] flex items-center justify-center mono text-[10px] flex-shrink-0">SP</div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center justify-between">
+              <p class="text-[var(--text)]">寿司 SHIN</p>
+              <span class="dot pulse" style="background: var(--phosphor);"></span>
+            </div>
+            <p class="mono text-[10px] text-[var(--text-3)]">11:55 · 寿司 SHIN</p>
+            <p class="text-[var(--text-2)] text-xs mt-1 truncate">明日の便で発送可能ですか？</p>
+          </div>
+        </div>
+
+        <div class="px-4 py-3 border-b line cursor-pointer flex gap-3 hover:bg-[var(--bg-1)]">
+          <div class="w-8 h-8 rounded bg-[var(--bg-3)] flex items-center justify-center mono text-[10px] flex-shrink-0">RR</div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center justify-between">
+              <p class="text-[var(--text)]">レストラン六本木</p>
+              <span class="dot" style="background: var(--phosphor);"></span>
+            </div>
+            <p class="mono text-[10px] text-[var(--text-3)]">10:42 · 米田</p>
+            <p class="text-[var(--text-2)] text-xs mt-1 truncate">Corton-Bressandes の追加について…</p>
+          </div>
+        </div>
+
+        <div class="px-4 py-3 border-b line cursor-pointer flex gap-3 hover:bg-[var(--bg-1)]">
+          <div class="w-8 h-8 rounded bg-[var(--bg-3)] flex items-center justify-center mono text-[10px] flex-shrink-0">BV</div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center justify-between">
+              <p class="text-[var(--text)]">Bistro Verdure</p>
+              <span class="dot" style="background: var(--phosphor);"></span>
+            </div>
+            <p class="mono text-[10px] text-[var(--text-3)]">昨日 · 田中</p>
+            <p class="text-[var(--text-2)] text-xs mt-1 truncate">5月の新着リスト見ました ✓</p>
+          </div>
+        </div>
+
+        <div class="px-4 py-3 border-b line cursor-pointer flex gap-3 hover:bg-[var(--bg-1)]">
+          <div class="w-8 h-8 rounded bg-[var(--bg-3)] flex items-center justify-center mono text-[10px] flex-shrink-0">CR</div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center justify-between">
+              <p class="text-[var(--text)]">CARROT</p>
+              <span class="dot" style="background: var(--phosphor);"></span>
+            </div>
+            <p class="mono text-[10px] text-[var(--text-3)]">5/06 · 渡辺</p>
+            <p class="text-[var(--text-2)] text-xs mt-1 truncate">来週、店舗に伺ってもいいですか？</p>
+          </div>
+        </div>
+
+        <div class="px-4 py-3 border-b line cursor-pointer flex gap-3 hover:bg-[var(--bg-1)] opacity-60">
+          <div class="w-8 h-8 rounded bg-[var(--bg-3)] flex items-center justify-center mono text-[10px] flex-shrink-0">HN</div>
+          <div class="flex-1 min-w-0">
+            <p class="text-[var(--text-2)]">Hana 麻布十番</p>
+            <p class="mono text-[10px] text-[var(--text-3)]">5/05 · 既読</p>
+            <p class="text-[var(--text-3)] text-xs mt-1 truncate">承知しました、ありがとうございます。</p>
+          </div>
+        </div>
+
+        <div class="px-4 py-3 border-b line cursor-pointer flex gap-3 hover:bg-[var(--bg-1)] opacity-60">
+          <div class="w-8 h-8 rounded bg-[var(--bg-3)] flex items-center justify-center mono text-[10px] flex-shrink-0">YG</div>
+          <div class="flex-1 min-w-0">
+            <p class="text-[var(--text-2)]">焼鳥 弦</p>
+            <p class="mono text-[10px] text-[var(--text-3)]">5/04 · 既読</p>
+            <p class="text-[var(--text-3)] text-xs mt-1 truncate">ありがとうございます、確認します。</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Conversation -->
+    <div class="flex-1 flex flex-col min-w-0 bg-[var(--bg)]">
+      <header class="h-12 border-b line flex items-center px-5 gap-3">
+        <div class="w-7 h-7 rounded bg-[var(--bg-3)] flex items-center justify-center mono text-[10px]">SP</div>
+        <div class="leading-tight">
+          <p class="text-sm">寿司 SHIN</p>
+          <p class="mono text-[10px] text-[var(--text-3)]">tier · silver · ¥298k/mo · last order 5/03</p>
+        </div>
+        <div class="ml-auto flex items-center gap-2">
+          <button class="btn">注文履歴</button>
+          <button class="btn">プロフィール</button>
+        </div>
+      </header>
+
+      <div class="flex-1 overflow-y-auto scroll p-6 space-y-5">
+
+        <p class="ascii-rule text-center">────────  2026-05-08  ────────</p>
+
+        <div class="flex gap-3 max-w-2xl">
+          <div class="w-8 h-8 rounded bg-[var(--bg-3)] flex items-center justify-center mono text-[10px] flex-shrink-0">SP</div>
+          <div>
+            <div class="subcard p-3 text-sm leading-relaxed">明日の便で発送可能ですか？</div>
+            <p class="mono text-[10px] text-[var(--text-3)] mt-1">11:55</p>
+          </div>
+        </div>
+
+        <div class="flex gap-3 max-w-2xl">
+          <div class="w-8 h-8 rounded bg-[var(--bg-3)] flex items-center justify-center mono text-[10px] flex-shrink-0">SP</div>
+          <div>
+            <div class="subcard p-3 text-sm leading-relaxed">2件 #B7C2D + #B7E91 を一緒にまとめてもらえると助かります。</div>
+            <p class="mono text-[10px] text-[var(--text-3)] mt-1">11:55</p>
+          </div>
+        </div>
+
+        <div class="flex gap-3 max-w-2xl ml-auto justify-end">
+          <div class="text-right">
+            <div class="p-3 text-sm leading-relaxed rounded-md" style="background: var(--bordeaux-3); color: white; border: 1px solid var(--bordeaux-2);">
+              ありがとうございます。明日 5/9 の便でまとめて発送いたします。
+            </div>
+            <p class="mono text-[10px] text-[var(--text-3)] mt-1">12:01 · 既読</p>
+          </div>
+          <div class="w-8 h-8 rounded bg-[var(--bordeaux-3)] flex items-center justify-center mono text-[10px] flex-shrink-0">M</div>
+        </div>
+
+        <!-- AI suggestion (system / agent) -->
+        <div class="max-w-2xl mx-auto subcard p-3 border-dashed" style="border-color: rgba(167,139,250,0.4);">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="tag tag-violet">⚡ AI assistant · suggestion</span>
+            <span class="ml-auto mono text-[10px] text-[var(--text-3)]">click to insert ↓</span>
+          </div>
+          <div class="space-y-1.5">
+            <button class="btn w-full text-left justify-start">📦 「集荷時間は16:00を予定しております」を挿入</button>
+            <button class="btn w-full text-left justify-start">💡 「次回入荷予定の Egly-Ouriet もお知らせします」を挿入</button>
+          </div>
+        </div>
+
+        <p class="ascii-rule text-center">━━━━━━━━  related order  ━━━━━━━━</p>
+
+        <!-- Order context card -->
+        <div class="max-w-2xl card p-4">
+          <div class="flex items-center justify-between mb-3">
+            <p class="mono text-xs text-[var(--text-3)]">#B7C2D · 2026-05-03</p>
+            <span class="tag tag-phosphor">confirmed</span>
+          </div>
+          <div class="space-y-2 text-sm">
+            <div class="flex justify-between">
+              <span>Egly-Ouriet Brut Tradition GC ×4</span>
+              <span class="mono">¥56,800</span>
+            </div>
+            <div class="flex justify-between">
+              <span>Domaine Leflaive Puligny-Montrachet ×2</span>
+              <span class="mono">¥36,000</span>
+            </div>
+            <div class="border-t line pt-2 flex justify-between">
+              <span class="text-[var(--text-3)]">合計</span>
+              <span class="mono text-[var(--text)]">¥92,800</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Composer -->
+      <div class="border-t line p-4 bg-[var(--bg-1)]">
+        <div class="card p-3">
+          <textarea class="bg-transparent w-full text-sm outline-none resize-none placeholder:text-[var(--text-3)]" rows="3" placeholder="メッセージを入力… ⌘⏎ で送信"></textarea>
+          <div class="flex items-center gap-2 mt-2 text-xs">
+            <button class="btn btn-ghost text-[var(--text-3)]">📎 添付</button>
+            <button class="btn btn-ghost text-[var(--text-3)]">📦 注文を引用</button>
+            <button class="btn btn-ghost text-[var(--violet)]">⚡ AIで返信</button>
+            <span class="ml-auto mono text-[10px] text-[var(--text-3)]">⌘⏎ send</span>
+            <button class="btn btn-primary">送信</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Side panel: customer profile -->
+    <div class="w-72 border-l line bg-[var(--bg)] flex flex-col flex-shrink-0">
+      <div class="h-12 border-b line flex items-center px-4 gap-2">
+        <span class="text-sm">Customer</span>
+        <span class="ml-auto mono text-[10px] text-[var(--text-3)]">since 2024-11</span>
+      </div>
+      <div class="p-4 space-y-5 overflow-y-auto scroll text-xs">
+        <div class="space-y-1.5">
+          <div class="flex justify-between"><span class="text-[var(--text-3)]">company</span><span>寿司 SHIN</span></div>
+          <div class="flex justify-between"><span class="text-[var(--text-3)]">tier</span><span class="tag">silver</span></div>
+          <div class="flex justify-between"><span class="text-[var(--text-3)]">rep</span><span>白石 圭</span></div>
+          <div class="flex justify-between"><span class="text-[var(--text-3)]">phone</span><span class="mono">03-xxxx-xxxx</span></div>
+          <div class="flex justify-between"><span class="text-[var(--text-3)]">address</span><span>港区西麻布 …</span></div>
+        </div>
+
+        <p class="ascii-rule">─ taste profile ─</p>
+        <div class="flex flex-wrap gap-1">
+          <span class="tag">Champagne</span>
+          <span class="tag">Bourgogne 白</span>
+          <span class="tag">純米大吟醸</span>
+          <span class="tag">Sancerre</span>
+        </div>
+
+        <p class="ascii-rule">─ recent activity ─</p>
+        <div class="space-y-2 mono text-[10px] text-[var(--text-2)]">
+          <div class="flex justify-between"><span>5/03 ordered</span><span>¥92,800</span></div>
+          <div class="flex justify-between"><span>4/22 ordered</span><span>¥48,400</span></div>
+          <div class="flex justify-between"><span>4/15 invoice paid</span><span>¥186,200</span></div>
+          <div class="flex justify-between"><span>4/08 ordered</span><span>¥124,800</span></div>
+        </div>
+
+        <p class="ascii-rule">─ stats ─</p>
+        <div class="grid grid-cols-2 gap-2">
+          <div class="subcard p-2.5">
+            <p class="text-[var(--text-3)] mono text-[10px]">orders / mo</p>
+            <p class="mono text-lg tabular mt-0.5">3.2</p>
+          </div>
+          <div class="subcard p-2.5">
+            <p class="text-[var(--text-3)] mono text-[10px]">avg ticket</p>
+            <p class="mono text-lg tabular mt-0.5">¥93k</p>
+          </div>
+          <div class="subcard p-2.5">
+            <p class="text-[var(--text-3)] mono text-[10px]">on-time pay</p>
+            <p class="mono text-lg tabular mt-0.5 text-[var(--phosphor)]">100%</p>
+          </div>
+          <div class="subcard p-2.5">
+            <p class="text-[var(--text-3)] mono text-[10px]">avg reply</p>
+            <p class="mono text-lg tabular mt-0.5">12m</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </section>
+</div>
+</body>
+</html>

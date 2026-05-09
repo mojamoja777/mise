@@ -10,7 +10,7 @@ export default async function BuyerChatPage() {
   const auth = await requireBuyer();
   if (!auth.ok) {
     return (
-      <div className="p-8 text-sm text-red-600">{auth.error}</div>
+      <div className="p-8 text-sm text-crimson">{auth.error}</div>
     );
   }
 
@@ -21,9 +21,9 @@ export default async function BuyerChatPage() {
 
   return (
     <div className="flex flex-col h-[calc(100vh-3.5rem-4rem)]">
-      <header className="px-4 py-2 border-b border-gray-200 bg-white shrink-0">
-        <h1 className="text-sm font-semibold text-gray-900">お問い合わせ</h1>
-        <p className="text-[11px] text-gray-400 mt-0.5">
+      <header className="px-4 py-2 border-b border-rule bg-white shrink-0">
+        <h1 className="text-sm font-semibold text-ink">お問い合わせ</h1>
+        <p className="text-[11px] text-ink-3 mt-0.5">
           酒屋とのやり取りをここで行います。返信には時間がかかる場合があります。
         </p>
       </header>

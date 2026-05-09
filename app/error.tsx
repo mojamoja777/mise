@@ -19,24 +19,24 @@ export default function GlobalRouteError({
   }, [error]);
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center px-6 py-12 bg-gray-50">
+    <div className="min-h-screen flex flex-col items-center justify-center px-6 py-12 bg-paper-2">
       <p className="text-5xl mb-4" aria-hidden>
         ⚠️
       </p>
-      <h1 className="text-2xl font-bold text-gray-900 mb-2">
+      <h1 className="text-2xl font-bold text-ink mb-2">
         問題が発生しました
       </h1>
-      <p className="text-sm text-gray-500 mb-6 text-center max-w-sm">
+      <p className="text-sm text-ink-3 mb-6 text-center max-w-sm">
         画面の読み込みに失敗しました。再試行しても改善しない場合はサポートまでご連絡ください。
       </p>
       {error.digest && (
-        <p className="text-xs text-gray-400 mb-6 font-mono">
+        <p className="text-xs text-ink-3 mb-6 font-mono">
           ref: {error.digest}
         </p>
       )}
       <button
         onClick={reset}
-        className="px-6 py-2.5 bg-[#6B1A35] text-white rounded-xl text-sm font-medium hover:bg-[#9B2D50] transition-colors"
+        className="px-6 py-2.5 bg-[#1c3a5c] text-white rounded-xl text-sm font-medium hover:bg-[#0e2238] transition-colors"
       >
         再試行
       </button>

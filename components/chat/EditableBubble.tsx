@@ -57,14 +57,14 @@ export function EditableBubble({ initialBody, onSave, onCancel }: Props) {
             }
           }}
           rows={2}
-          className="w-full border border-[#6B1A35] rounded-2xl px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#6B1A35] resize-y min-h-[60px] bg-white"
+          className="w-full border border-[#1c3a5c] rounded-2xl px-3 py-2 text-sm text-ink focus:outline-none focus:ring-2 focus:ring-[#1c3a5c] resize-y min-h-[60px] bg-white"
         />
-        {error && <p className="text-xs text-red-600 mt-1 px-1">{error}</p>}
+        {error && <p className="text-xs text-crimson mt-1 px-1">{error}</p>}
         <div className="flex justify-end gap-2 mt-1">
           <button
             type="button"
             onClick={onCancel}
-            className="text-xs px-3 py-1 rounded-md text-gray-600 hover:bg-gray-100"
+            className="text-xs px-3 py-1 rounded-md text-ink-2 hover:bg-paper-2"
           >
             キャンセル
           </button>
@@ -72,7 +72,7 @@ export function EditableBubble({ initialBody, onSave, onCancel }: Props) {
             type="button"
             onClick={submit}
             disabled={pending || !body.trim()}
-            className="text-xs px-3 py-1 rounded-md bg-[#6B1A35] text-white hover:bg-[#9B2D50] disabled:opacity-40"
+            className="text-xs px-3 py-1 rounded-md bg-[#1c3a5c] text-white hover:bg-[#0e2238] disabled:opacity-40"
           >
             {pending ? "保存中..." : "保存"}
           </button>

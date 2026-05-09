@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mise — Buyer · Order Detail</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+JP:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="_shared.css" />
+</head>
+<body class="scanlines vignette">
+
+<div class="flex h-screen relative" style="z-index: 2;">
+
+  <aside class="w-56 border-r line bg-[var(--bg)] flex flex-col flex-shrink-0">
+    <div class="h-12 flex items-center px-4 border-b line gap-2">
+      <span class="dot dot-glow" style="background: var(--phosphor);"></span>
+      <span class="font-semibold tracking-tight">mise</span>
+      <span class="mono text-[10px] text-[var(--text-3)] ml-1">/buyer</span>
+    </div>
+    <nav class="px-2 py-3 text-sm space-y-0.5">
+      <a class="flex items-center gap-2 px-2 py-1.5 rounded-md text-[var(--text-2)] hover:bg-[var(--bg-2)]"><span>◯</span> Catalog <kbd class="ml-auto">C</kbd></a>
+      <a class="flex items-center gap-2 px-2 py-1.5 rounded-md text-[var(--text-2)] hover:bg-[var(--bg-2)]"><span>◯</span> Cart <span class="ml-auto tag tag-bordeaux">2</span></a>
+      <a class="flex items-center gap-2 px-2 py-1.5 rounded-md bg-[var(--bg-3)] text-[var(--text)]"><span class="dot" style="background: var(--bordeaux);"></span> Orders <span class="ml-auto mono text-[10px] text-[var(--text-3)]">12</span></a>
+      <a class="flex items-center gap-2 px-2 py-1.5 rounded-md text-[var(--text-2)] hover:bg-[var(--bg-2)]"><span>◯</span> Invoices</a>
+      <a class="flex items-center gap-2 px-2 py-1.5 rounded-md text-[var(--text-2)] hover:bg-[var(--bg-2)]"><span>◯</span> Chat <span class="ml-auto dot" style="background: var(--phosphor);"></span></a>
+    </nav>
+    <div class="mt-auto border-t line p-3">
+      <div class="flex items-center gap-2">
+        <div class="w-7 h-7 rounded-md bg-[var(--bg-3)] flex items-center justify-center text-xs">SP</div>
+        <div class="leading-tight">
+          <p class="text-xs">寿司 SHIN</p>
+          <p class="text-[10px] text-[var(--text-3)]">buyer · 西麻布</p>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <section class="flex-1 flex flex-col min-w-0 overflow-hidden">
+
+    <header class="h-12 border-b line flex items-center px-5 gap-4 bg-[var(--bg)]">
+      <div class="flex items-center gap-2 text-sm">
+        <a class="text-[var(--text-3)]">← orders</a>
+        <span class="text-[var(--text-3)]">/</span>
+        <span class="mono">#B7E91C-3F</span>
+      </div>
+      <div class="ml-auto flex items-center gap-2">
+        <button class="btn">📄 PDF</button>
+        <button class="btn">💬 店主に質問</button>
+      </div>
+    </header>
+
+    <div class="flex-1 overflow-y-auto scroll p-6">
+
+      <div class="max-w-4xl mx-auto">
+
+        <!-- Hero status -->
+        <div class="card p-6 mb-5">
+          <div class="flex items-start justify-between">
+            <div>
+              <p class="mono text-[10px] text-[var(--text-3)] tracking-widest">ORDER · #B7E91C-3F</p>
+              <h1 class="mono text-3xl tabular mt-1">¥189,400</h1>
+              <p class="text-sm text-[var(--text-2)] mt-1">7点 · 2026-05-08 受付 · 5/15 18:00 締切後に確定</p>
+            </div>
+            <div class="text-right">
+              <span class="tag tag-amber pulse">allocation pending</span>
+              <p class="mono text-[10px] text-[var(--text-3)] mt-2">残り 03:38:00</p>
+            </div>
+          </div>
+
+          <!-- Timeline -->
+          <p class="ascii-rule mt-6 mb-3">────────  status timeline  ────────</p>
+          <div class="grid grid-cols-4 gap-3">
+            <div class="subcard p-3 border-l-2" style="border-left-color: var(--phosphor);">
+              <p class="mono text-[10px] text-[var(--phosphor)] tracking-widest">01 · ORDERED</p>
+              <p class="text-sm mt-1">注文受付</p>
+              <p class="mono text-[10px] text-[var(--text-3)] mt-1">5/03 14:21</p>
+            </div>
+            <div class="subcard p-3 border-l-2" style="border-left-color: var(--amber);">
+              <p class="mono text-[10px] text-[var(--amber)] tracking-widest">02 · DEADLINE</p>
+              <p class="text-sm mt-1">受付締切待ち</p>
+              <p class="mono text-[10px] text-[var(--text-3)] mt-1 pulse">5/15 18:00 — 残 03:38:00</p>
+            </div>
+            <div class="subcard p-3 border-l-2 opacity-50" style="border-left-color: var(--text-4);">
+              <p class="mono text-[10px] text-[var(--text-3)] tracking-widest">03 · ALLOCATED</p>
+              <p class="text-sm mt-1">配分結果通知</p>
+              <p class="mono text-[10px] text-[var(--text-3)] mt-1">— 待機中 —</p>
+            </div>
+            <div class="subcard p-3 border-l-2 opacity-50" style="border-left-color: var(--text-4);">
+              <p class="mono text-[10px] text-[var(--text-3)] tracking-widest">04 · SHIPPED</p>
+              <p class="text-sm mt-1">発送完了</p>
+              <p class="mono text-[10px] text-[var(--text-3)] mt-1">— 待機中 —</p>
+            </div>
+          </div>
+
+          <!-- Caution band -->
+          <div class="mt-5 p-3 rounded border line tag-amber" style="background: rgba(251,191,36,0.06); border-color: rgba(251,191,36,0.30);">
+            <p class="text-xs text-[var(--amber)] font-semibold mb-1">⚠ 割り当て対象商品が含まれます</p>
+            <p class="text-xs text-[var(--text-2)] leading-relaxed">受付締切後、店舗側で各買い手への配分本数を決定します。希望本数を下回る可能性があり、確定後の<span class="text-[var(--text)]">キャンセルは不可</span>です。</p>
+          </div>
+        </div>
+
+        <!-- Items -->
+        <p class="ascii-rule mb-3">─────────────  items  ─────────────</p>
+
+        <div class="card overflow-hidden">
+          <table class="w-full text-sm">
+            <thead class="border-b line text-[10px] uppercase tracking-widest text-[var(--text-3)]">
+              <tr>
+                <th class="text-left font-normal py-2.5 pl-5">Item</th>
+                <th class="text-right font-normal py-2.5 w-24">Unit</th>
+                <th class="text-right font-normal py-2.5 w-24">Requested</th>
+                <th class="text-right font-normal py-2.5 w-24">Allocated</th>
+                <th class="text-right font-normal py-2.5 w-32 pr-5">Subtotal</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y line">
+
+              <tr class="row">
+                <td class="pl-5 py-3">
+                  <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded bg-[var(--bg-3)] flex items-center justify-center">🍷</div>
+                    <div>
+                      <div class="flex items-center gap-2">
+                        <span>Tollot-Beaut Corton-Bressandes 2020</span>
+                        <span class="tag tag-amber">allocation</span>
+                      </div>
+                      <p class="mono text-[10px] text-[var(--text-3)] mt-0.5">Bourgogne · Grand Cru · W-01931</p>
+                    </div>
+                  </div>
+                </td>
+                <td class="mono text-right text-[var(--text-2)]">¥22,800</td>
+                <td class="mono text-right">2</td>
+                <td class="mono text-right text-[var(--amber)]">— pending —</td>
+                <td class="mono text-right pr-5 text-[var(--text-3)]">¥45,600</td>
+              </tr>
+
+              <tr class="row">
+                <td class="pl-5 py-3">
+                  <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded bg-[var(--bg-3)] flex items-center justify-center">🍾</div>
+                    <div>
+                      <span>Egly-Ouriet Brut Tradition GC</span>
+                      <p class="mono text-[10px] text-[var(--text-3)] mt-0.5">Champagne · NV · W-01872</p>
+                    </div>
+                  </div>
+                </td>
+                <td class="mono text-right text-[var(--text-2)]">¥14,200</td>
+                <td class="mono text-right">4</td>
+                <td class="mono text-right text-[var(--phosphor)]">4</td>
+                <td class="mono text-right pr-5">¥56,800</td>
+              </tr>
+
+              <tr class="row">
+                <td class="pl-5 py-3">
+                  <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded bg-[var(--bg-3)] flex items-center justify-center">🍷</div>
+                    <div>
+                      <span>Domaine Leflaive Puligny-Montrachet 2020</span>
+                      <p class="mono text-[10px] text-[var(--text-3)] mt-0.5">Bourgogne · 1er Cru · W-01928</p>
+                    </div>
+                  </div>
+                </td>
+                <td class="mono text-right text-[var(--text-2)]">¥18,000</td>
+                <td class="mono text-right">5</td>
+                <td class="mono text-right text-[var(--phosphor)]">5</td>
+                <td class="mono text-right pr-5">¥90,000</td>
+              </tr>
+
+            </tbody>
+            <tfoot class="border-t line-2 bg-[var(--bg-1)] mono">
+              <tr>
+                <td colspan="4" class="pl-5 py-2 text-right text-[var(--text-3)] text-xs">小計</td>
+                <td class="text-right pr-5 py-2">¥192,400</td>
+              </tr>
+              <tr>
+                <td colspan="4" class="pl-5 py-2 text-right text-[var(--text-3)] text-xs">割り当て調整 (allocation pending)</td>
+                <td class="text-right pr-5 py-2 text-[var(--amber)]">— ¥??</td>
+              </tr>
+              <tr class="border-t line">
+                <td colspan="4" class="pl-5 py-3 text-right text-xs uppercase tracking-widest">total · estimate</td>
+                <td class="text-right pr-5 py-3 text-base">¥189,400</td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+
+        <!-- Shipping -->
+        <p class="ascii-rule mt-6 mb-3">────────  shipping & note  ────────</p>
+        <div class="grid grid-cols-2 gap-3">
+          <div class="card p-4">
+            <p class="text-[10px] tracking-widest uppercase text-[var(--text-3)]">SHIP TO</p>
+            <p class="text-sm mt-2">寿司 SHIN</p>
+            <p class="text-xs text-[var(--text-2)] mt-1 leading-relaxed">〒106-0031<br/>東京都港区西麻布 X-X-X</p>
+            <p class="mono text-[10px] text-[var(--text-3)] mt-2">担当：白石 圭 · 03-xxxx-xxxx</p>
+          </div>
+          <div class="card p-4">
+            <p class="text-[10px] tracking-widest uppercase text-[var(--text-3)]">NOTE</p>
+            <p class="text-sm mt-2 leading-relaxed text-[var(--text-2)]">5/16以降の発送希望。前日午前中までに集荷時間ご連絡ください。</p>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="h-8 border-t line flex items-center px-5 text-[11px] text-[var(--text-3)] gap-4 mono bg-[var(--bg)]">
+      <span><span class="text-[var(--phosphor)]">●</span> realtime · status auto-updates</span>
+      <span class="ml-auto">⌘P print · ⌘E export</span>
+    </div>
+
+  </section>
+</div>
+</body>
+</html>

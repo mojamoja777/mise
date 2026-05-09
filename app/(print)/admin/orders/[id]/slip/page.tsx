@@ -78,11 +78,11 @@ export default async function SlipPage({ params }: Props) {
       </div>
 
       {/* 伝票本体 */}
-      <div className="max-w-[210mm] mx-auto p-8 bg-white text-gray-900 text-sm font-sans">
+      <div className="max-w-[210mm] mx-auto p-8 bg-white text-ink text-sm font-sans">
         {/* ヘッダー */}
         <div className="text-center mb-8">
           <h1 className="text-2xl font-bold tracking-widest">納 品 書</h1>
-          <p className="text-xs text-gray-500 mt-1">
+          <p className="text-xs text-ink-3 mt-1">
             発行日：{issuedAt.toLocaleDateString("ja-JP", {
               year: "numeric",
               month: "2-digit",
@@ -98,10 +98,10 @@ export default async function SlipPage({ params }: Props) {
               {buyer?.company_name ?? "—"}{" "}
               <span className="text-sm font-normal">御中</span>
             </p>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-ink-3">
               注文番号：#{order.id.slice(0, 8).toUpperCase()}
             </p>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-ink-3">
               注文日：{orderedAt.toLocaleDateString("ja-JP", {
                 year: "numeric",
                 month: "2-digit",
@@ -109,13 +109,13 @@ export default async function SlipPage({ params }: Props) {
               })}
             </p>
           </div>
-          <div className="text-right text-xs text-gray-600">
-            <p className="font-bold text-sm text-gray-900 mb-1">Mise</p>
+          <div className="text-right text-xs text-ink-2">
+            <p className="font-bold text-sm text-ink mb-1">Mise</p>
           </div>
         </div>
 
         {/* 合計金額 */}
-        <div className="bg-gray-50 border border-gray-300 rounded px-4 py-3 mb-6 flex justify-between items-center">
+        <div className="bg-paper-2 border border-rule-strong rounded px-4 py-3 mb-6 flex justify-between items-center">
           <span className="font-bold">合計金額</span>
           <span className="text-xl font-bold">
             ¥{total.toLocaleString()}
@@ -144,10 +144,10 @@ export default async function SlipPage({ params }: Props) {
               } | null;
               const subtotal = item.unit_price * item.quantity;
               return (
-                <tr key={item.id} className="border-b border-gray-200">
-                  <td className="py-2 text-xs text-gray-500">{index + 1}</td>
+                <tr key={item.id} className="border-b border-rule">
+                  <td className="py-2 text-xs text-ink-3">{index + 1}</td>
                   <td className="py-2 text-sm">{product?.name ?? "—"}</td>
-                  <td className="py-2 text-xs text-gray-500">
+                  <td className="py-2 text-xs text-ink-3">
                     {[product?.producer, product?.region]
                       .filter(Boolean)
                       .join(" / ") || "—"}
@@ -179,15 +179,15 @@ export default async function SlipPage({ params }: Props) {
         {/* 備考 */}
         {order.note && (
           <div className="mb-6">
-            <p className="text-xs font-semibold text-gray-600 mb-1">備考</p>
-            <p className="text-sm text-gray-700 border border-gray-200 rounded p-3">
+            <p className="text-xs font-semibold text-ink-2 mb-1">備考</p>
+            <p className="text-sm text-ink-2 border border-rule rounded p-3">
               {order.note}
             </p>
           </div>
         )}
 
         {/* フッター */}
-        <div className="border-t border-gray-300 pt-4 mt-8 text-center text-xs text-gray-400">
+        <div className="border-t border-rule-strong pt-4 mt-8 text-center text-xs text-ink-3">
           この伝票は発送準備用です。
         </div>
       </div>

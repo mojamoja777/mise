@@ -1,10 +1,8 @@
-// app/(admin)/admin/invoices/page.tsx
-// 管理者 - 請求書一覧
-
 import Link from "next/link";
 import { Download, FileText } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { GenerateInvoicesButton } from "@/components/admin/GenerateInvoicesButton";
+import { PlateCorner, Tag } from "@/components/ui";
 
 type Props = {
   searchParams: Promise<{ month?: string }>;
@@ -26,7 +24,7 @@ export default async function AdminInvoicesPage({ searchParams }: Props) {
       issued_at,
       updated_at,
       users!inner ( company_name )
-    `
+    `,
     )
     .order("period_start", { ascending: false })
     .order("issued_at", { ascending: false });
@@ -42,28 +40,29 @@ export default async function AdminInvoicesPage({ searchParams }: Props) {
 
   const { data: invoices, error } = await query;
 
-  // 月のユニーク一覧（フィルタUI用）
-  const months = Array.from(
-    new Set(
-      invoices?.map((inv) => inv.period_start.slice(0, 7)) ?? []
-    )
-  );
+  const months = Array.from(new Set(invoices?.map((inv) => inv.period_start.slice(0, 7)) ?? []));
 
   return (
-    <div className="p-8">
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">請求書</h1>
-        <GenerateInvoicesButton />
-      </div>
+    <div className="px-10 pt-7 pb-10 relative">
+      <PlateCorner number="09" />
 
-      {/* 月フィルタ & 一括DL */}
-      <div className="flex items-center gap-3 mb-4">
+      <header className="border-b border-rule pb-5 mb-7 flex items-baseline justify-between">
+        <div>
+          <p className="caps">Plate IX · Invoices</p>
+          <h1 className="font-serif text-5xl mt-2 tracking-tight">請求簿</h1>
+          <p className="font-italic-serif text-base mt-2 text-ink-3">毎月1日に前月分を自動生成</p>
+        </div>
+        <GenerateInvoicesButton />
+      </header>
+
+      {/* Filter & bulk DL */}
+      <div className="flex items-center gap-3 mb-5">
         <form className="flex items-center gap-2">
-          <label className="text-xs text-gray-600">対象月：</label>
+          <label className="caps">対象月</label>
           <select
             name="month"
             defaultValue={month ?? ""}
-            className="text-sm border border-gray-300 rounded-lg px-3 py-1.5 bg-white"
+            className="text-sm border border-rule-strong px-3 py-1.5 bg-paper-2 focus:outline-none focus:border-plate"
           >
             <option value="">すべて</option>
             {months.map((m) => (
@@ -74,7 +73,7 @@ export default async function AdminInvoicesPage({ searchParams }: Props) {
           </select>
           <button
             type="submit"
-            className="text-sm bg-white border border-gray-300 text-gray-700 px-3 py-1.5 rounded-lg hover:bg-gray-50"
+            className="text-xs bg-paper border border-rule-strong text-ink-2 px-3 py-1.5 hover:bg-paper-2 transition-colors"
           >
             絞り込み
           </button>
@@ -82,115 +81,92 @@ export default async function AdminInvoicesPage({ searchParams }: Props) {
         {month && (
           <a
             href={`/api/invoices/zip?month=${month}`}
-            className="inline-flex items-center gap-1.5 bg-[#6B1A35] text-white px-3 py-1.5 rounded-lg text-sm hover:bg-[#5a1630] transition-colors"
+            className="inline-flex items-center gap-1.5 bg-plate text-paper px-3 py-1.5 text-xs hover:bg-plate-deep transition-colors font-italic-serif"
           >
-            <Download className="w-4 h-4" />
+            <Download className="w-3.5 h-3.5" />
             一括ZIPダウンロード（{month}）
           </a>
         )}
       </div>
 
       {error && (
-        <div className="bg-red-50 border border-red-200 text-red-700 text-sm px-4 py-3 rounded-xl mb-4">
+        <div className="bg-crimson-bg border border-crimson text-crimson text-sm px-4 py-3 mb-4">
           請求書の取得に失敗しました。
         </div>
       )}
 
       {invoices && invoices.length > 0 ? (
-        <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-          <table className="w-full text-sm">
-            <thead className="bg-gray-50 border-b border-gray-200">
-              <tr>
-                <th className="text-left px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">
-                  請求番号
-                </th>
-                <th className="text-left px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">
-                  請求先
-                </th>
-                <th className="text-left px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">
-                  対象期間
-                </th>
-                <th className="text-right px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">
-                  合計金額（税込）
-                </th>
-                <th className="text-left px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">
-                  発行日
-                </th>
-                <th className="px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide text-center">
-                  PDF
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-100">
-              {invoices.map((invoice) => {
-                const buyer = invoice.users as {
-                  company_name: string;
-                } | null;
-                const revised =
-                  new Date(invoice.updated_at).getTime() -
-                    new Date(invoice.issued_at).getTime() >
-                  60_000;
-                return (
-                  <tr
-                    key={invoice.id}
-                    className="hover:bg-gray-50 transition-colors"
-                  >
-                    <td className="px-5 py-4">
-                      <Link
-                        href={`/admin/invoices/${invoice.id}`}
-                        className="font-mono text-xs text-[#6B1A35] hover:underline"
-                      >
-                        #{invoice.id.slice(0, 8).toUpperCase()}
-                      </Link>
-                    </td>
-                    <td className="px-5 py-4 text-gray-900">
-                      <Link
-                        href={`/admin/invoices/${invoice.id}`}
-                        className="hover:text-[#6B1A35]"
-                      >
-                        {buyer?.company_name ?? "—"}
-                      </Link>
-                      {revised && (
-                        <span className="ml-2 inline-block text-[10px] text-red-600 border border-red-300 rounded px-1.5 py-0.5">
-                          修正あり
-                        </span>
-                      )}
-                    </td>
-                    <td className="px-5 py-4 text-gray-600 text-xs">
-                      {invoice.period_start} 〜 {invoice.period_end}
-                    </td>
-                    <td className="px-5 py-4 text-right font-medium text-gray-900">
-                      ¥{Number(invoice.total_amount).toLocaleString()}
-                    </td>
-                    <td className="px-5 py-4 text-gray-500 text-xs">
-                      {new Date(invoice.issued_at).toLocaleDateString("ja-JP")}
-                    </td>
-                    <td className="px-5 py-4 text-center">
-                      <a
-                        href={`/api/invoices/${invoice.id}/pdf`}
-                        className="inline-flex items-center gap-1 text-[#6B1A35] hover:underline text-xs"
-                      >
-                        <FileText className="w-3.5 h-3.5" />
-                        DL
-                      </a>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="border-b border-plate">
+              <th className="text-left py-3 caps w-32">請求番号</th>
+              <th className="text-left py-3 caps">請求先</th>
+              <th className="text-left py-3 caps w-40">対象期間</th>
+              <th className="text-right py-3 caps w-32">合計（税込）</th>
+              <th className="text-left py-3 caps w-28">発行日</th>
+              <th className="text-center py-3 caps w-16">PDF</th>
+            </tr>
+          </thead>
+          <tbody>
+            {invoices.map((invoice) => {
+              const buyer = invoice.users as { company_name: string } | null;
+              const revised =
+                new Date(invoice.updated_at).getTime() -
+                  new Date(invoice.issued_at).getTime() >
+                60_000;
+              return (
+                <tr key={invoice.id} className="border-b border-rule hover:bg-paper-2 transition-colors">
+                  <td className="py-3.5">
+                    <Link
+                      href={`/admin/invoices/${invoice.id}`}
+                      className="font-mono text-xs text-plate hover:underline"
+                    >
+                      #{invoice.id.slice(0, 8).toUpperCase()}
+                    </Link>
+                  </td>
+                  <td className="py-3.5">
+                    <Link
+                      href={`/admin/invoices/${invoice.id}`}
+                      className="font-serif tracking-tight hover:text-plate"
+                    >
+                      {buyer?.company_name ?? "—"}
+                    </Link>
+                    {revised && <Tag variant="amber" className="ml-2">修正あり</Tag>}
+                  </td>
+                  <td className="text-ink-2 text-xs plate-num">
+                    {invoice.period_start} 〜 {invoice.period_end}
+                  </td>
+                  <td className="text-right plate-num text-plate">
+                    ¥{Number(invoice.total_amount).toLocaleString()}
+                  </td>
+                  <td className="text-ink-3 text-xs plate-num">
+                    {new Date(invoice.issued_at).toLocaleDateString("ja-JP")}
+                  </td>
+                  <td className="text-center">
+                    <a
+                      href={`/api/invoices/${invoice.id}/pdf`}
+                      className="inline-flex items-center gap-1 text-plate hover:underline text-xs"
+                    >
+                      <FileText className="w-3.5 h-3.5" />
+                      DL
+                    </a>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
       ) : (
-        <div className="bg-white rounded-xl border border-gray-200 flex flex-col items-center justify-center py-20 text-gray-400">
+        <div className="bg-paper-2 border border-rule flex flex-col items-center justify-center py-20 text-ink-3">
           <FileText className="w-10 h-10 mb-3" />
-          <p className="text-sm">
+          <p className="font-italic-serif text-base">
             {month ? "該当月の請求書がありません" : "請求書がまだありません"}
           </p>
-          <p className="text-xs mt-1">
-            毎月1日に前月分が自動生成されます
-          </p>
+          <p className="caps mt-2">毎月1日に前月分が自動生成されます</p>
         </div>
       )}
+
+      <p className="ornament mt-10" />
     </div>
   );
 }

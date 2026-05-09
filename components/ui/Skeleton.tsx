@@ -4,7 +4,7 @@
 export function Skeleton({ className = "" }: { className?: string }) {
   return (
     <div
-      className={`animate-pulse bg-gray-200/70 rounded ${className}`}
+      className={`animate-pulse bg-paper-3/70 rounded ${className}`}
       aria-hidden
     />
   );
@@ -37,13 +37,13 @@ export function SkeletonTable({
   cols?: number;
 }) {
   return (
-    <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-      <div className="bg-gray-50 border-b border-gray-200 px-5 py-3 flex gap-5">
+    <div className="bg-white rounded-xl border border-rule overflow-hidden">
+      <div className="bg-paper-2 border-b border-rule px-5 py-3 flex gap-5">
         {Array.from({ length: cols }).map((_, i) => (
           <Skeleton key={i} className="h-3 flex-1" />
         ))}
       </div>
-      <div className="divide-y divide-gray-100">
+      <div className="divide-y divide-rule">
         {Array.from({ length: rows }).map((_, r) => (
           <div key={r} className="px-5 py-4 flex gap-5 items-center">
             {Array.from({ length: cols }).map((_, c) => (
@@ -62,7 +62,7 @@ export function SkeletonCardGrid({ count = 8 }: { count?: number }) {
       {Array.from({ length: count }).map((_, i) => (
         <div
           key={i}
-          className="bg-white rounded-xl border border-gray-100 overflow-hidden"
+          className="bg-white rounded-xl border border-rule overflow-hidden"
         >
           <Skeleton className="aspect-square rounded-none" />
           <div className="p-2.5 space-y-2">

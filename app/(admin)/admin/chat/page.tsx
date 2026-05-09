@@ -11,7 +11,7 @@ export default async function AdminChatPage() {
   const auth = await requireAdmin();
   if (!auth.ok) {
     return (
-      <div className="p-8 text-sm text-red-600">{auth.error}</div>
+      <div className="p-8 text-sm text-crimson">{auth.error}</div>
     );
   }
   const threads = await fetchAdminThreads(auth.supabase, auth.user.id);
@@ -19,7 +19,7 @@ export default async function AdminChatPage() {
   return (
     <div className="flex h-screen">
       <AdminThreadList threads={threads} activeBuyerId={null} />
-      <div className="flex-1 flex flex-col items-center justify-center bg-gray-50 text-gray-400">
+      <div className="flex-1 flex flex-col items-center justify-center bg-paper-2 text-ink-3">
         <MessageCircle className="w-10 h-10 mb-3" />
         <p className="text-sm">左の一覧から飲食店を選択してください</p>
         {threads.length === 0 && (
@@ -27,7 +27,7 @@ export default async function AdminChatPage() {
             まだメッセージのやり取りはありません。
             <Link
               href="/admin/buyers"
-              className="text-[#6B1A35] hover:underline ml-1"
+              className="text-[#1c3a5c] hover:underline ml-1"
             >
               顧客一覧へ
             </Link>

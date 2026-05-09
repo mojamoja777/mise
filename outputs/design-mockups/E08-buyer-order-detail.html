@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mise — Editorial · Order Detail</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+JP:wght@300;400;500&family=Noto+Serif+JP:wght@300;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="_editorial.css" />
+</head>
+<body class="grain">
+
+<!-- Top header -->
+<header class="border-b rule">
+  <div class="max-w-[1280px] mx-auto px-10 h-16 flex items-center justify-between">
+    <div class="flex items-baseline gap-4">
+      <p class="serif text-2xl">Mise</p>
+      <p class="caps">Maison du Vin</p>
+    </div>
+    <nav class="flex items-center gap-8 text-sm" style="color: var(--ink-2);">
+      <a class="hover:text-[var(--bordeaux)]">Cellar</a>
+      <a class="hover:text-[var(--bordeaux)]">Allocations</a>
+      <a style="color: var(--bordeaux); font-weight: 500;">Orders</a>
+      <a class="hover:text-[var(--bordeaux)]">Invoices</a>
+      <a class="hover:text-[var(--bordeaux)]">Chat <span class="dot dot-forest ml-1"></span></a>
+      <span class="hairline w-px h-4"></span>
+      <a class="flex items-center gap-1.5">🛒 <span>2</span></a>
+    </nav>
+  </div>
+</header>
+
+<main class="max-w-[1280px] mx-auto px-10 py-10">
+
+  <!-- Breadcrumb -->
+  <div class="caps mb-4">
+    <a style="color: var(--ink-3);">← Orders</a>
+    <span class="mx-2" style="color: var(--ink-3);">·</span>
+    <span class="ledger-num" style="color: var(--ink-3);">#B7E91C-3F</span>
+  </div>
+
+  <!-- Hero status -->
+  <section class="card p-8 mb-8">
+    <div class="flex items-start justify-between">
+      <div>
+        <p class="caps">Order · #B7E91C-3F</p>
+        <h1 class="serif text-6xl mt-2 tabular">¥189,400</h1>
+        <p class="text-sm mt-2" style="color: var(--ink-2);">7点 · 2026-05-08 受付 · 5/15 18:00 締切後に確定</p>
+      </div>
+      <div class="text-right">
+        <span class="tag tag-amber pulse" style="font-size: 11px; padding: 4px 12px;">Allocation pending</span>
+        <p class="ledger-num text-2xl mt-3" style="color: var(--amber);">残 03:38:00</p>
+      </div>
+    </div>
+
+    <!-- Timeline -->
+    <p class="caps mt-8 mb-3">Status timeline</p>
+    <div class="grid grid-cols-4 gap-0 border-y" style="border-color: var(--gold);">
+      <div class="p-4" style="border-right: 1px solid var(--rule);">
+        <div class="flex items-center gap-2"><span class="dot dot-forest"></span><span class="caps" style="color: var(--forest);">01 · Ordered</span></div>
+        <p class="serif text-lg mt-2">注文受付</p>
+        <p class="text-xs mt-1" style="color: var(--ink-3);">5/03 14:21</p>
+      </div>
+      <div class="p-4" style="border-right: 1px solid var(--rule); background: rgba(176,117,21,0.06);">
+        <div class="flex items-center gap-2"><span class="dot dot-amber pulse"></span><span class="caps" style="color: var(--amber);">02 · Deadline</span></div>
+        <p class="serif text-lg mt-2">受付締切待ち</p>
+        <p class="text-xs mt-1" style="color: var(--ink-3);">5/15 18:00 · 残 03:38:00</p>
+      </div>
+      <div class="p-4 opacity-50" style="border-right: 1px solid var(--rule);">
+        <div class="flex items-center gap-2"><span class="dot dot-ink"></span><span class="caps">03 · Allocated</span></div>
+        <p class="serif text-lg mt-2" style="color: var(--ink-3);">配分結果通知</p>
+        <p class="text-xs mt-1" style="color: var(--ink-4);">— 待機中 —</p>
+      </div>
+      <div class="p-4 opacity-50">
+        <div class="flex items-center gap-2"><span class="dot dot-ink"></span><span class="caps">04 · Shipped</span></div>
+        <p class="serif text-lg mt-2" style="color: var(--ink-3);">発送完了</p>
+        <p class="text-xs mt-1" style="color: var(--ink-4);">— 待機中 —</p>
+      </div>
+    </div>
+
+    <!-- Caution band -->
+    <div class="mt-6 p-4 flex gap-3" style="background: var(--amber-bg); border: 1px solid var(--amber);">
+      <span class="serif text-xl" style="color: var(--amber);">⚠</span>
+      <div>
+        <p class="font-medium mb-1" style="color: var(--amber);">割り当て対象商品が含まれます</p>
+        <p class="text-sm leading-relaxed" style="color: var(--ink-2);">受付締切後、店舗側で各買い手への配分本数を決定します。希望本数を下回る可能性があり、確定後の<span style="color: var(--ink); font-weight: 500;">キャンセルは不可</span>です。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Items -->
+  <p class="fleuron mb-6"></p>
+  <h2 class="serif text-2xl mb-5">明細</h2>
+
+  <div class="card overflow-hidden mb-8">
+    <table class="ledger w-full">
+      <thead>
+        <tr>
+          <th class="pl-6">Item</th>
+          <th class="text-right w-24">Unit</th>
+          <th class="text-right w-24">Requested</th>
+          <th class="text-right w-32">Allocated</th>
+          <th class="text-right w-32 pr-6">Subtotal</th>
+        </tr>
+      </thead>
+      <tbody>
+
+        <tr class="row">
+          <td class="pl-6">
+            <div class="flex items-center gap-3.5">
+              <div class="seal" style="width: 44px; height: 44px;">🍷</div>
+              <div>
+                <div class="flex items-center gap-2">
+                  <span class="serif text-base">Tollot-Beaut Corton-Bressandes 2020</span>
+                  <span class="tag tag-amber">allocation</span>
+                </div>
+                <p class="caps mt-1">Bourgogne · Grand Cru · W-01931</p>
+              </div>
+            </div>
+          </td>
+          <td class="text-right ledger-num" style="color: var(--ink-2);">¥22,800</td>
+          <td class="text-right ledger-num">2</td>
+          <td class="text-right ledger-num" style="color: var(--amber);">— pending —</td>
+          <td class="text-right pr-6 ledger-num" style="color: var(--ink-3);">¥45,600</td>
+        </tr>
+
+        <tr class="row">
+          <td class="pl-6">
+            <div class="flex items-center gap-3.5">
+              <div class="seal" style="width: 44px; height: 44px;">🍾</div>
+              <div>
+                <span class="serif text-base">Egly-Ouriet Brut Tradition GC</span>
+                <p class="caps mt-1">Champagne · NV · W-01872</p>
+              </div>
+            </div>
+          </td>
+          <td class="text-right ledger-num" style="color: var(--ink-2);">¥14,200</td>
+          <td class="text-right ledger-num">4</td>
+          <td class="text-right ledger-num" style="color: var(--forest);">4</td>
+          <td class="text-right pr-6 ledger-num">¥56,800</td>
+        </tr>
+
+        <tr class="row">
+          <td class="pl-6">
+            <div class="flex items-center gap-3.5">
+              <div class="seal" style="width: 44px; height: 44px;">🍷</div>
+              <div>
+                <span class="serif text-base">Domaine Leflaive Puligny-Montrachet 2020</span>
+                <p class="caps mt-1">Bourgogne · 1er Cru · W-01928</p>
+              </div>
+            </div>
+          </td>
+          <td class="text-right ledger-num" style="color: var(--ink-2);">¥18,000</td>
+          <td class="text-right ledger-num">5</td>
+          <td class="text-right ledger-num" style="color: var(--forest);">5</td>
+          <td class="text-right pr-6 ledger-num">¥90,000</td>
+        </tr>
+
+      </tbody>
+      <tfoot>
+        <tr style="background: var(--paper-2);">
+          <td colspan="4" class="text-right caps pl-6 pt-3 pb-2">小計</td>
+          <td class="text-right pr-6 pt-3 pb-2 ledger-num">¥192,400</td>
+        </tr>
+        <tr style="background: var(--paper-2);">
+          <td colspan="4" class="text-right caps pl-6 pb-2">割当調整</td>
+          <td class="text-right pr-6 pb-2 ledger-num" style="color: var(--amber);">— ¥??</td>
+        </tr>
+        <tr style="background: var(--paper-2); border-top: 2px solid var(--rule-strong);">
+          <td colspan="4" class="text-right caps pl-6 pt-3 pb-3" style="font-size: 11px;">Total · estimate</td>
+          <td class="text-right pr-6 pt-3 pb-3 serif text-2xl">¥189,400</td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+
+  <!-- Shipping & note -->
+  <p class="fleuron mb-6"></p>
+  <div class="grid grid-cols-2 gap-6">
+    <div class="card p-6">
+      <p class="caps mb-3">Ship to</p>
+      <p class="serif text-lg">寿司 SHIN</p>
+      <p class="text-sm mt-2 leading-relaxed" style="color: var(--ink-2);">〒106-0031<br/>東京都港区西麻布 X-X-X</p>
+      <p class="caps mt-3">担当 · 白石 圭 · <span class="ledger-num">03-xxxx-xxxx</span></p>
+    </div>
+    <div class="card p-6">
+      <p class="caps mb-3">Note</p>
+      <p class="text-sm leading-relaxed" style="color: var(--ink-2);">5/16以降の発送希望。前日午前中までに集荷時間ご連絡ください。</p>
+    </div>
+  </div>
+
+  <!-- Action bar -->
+  <div class="mt-8 flex items-center justify-between">
+    <p class="caps" style="color: var(--ink-3);"><span class="dot dot-forest" style="margin-right: 4px;"></span>realtime · status auto-updates</p>
+    <div class="flex gap-2">
+      <button class="btn">📄 PDF</button>
+      <button class="btn">💬 店主に質問</button>
+    </div>
+  </div>
+
+</main>
+
+<footer class="border-t rule mt-16">
+  <div class="max-w-[1280px] mx-auto px-10 py-8 flex justify-between text-xs" style="color: var(--ink-3);">
+    <span>Mise · 株式会社○○ · 通信販売酒類小売業免許 [99-9999999-99]</span>
+    <span class="caps">May 2026 · No. 17</span>
+  </div>
+</footer>
+
+</body>
+</html>

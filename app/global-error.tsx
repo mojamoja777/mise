@@ -63,7 +63,7 @@ export default function GlobalError({
           onClick={reset}
           style={{
             padding: "10px 24px",
-            background: "#6B1A35",
+            background: "#1c3a5c",
             color: "white",
             border: "none",
             borderRadius: 12,

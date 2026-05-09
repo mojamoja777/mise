@@ -1,12 +1,10 @@
-// app/(auth)/login/page.tsx
-// ログイン画面
-// メールアドレスとパスワードで Supabase Auth にサインイン
-
 "use client";
 
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { login } from "./actions";
+import { PlateCorner } from "@/components/ui/PlateCorner";
+import { Button } from "@/components/ui/Button";
 
 export default function LoginPage() {
   const [error, setError] = useState<string | null>(null);
@@ -16,44 +14,39 @@ export default function LoginPage() {
   async function handleSubmit(formData: FormData) {
     setLoading(true);
     setError(null);
-
     const result = await login(formData);
-
     if (result?.error) {
       setError(result.error);
       setLoading(false);
     }
-    // 成功時は Server Action 内で redirect() するためここには戻らない
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#FDF4F6] px-4">
-      <div className="w-full max-w-sm">
-        {/* ロゴ・タイトル */}
-        <div className="text-center mb-8">
-          <div className="text-5xl mb-3">🍷</div>
-          <h1 className="text-lg font-semibold text-[#3B0A1E] tracking-wide">
-            Wine Order
+    <div className="min-h-screen flex items-center justify-center px-4 relative">
+      <PlateCorner number="00" />
+
+      <div className="w-full max-w-md">
+        <div className="text-center mb-10">
+          <p className="caps">Maison du Vin · est. 2026</p>
+          <h1 className="font-serif text-6xl mt-3 tracking-tight">
+            <span className="font-italic-serif text-plate">Mise</span>
           </h1>
-          <p className="text-sm text-gray-600 mt-1">ワイン発注管理</p>
+          <p className="font-italic-serif text-base mt-2 text-ink-2">
+            ようこそ。お店の方はこちらから。
+          </p>
+          <div className="hairline-gold w-24 mx-auto mt-6" />
         </div>
 
-        {/* ログインフォーム */}
-        <div className="bg-white rounded-2xl shadow-sm p-8">
+        <div className="bg-paper border border-rule p-10">
           <form action={handleSubmit} className="space-y-5">
-            {/* エラーメッセージ */}
             {error && (
-              <div className="bg-red-50 border border-red-200 text-red-700 text-sm px-4 py-3 rounded-xl">
+              <div className="bg-crimson-bg border border-crimson text-crimson text-sm px-4 py-3">
                 {error}
               </div>
             )}
 
-            {/* メールアドレス */}
             <div>
-              <label
-                htmlFor="email"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
+              <label htmlFor="email" className="caps block mb-1.5">
                 メールアドレス
               </label>
               <input
@@ -63,16 +56,12 @@ export default function LoginPage() {
                 autoComplete="email"
                 required
                 placeholder="example@restaurant.jp"
-                className="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#6B1A35]"
+                className="w-full border border-rule-strong bg-paper-2 px-4 py-3 text-sm placeholder:text-ink-3 focus:outline-none focus:border-plate"
               />
             </div>
 
-            {/* パスワード */}
             <div>
-              <label
-                htmlFor="password"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
+              <label htmlFor="password" className="caps block mb-1.5">
                 パスワード
               </label>
               <div className="relative">
@@ -82,33 +71,34 @@ export default function LoginPage() {
                   type={showPassword ? "text" : "password"}
                   autoComplete="current-password"
                   required
-                  className="w-full border border-gray-200 rounded-lg px-4 py-3 pr-12 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#6B1A35]"
+                  className="w-full border border-rule-strong bg-paper-2 px-4 py-3 pr-12 text-sm focus:outline-none focus:border-plate"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-ink-3 hover:text-plate"
                   aria-label={showPassword ? "パスワードを隠す" : "パスワードを表示"}
                 >
-                  {showPassword ? (
-                    <EyeOff className="w-5 h-5" />
-                  ) : (
-                    <Eye className="w-5 h-5" />
-                  )}
+                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </button>
               </div>
             </div>
 
-            {/* ログインボタン */}
-            <button
+            <Button
               type="submit"
               disabled={loading}
-              className="w-full bg-[#6B1A35] text-white font-medium py-3 px-6 rounded-xl hover:bg-[#9B2D50] active:opacity-80 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-base"
+              variant="primary"
+              size="lg"
+              className="w-full justify-center"
             >
-              {loading ? "ログイン中..." : "ログイン"}
-            </button>
+              {loading ? "ログイン中..." : "ログイン ⏎"}
+            </Button>
           </form>
         </div>
+
+        <p className="caps text-center mt-6 text-ink-3">
+          Plate № 00 · 2026
+        </p>
       </div>
     </div>
   );

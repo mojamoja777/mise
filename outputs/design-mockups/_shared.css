@@ -1,0 +1,105 @@
+/* Mise · Operator+ design tokens */
+:root {
+  --bg: #0a0a0c;
+  --bg-1: #0f0f12;
+  --bg-2: #14141a;
+  --bg-3: #1c1c24;
+  --bg-4: #25252e;
+  --line: #25252c;
+  --line-2: #34343e;
+  --line-3: #4a4a55;
+  --text: #e8e8ec;
+  --text-2: #a3a3ad;
+  --text-3: #6c6c75;
+  --text-4: #4a4a52;
+  --bordeaux: #c54a6f;
+  --bordeaux-2: #9b2d50;
+  --bordeaux-3: #5a1428;
+  --phosphor: #4ade80;
+  --phosphor-glow: rgba(74,222,128,0.35);
+  --amber: #fbbf24;
+  --cyan: #5eead4;
+  --violet: #a78bfa;
+  --rose: #fb7185;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Inter", "Noto Sans JP", sans-serif;
+  font-feature-settings: "ss01","cv11","tnum";
+  -webkit-font-smoothing: antialiased;
+}
+.mono { font-family: "JetBrains Mono", monospace; }
+.tabular { font-variant-numeric: tabular-nums; }
+.line { border-color: var(--line); }
+.line-2 { border-color: var(--line-2); }
+.line-3 { border-color: var(--line-3); }
+.dot { width: 6px; height: 6px; border-radius: 999px; display: inline-block; }
+.dot-glow { box-shadow: 0 0 8px var(--phosphor-glow); }
+kbd {
+  font-family: "JetBrains Mono", monospace; font-size: 10px;
+  padding: 2px 5px; border: 1px solid var(--line-2); border-radius: 4px;
+  color: var(--text-2); background: var(--bg-3);
+}
+/* subtle CRT scanlines */
+.scanlines::before {
+  content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 1;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(255,255,255,0.012) 0px,
+    rgba(255,255,255,0.012) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+}
+.vignette::after {
+  content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background: radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.45) 100%);
+}
+.scroll::-webkit-scrollbar { width: 6px; height: 6px; }
+.scroll::-webkit-scrollbar-thumb { background: var(--line-2); border-radius: 3px; }
+.row:hover { background: var(--bg-1); }
+.ascii-rule {
+  font-family: "JetBrains Mono", monospace; font-size: 10px;
+  color: var(--text-4); letter-spacing: 0; line-height: 1; user-select: none;
+}
+.tag {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-family: "JetBrains Mono", monospace; font-size: 10px;
+  padding: 2px 7px; border: 1px solid var(--line-2); border-radius: 3px;
+  color: var(--text-2);
+}
+.tag-bordeaux { border-color: rgba(197,74,111,0.35); background: rgba(197,74,111,0.10); color: var(--bordeaux); }
+.tag-amber { border-color: rgba(251,191,36,0.30); background: rgba(251,191,36,0.10); color: var(--amber); }
+.tag-phosphor { border-color: rgba(74,222,128,0.30); background: rgba(74,222,128,0.08); color: var(--phosphor); }
+.tag-cyan { border-color: rgba(94,234,212,0.30); background: rgba(94,234,212,0.08); color: var(--cyan); }
+.tag-violet { border-color: rgba(167,139,250,0.30); background: rgba(167,139,250,0.10); color: var(--violet); }
+.h-band {
+  background: linear-gradient(90deg, transparent, rgba(197,74,111,0.5), transparent);
+  height: 1px;
+}
+.btn {
+  font-size: 12px; padding: 6px 12px; border: 1px solid var(--line-2);
+  border-radius: 6px; color: var(--text); background: var(--bg-2);
+  display: inline-flex; align-items: center; gap: 6px; transition: all .15s ease;
+}
+.btn:hover { background: var(--bg-3); border-color: var(--line-3); }
+.btn-primary { background: var(--bordeaux-2); border-color: var(--bordeaux); color: white; }
+.btn-primary:hover { background: var(--bordeaux); }
+.btn-ghost { background: transparent; }
+.input {
+  background: var(--bg-2); border: 1px solid var(--line); border-radius: 6px;
+  padding: 6px 10px; font-size: 12px; color: var(--text); outline: none;
+}
+.input:focus { border-color: var(--bordeaux); }
+.card { background: var(--bg-1); border: 1px solid var(--line); border-radius: 8px; }
+.subcard { background: var(--bg-2); border: 1px solid var(--line); border-radius: 6px; }
+.pulse {
+  animation: pulse 2.5s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+.glow-text-phosphor { color: var(--phosphor); text-shadow: 0 0 12px var(--phosphor-glow); }

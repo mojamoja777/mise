@@ -3,6 +3,7 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { TenantSettingsForm } from "@/components/admin/TenantSettingsForm";
+import { PlateCorner } from "@/components/ui";
 
 export default async function AdminSettingsPage() {
   const supabase = await createClient();
@@ -15,7 +16,7 @@ export default async function AdminSettingsPage() {
   if (!user) {
     return (
       <div className="p-8">
-        <p className="text-sm text-red-600">未認証です</p>
+        <p className="text-sm text-crimson">未認証です</p>
       </div>
     );
   }
@@ -29,7 +30,7 @@ export default async function AdminSettingsPage() {
   if (!profile?.tenant_id) {
     return (
       <div className="p-8">
-        <p className="text-sm text-red-600">
+        <p className="text-sm text-crimson">
           テナントに紐付けられていません。管理者に連絡してください。
         </p>
       </div>
@@ -45,7 +46,7 @@ export default async function AdminSettingsPage() {
   if (error || !tenant) {
     return (
       <div className="p-8">
-        <p className="text-sm text-red-600">
+        <p className="text-sm text-crimson">
           テナント情報の取得に失敗しました。
         </p>
       </div>
@@ -53,15 +54,20 @@ export default async function AdminSettingsPage() {
   }
 
   return (
-    <div className="p-8 max-w-3xl">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">設定</h1>
-        <p className="text-sm text-gray-500 mt-1">
+    <div className="px-10 pt-7 pb-10 max-w-4xl relative">
+      <PlateCorner number="00" />
+
+      <header className="border-b border-rule pb-5 mb-7">
+        <p className="caps">House · Settings</p>
+        <h1 className="font-serif text-5xl mt-2 tracking-tight">設定</h1>
+        <p className="font-italic-serif text-base mt-2 text-ink-3">
           請求書・伝票に記載される酒屋情報を編集します
         </p>
-      </div>
+      </header>
 
       <TenantSettingsForm tenant={tenant} />
+
+      <p className="ornament mt-10" />
     </div>
   );
 }

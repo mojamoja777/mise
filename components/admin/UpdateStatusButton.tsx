@@ -26,11 +26,11 @@ export function UpdateStatusButton({ orderId, currentStatus }: Props) {
 
   return (
     <div>
-      {error && <p className="text-red-600 text-sm mb-2">{error}</p>}
+      {error && <p className="text-crimson text-sm mb-2">{error}</p>}
       <button
         onClick={handleClick}
         disabled={loading}
-        className="px-5 py-2.5 bg-[#6B1A35] text-white text-sm font-medium rounded-xl hover:bg-[#9B2D50] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        className="px-5 py-2.5 bg-[#1c3a5c] text-white text-sm font-medium rounded-xl hover:bg-[#0e2238] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
       >
         {loading ? "処理中..." : "受注承認"}
       </button>

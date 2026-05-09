@@ -28,6 +28,8 @@ export async function getActiveProducts(): Promise<ActiveProduct[]> {
     .from("products")
     .select("*")
     .eq("is_active", true)
+    .eq("status", "published")
+    .is("deleted_at", null)
     .order("name");
 
   return data ?? [];

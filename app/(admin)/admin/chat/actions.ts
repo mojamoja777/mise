@@ -101,6 +101,6 @@ export async function markAdminThreadRead(buyerId: string): Promise<Result> {
     );
   if (error) return { error: "既読の更新に失敗しました。" };
 
-  revalidatePath("/admin/chat");
+  // NOTE: page render 中に呼ばれる前提なので revalidatePath は呼ばない（Next.js 16 制約）
   return { error: null };
 }

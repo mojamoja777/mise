@@ -80,6 +80,8 @@ export async function markBuyerThreadRead(): Promise<Result> {
     .eq("id", auth.user.id);
   if (error) return { error: "既読の更新に失敗しました。" };
 
-  revalidatePath("/buyer/chat");
+  // NOTE: 本関数は page render 中に呼ばれるため revalidatePath は呼ばない
+  // （Next.js 16 で「render 中の revalidate は unsupported」エラーになる）。
+  // last_chat_seen_at の表示反映は次のナビゲーションで自然に行われる。
   return { error: null };
 }

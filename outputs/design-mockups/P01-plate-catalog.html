@@ -1,0 +1,318 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mise — Plate · Catalog</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300..600;9..144,300..600&family=Inter+Tight:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+JP:wght@300;400;500&family=Noto+Serif+JP:wght@300;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="_plate.css" />
+</head>
+<body class="grain">
+
+<!-- Plate marker (top-right) -->
+<div class="plate-corner">
+  <span class="caps">Plate</span>
+  <span class="num">№ 01</span>
+</div>
+
+<!-- Top bar -->
+<header class="border-b rule">
+  <div class="max-w-[1280px] mx-auto px-10 h-16 flex items-center justify-between">
+    <div class="flex items-baseline gap-4">
+      <p class="serif-tight text-3xl tracking-tight">Mise</p>
+      <p class="caps">Maison du Vin · est. 2026</p>
+    </div>
+    <nav class="flex items-center gap-8 text-sm" style="color: var(--ink-2);">
+      <a style="color: var(--plate); font-weight: 500;">Cellar</a>
+      <a class="hover:opacity-70">Allocations</a>
+      <a class="hover:opacity-70">Orders</a>
+      <a class="hover:opacity-70">Invoices</a>
+      <a class="hover:opacity-70">Chat <span class="dot dot-forest ml-1"></span></a>
+      <span class="hairline w-px h-4"></span>
+      <a class="flex items-center gap-1.5 serif-italic">🛒 <span>2</span></a>
+    </nav>
+  </div>
+</header>
+
+<!-- Hero — like a plate frontispiece -->
+<section class="max-w-[1280px] mx-auto px-10 py-16 relative">
+
+  <div class="grid grid-cols-12 gap-10 items-end">
+    <div class="col-span-7">
+      <p class="caps mb-4">No. 17 — Mai · MMXXVI</p>
+      <h1 class="serif text-[88px] leading-[0.95] tracking-tight">
+        <span class="serif-italic" style="color: var(--plate);">Bourgogne,</span><br/>
+        <span class="serif">forgotten slopes.</span>
+      </h1>
+      <p class="serif-italic mt-3 text-2xl" style="color: var(--ink-2);">ブルゴーニュ、忘れられた斜面。</p>
+      <p class="mt-7 max-w-lg leading-relaxed" style="color: var(--ink-2);">
+        今月の入荷から12本を選びました。Saint-Aubin、Pernand-Vergelesses、
+        そして新しく取扱を始めた Domaine Tollot-Beaut。希少品はすべて受付制です。
+      </p>
+      <div class="mt-8 flex items-center gap-3">
+        <button class="btn btn-primary" style="font-size: 13px; padding: 10px 22px;">セラーを見る</button>
+        <button class="btn" style="font-size: 13px; padding: 10px 22px;">割当に申込む →</button>
+      </div>
+    </div>
+
+    <div class="col-span-5">
+      <div class="aspect-[4/5] flex items-center justify-center relative" style="background: var(--paper-2); border: 1px solid var(--plate);">
+        <!-- Plate-style schematic bottle -->
+        <div class="bottle" style="width: 90px; height: 200px;"></div>
+
+        <!-- Coordinate labels like an old plate -->
+        <p class="absolute top-4 left-4 caps" style="color: var(--plate);">Fig. (a)</p>
+        <p class="absolute top-4 right-4 caps" style="color: var(--plate);">vol. 750ml</p>
+
+        <!-- Bottom caption -->
+        <div class="absolute inset-x-0 bottom-0 px-6 py-4" style="border-top: 1px solid var(--plate); background: var(--paper);">
+          <p class="caps" style="color: var(--vermilion);">Featured</p>
+          <p class="serif-tight text-xl mt-1">Tollot-Beaut · Corton-Bressandes 2020</p>
+          <p class="text-xs mt-1" style="color: var(--ink-3);">残 6 本 · 受付期限 5/15 18:00</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="double-rule max-w-[1280px] mx-auto"></div>
+
+<!-- Cellar -->
+<section class="max-w-[1280px] mx-auto px-10 py-12">
+
+  <div class="flex items-end justify-between mb-10">
+    <div>
+      <p class="caps">Cellar · Plate II</p>
+      <h2 class="serif text-5xl mt-2 tracking-tight">今週の入荷 <span class="serif-italic ml-3" style="color: var(--ink-3);">38本</span></h2>
+    </div>
+    <input class="input w-72" placeholder="生産者・地域・品種で検索" />
+  </div>
+
+  <div class="grid grid-cols-12 gap-10">
+    <!-- Sidebar -->
+    <aside class="col-span-3 text-sm">
+
+      <div class="space-y-9">
+        <div>
+          <p class="caps mb-4">Category</p>
+          <ul class="space-y-2.5">
+            <li class="flex justify-between items-baseline" style="color: var(--plate); font-weight: 500;"><span class="serif-tight text-lg">— ワイン</span><span class="plate-num">24</span></li>
+            <li class="flex justify-between items-baseline" style="color: var(--ink-2);"><span class="serif-tight text-base">日本酒</span><span class="plate-num" style="color: var(--ink-3);">8</span></li>
+            <li class="flex justify-between items-baseline" style="color: var(--ink-2);"><span class="serif-tight text-base">焼酎</span><span class="plate-num" style="color: var(--ink-3);">3</span></li>
+            <li class="flex justify-between items-baseline" style="color: var(--ink-2);"><span class="serif-tight text-base">ジン</span><span class="plate-num" style="color: var(--ink-3);">1</span></li>
+            <li class="flex justify-between items-baseline" style="color: var(--ink-2);"><span class="serif-tight text-base">ウイスキー</span><span class="plate-num" style="color: var(--ink-3);">2</span></li>
+          </ul>
+        </div>
+
+        <div class="hairline-plate"></div>
+
+        <div>
+          <p class="caps mb-4">Region · France</p>
+          <ul class="space-y-2.5" style="color: var(--ink-2);">
+            <li class="flex justify-between" style="color: var(--plate); font-weight: 500;"><span class="serif-italic">Bourgogne</span><span class="plate-num" style="color: var(--ink-3);">12</span></li>
+            <li class="flex justify-between"><span class="serif-italic">Bordeaux</span><span class="plate-num" style="color: var(--ink-3);">5</span></li>
+            <li class="flex justify-between"><span class="serif-italic">Champagne</span><span class="plate-num" style="color: var(--ink-3);">4</span></li>
+            <li class="flex justify-between"><span class="serif-italic">Loire</span><span class="plate-num" style="color: var(--ink-3);">3</span></li>
+            <li class="flex justify-between"><span class="serif-italic">Alsace</span><span class="plate-num" style="color: var(--ink-3);">2</span></li>
+          </ul>
+        </div>
+
+        <div class="hairline-plate"></div>
+
+        <div>
+          <p class="caps mb-4">Type</p>
+          <div class="flex flex-wrap gap-2">
+            <span class="btn" style="font-size: 11px; padding: 4px 10px;">赤</span>
+            <span class="btn btn-primary" style="font-size: 11px; padding: 4px 10px;">白</span>
+            <span class="btn" style="font-size: 11px; padding: 4px 10px;">ロゼ</span>
+            <span class="btn" style="font-size: 11px; padding: 4px 10px;">スパークリング</span>
+          </div>
+        </div>
+
+        <div>
+          <p class="caps mb-4">Status — legend</p>
+          <ul class="space-y-2 text-sm" style="color: var(--ink-2);">
+            <li class="flex items-center gap-2"><span class="dot dot-forest"></span><span class="serif-italic">in stock</span><span class="ml-auto plate-num" style="color: var(--ink-3);">28</span></li>
+            <li class="flex items-center gap-2"><span class="dot dot-amber"></span><span class="serif-italic">allocation</span><span class="ml-auto plate-num" style="color: var(--ink-3);">8</span></li>
+            <li class="flex items-center gap-2"><span class="dot dot-crimson"></span><span class="serif-italic">low / sold out</span><span class="ml-auto plate-num" style="color: var(--ink-3);">2</span></li>
+          </ul>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Grid -->
+    <div class="col-span-9 grid grid-cols-3 gap-x-6 gap-y-12">
+
+      <!-- 6 cards · plate style -->
+
+      <article class="group cursor-pointer">
+        <div class="aspect-[3/4] relative overflow-hidden" style="background: var(--paper-2); border: 1px solid var(--plate);">
+          <p class="absolute top-3 left-3 caps" style="color: var(--plate);">Fig. (a)</p>
+          <p class="absolute top-3 right-3 caps" style="color: var(--plate);">№ 01</p>
+          <div class="absolute inset-0 flex items-center justify-center">
+            <div class="bottle"></div>
+          </div>
+          <div class="absolute bottom-3 left-3 flex items-center gap-1.5">
+            <span class="dot dot-amber"></span>
+            <span class="tag tag-amber">allocation</span>
+          </div>
+        </div>
+        <div class="mt-4">
+          <p class="caps">Bourgogne · 2020</p>
+          <p class="serif-tight text-xl mt-1.5 leading-tight">Domaine Leflaive Puligny-Montrachet</p>
+          <p class="serif-italic text-sm mt-1" style="color: var(--ink-3);">ピュリニー・モンラッシェ村名</p>
+          <div class="mt-3 pt-3 flex items-baseline justify-between" style="border-top: 1px solid var(--rule);">
+            <p class="serif text-xl plate-num" style="color: var(--plate);">¥18,000</p>
+            <p class="caps" style="color: var(--ink-3);">受付 〜 5/15</p>
+          </div>
+        </div>
+      </article>
+
+      <article class="group cursor-pointer">
+        <div class="aspect-[3/4] relative overflow-hidden" style="background: var(--paper-2); border: 1px solid var(--plate);">
+          <p class="absolute top-3 left-3 caps" style="color: var(--plate);">Fig. (b)</p>
+          <p class="absolute top-3 right-3 caps" style="color: var(--plate);">№ 02</p>
+          <div class="absolute inset-0 flex items-center justify-center">
+            <div class="bottle" style="border-radius: 30px 30px 4px 4px; height: 150px; width: 70px;"></div>
+          </div>
+          <div class="absolute bottom-3 left-3 flex items-center gap-1.5">
+            <span class="dot dot-forest"></span>
+            <span class="tag tag-forest">in stock</span>
+          </div>
+        </div>
+        <div class="mt-4">
+          <p class="caps">Champagne · NV</p>
+          <p class="serif-tight text-xl mt-1.5 leading-tight">Egly-Ouriet Brut Tradition Grand Cru</p>
+          <p class="serif-italic text-sm mt-1" style="color: var(--ink-3);">アンボネイ村のRMの代名詞</p>
+          <div class="mt-3 pt-3 flex items-baseline justify-between" style="border-top: 1px solid var(--rule);">
+            <p class="serif text-xl plate-num" style="color: var(--plate);">¥14,200</p>
+            <p class="caps" style="color: var(--ink-3);">在庫 12 本</p>
+          </div>
+        </div>
+      </article>
+
+      <article class="group cursor-pointer">
+        <div class="aspect-[3/4] relative overflow-hidden" style="background: var(--paper-2); border: 1px solid var(--plate);">
+          <p class="absolute top-3 left-3 caps" style="color: var(--plate);">Fig. (c)</p>
+          <p class="absolute top-3 right-3 caps" style="color: var(--plate);">№ 03</p>
+          <div class="absolute inset-0 flex items-center justify-center">
+            <div class="bottle"></div>
+          </div>
+          <div class="absolute bottom-3 left-3 flex items-center gap-1.5">
+            <span class="dot dot-amber"></span>
+            <span class="tag tag-amber">allocation</span>
+          </div>
+        </div>
+        <div class="mt-4">
+          <p class="caps">Bourgogne · 2020</p>
+          <p class="serif-tight text-xl mt-1.5 leading-tight">Tollot-Beaut Corton-Bressandes</p>
+          <p class="serif-italic text-sm mt-1" style="color: var(--vermilion);">特級 · 6本のみ入荷</p>
+          <div class="mt-3 pt-3 flex items-baseline justify-between" style="border-top: 1px solid var(--rule);">
+            <p class="serif text-xl plate-num" style="color: var(--plate);">¥22,800</p>
+            <p class="caps" style="color: var(--ink-3);">受付 〜 5/15</p>
+          </div>
+        </div>
+      </article>
+
+      <article class="group cursor-pointer">
+        <div class="aspect-[3/4] relative overflow-hidden" style="background: var(--paper-2); border: 1px solid var(--plate);">
+          <p class="absolute top-3 left-3 caps" style="color: var(--plate);">Fig. (d)</p>
+          <p class="absolute top-3 right-3 caps" style="color: var(--plate);">№ 04</p>
+          <div class="absolute inset-0 flex items-center justify-center">
+            <div class="bottle"></div>
+          </div>
+          <div class="absolute bottom-3 left-3 flex items-center gap-1.5">
+            <span class="dot dot-forest"></span>
+            <span class="tag tag-forest">in stock</span>
+          </div>
+        </div>
+        <div class="mt-4">
+          <p class="caps">Bordeaux · 2018</p>
+          <p class="serif-tight text-xl mt-1.5 leading-tight">Château Lynch-Bages</p>
+          <p class="serif-italic text-sm mt-1" style="color: var(--ink-3);">ポイヤック5級格付</p>
+          <div class="mt-3 pt-3 flex items-baseline justify-between" style="border-top: 1px solid var(--rule);">
+            <p class="serif text-xl plate-num" style="color: var(--plate);">¥19,500</p>
+            <p class="caps" style="color: var(--ink-3);">在庫 24 本</p>
+          </div>
+        </div>
+      </article>
+
+      <article class="group cursor-pointer">
+        <div class="aspect-[3/4] relative overflow-hidden" style="background: var(--paper-2); border: 1px solid var(--plate);">
+          <p class="absolute top-3 left-3 caps" style="color: var(--plate);">Fig. (e)</p>
+          <p class="absolute top-3 right-3 caps" style="color: var(--plate);">№ 05</p>
+          <div class="absolute inset-0 flex items-center justify-center">
+            <div style="width: 60px; height: 130px; border: 1.5px solid var(--plate); border-radius: 4px; position: relative;">
+              <div style="position: absolute; top: -22px; left: 50%; transform: translateX(-50%); width: 18px; height: 22px; border-left: 1.5px solid var(--plate); border-right: 1.5px solid var(--plate); border-top: 1.5px solid var(--plate); border-radius: 2px;"></div>
+            </div>
+          </div>
+          <div class="absolute bottom-3 left-3 flex items-center gap-1.5">
+            <span class="dot dot-crimson"></span>
+            <span class="tag tag-crimson">残少</span>
+          </div>
+        </div>
+        <div class="mt-4">
+          <p class="caps">Yamagata · 2024</p>
+          <p class="serif-tight text-xl mt-1.5 leading-tight">十四代 本丸 秘伝玉返し</p>
+          <p class="serif-italic text-sm mt-1" style="color: var(--ink-3);">高木酒造 · 純米</p>
+          <div class="mt-3 pt-3 flex items-baseline justify-between" style="border-top: 1px solid var(--rule);">
+            <p class="serif text-xl plate-num" style="color: var(--plate);">¥3,800</p>
+            <p class="caps" style="color: var(--crimson);">残 6 本</p>
+          </div>
+        </div>
+      </article>
+
+      <article class="group cursor-pointer opacity-50">
+        <div class="aspect-[3/4] relative overflow-hidden" style="background: var(--paper-2); border: 1px dashed var(--rule-strong);">
+          <p class="absolute top-3 left-3 caps" style="color: var(--ink-3);">Fig. (f)</p>
+          <p class="absolute top-3 right-3 caps" style="color: var(--ink-3);">№ 06</p>
+          <div class="absolute inset-0 flex items-center justify-center">
+            <div class="bottle" style="border-color: var(--ink-3);"></div>
+          </div>
+          <div class="absolute bottom-3 left-3 flex items-center gap-1.5">
+            <span class="dot dot-ink"></span>
+            <span class="tag" style="border-color: var(--rule-strong); color: var(--ink-3);">sold out</span>
+          </div>
+        </div>
+        <div class="mt-4">
+          <p class="caps">Bourgogne · 2019</p>
+          <p class="serif-tight text-xl mt-1.5 leading-tight">Coche-Dury Meursault</p>
+          <p class="serif-italic text-sm mt-1" style="color: var(--ink-3);">完売しました</p>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- Producer story / plate spread -->
+<section class="mt-16" style="background: var(--plate); color: var(--paper);">
+  <div class="max-w-[1280px] mx-auto px-10 py-20 grid grid-cols-12 gap-10">
+    <div class="col-span-4">
+      <p class="caps" style="color: rgba(232,226,212,0.7);">Plate IX · Producer of the month</p>
+      <p class="serif text-5xl mt-3 leading-[1.05]">Domaine<br/><span class="serif-italic">Tollot-Beaut</span></p>
+      <p class="mt-3 caps" style="color: rgba(232,226,212,0.6);">Chorey-lès-Beaune</p>
+    </div>
+    <div class="col-span-8 leading-relaxed" style="color: rgba(232,226,212,0.85);">
+      <p>
+        コート・ド・ボーヌの北、Chorey-lès-Beaune に拠点を置く5代続く家族経営。
+        化学肥料を使わない健全なぶどう栽培と、控えめな樽使いで描く透明感のある赤。
+        Mise では今期、特級 Corton-Bressandes と村名 Savigny-lès-Beaune を計18本のみ確保しました。
+      </p>
+      <button class="mt-6 inline-flex items-center gap-2 text-sm pb-1 serif-italic" style="border-bottom: 1px solid rgba(232,226,212,0.5);">生産者ページへ →</button>
+    </div>
+  </div>
+</section>
+
+<footer class="border-t rule">
+  <div class="max-w-[1280px] mx-auto px-10 py-8 flex justify-between text-xs" style="color: var(--ink-3);">
+    <p>Mise · 株式会社○○ · 通信販売酒類小売業免許 [99-9999999-99]</p>
+    <p class="serif-italic">Plate № 01 — Catalog · MMXXVI · V</p>
+  </div>
+</footer>
+
+</body>
+</html>

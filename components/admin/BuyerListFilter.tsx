@@ -43,9 +43,9 @@ export function BuyerListFilter() {
     <div className="flex flex-wrap items-center gap-3 mb-4">
       <form
         onSubmit={handleSearch}
-        className="flex items-center gap-2 bg-white border border-gray-200 rounded-lg px-3 py-1.5"
+        className="flex items-center gap-2 bg-white border border-rule rounded-lg px-3 py-1.5"
       >
-        <Search className="w-4 h-4 text-gray-400" />
+        <Search className="w-4 h-4 text-ink-3" />
         <input
           type="text"
           value={q}
@@ -57,7 +57,7 @@ export function BuyerListFilter() {
       <select
         value={currentStatus}
         onChange={(e) => handleStatusChange(e.target.value)}
-        className="text-sm border border-gray-200 rounded-lg px-3 py-1.5 bg-white"
+        className="text-sm border border-rule rounded-lg px-3 py-1.5 bg-white"
       >
         <option value="active">有効のみ</option>
         <option value="inactive">無効のみ</option>

@@ -22,11 +22,10 @@ export default function AdminLayout({
 }) {
   return (
     <div className="flex min-h-screen">
-      {/* 未読数取得の往復が page render を止めないよう Suspense でラップ */}
-      <Suspense fallback={<aside className="w-64 bg-[#3B0A1E] shrink-0" />}>
+      <Suspense fallback={<aside className="w-60 bg-paper border-r border-rule shrink-0" />}>
         <AdminSideNavWithUnread />
       </Suspense>
-      <main className="flex-1 bg-gray-100 overflow-auto">{children}</main>
+      <main className="flex-1 overflow-auto">{children}</main>
     </div>
   );
 }

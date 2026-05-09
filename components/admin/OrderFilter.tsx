@@ -26,7 +26,7 @@ export function OrderFilter() {
     <select
       value={current}
       onChange={(e) => handleChange(e.target.value)}
-      className="border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#6B1A35] bg-white"
+      className="border border-rule rounded-lg px-3 py-2 text-sm text-ink-2 focus:outline-none focus:ring-2 focus:ring-[#1c3a5c] bg-white"
     >
       {OPTIONS.map((opt) => (
         <option key={opt.value} value={opt.value}>

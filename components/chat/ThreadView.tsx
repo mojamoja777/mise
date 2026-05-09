@@ -29,6 +29,8 @@ type Props = {
   currentUserId: string;
   send: (body: string) => Promise<{ error: string | null }>;
   emptyHint?: string;
+  /** admin 側のみ true。AI 返信文案ボタンを表示する */
+  enableAISuggestions?: boolean;
 };
 
 export function ThreadView({
@@ -37,6 +39,7 @@ export function ThreadView({
   currentUserId,
   send,
   emptyHint,
+  enableAISuggestions,
 }: Props) {
   const [messages, setMessages] = useState<ThreadMessage[]>(initialMessages);
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -110,10 +113,10 @@ export function ThreadView({
   }
 
   return (
-    <div className="flex flex-col h-full bg-gray-50">
+    <div className="flex flex-col h-full bg-paper-2">
       <div className="flex-1 overflow-y-auto px-3 py-4">
         {messages.length === 0 ? (
-          <div className="h-full flex flex-col items-center justify-center text-gray-400 text-sm">
+          <div className="h-full flex flex-col items-center justify-center text-ink-3 text-sm">
             <span className="text-3xl mb-2" aria-hidden>💬</span>
             <p>{emptyHint ?? "まだメッセージはありません"}</p>
           </div>
@@ -146,7 +149,10 @@ export function ThreadView({
         )}
         <div ref={bottomRef} />
       </div>
-      <MessageComposer send={send} />
+      <MessageComposer
+        send={send}
+        suggestionsBuyerId={enableAISuggestions ? buyerId : undefined}
+      />
     </div>
   );
 }

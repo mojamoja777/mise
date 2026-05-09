@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mise — Editorial · Allocation</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+JP:wght@300;400;500&family=Noto+Serif+JP:wght@300;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="_editorial.css" />
+</head>
+<body class="grain">
+
+<div class="flex h-screen">
+
+  <!-- Slim sidebar -->
+  <aside class="w-16 border-r rule flex flex-col items-center py-4 gap-4 flex-shrink-0">
+    <p class="serif text-xl">M</p>
+    <div class="hairline w-8"></div>
+    <button class="w-10 h-10 flex items-center justify-center" style="color: var(--ink-3);"><span class="serif">⌂</span></button>
+    <button class="w-10 h-10 flex items-center justify-center bg-[var(--paper-2)]" style="color: var(--bordeaux);"><span class="serif">◉</span></button>
+    <button class="w-10 h-10 flex items-center justify-center" style="color: var(--ink-3);"><span class="serif">▦</span></button>
+    <button class="w-10 h-10 flex items-center justify-center" style="color: var(--ink-3);"><span class="serif">⏵</span></button>
+    <button class="w-10 h-10 flex items-center justify-center" style="color: var(--ink-3);"><span class="serif">¥</span></button>
+  </aside>
+
+  <section class="flex-1 flex flex-col min-w-0 overflow-hidden">
+
+    <!-- Issue header -->
+    <header class="border-b rule px-10 pt-7 pb-5">
+      <div class="flex items-baseline gap-3 caps mb-2">
+        <span style="color: var(--ink-3);">Allocation</span>
+        <span style="color: var(--ink-3);">·</span>
+        <span style="color: var(--ink-3);">W-01931</span>
+      </div>
+      <div class="flex items-baseline justify-between">
+        <h1 class="serif text-4xl">Tollot-Beaut <span style="color: var(--bordeaux);">Corton-Bressandes</span> 2020</h1>
+        <div class="flex items-center gap-2">
+          <span class="tag tag-amber pulse">Deadline 03:38:00</span>
+          <button class="btn">save draft</button>
+          <button class="btn btn-primary">確定 & 通知 ⏎</button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Hero block -->
+    <div class="border-b rule px-10 py-6 grid grid-cols-12 gap-8 items-end">
+      <div class="col-span-3">
+        <p class="caps">Cellar</p>
+        <p class="serif text-5xl mt-2 tabular">06</p>
+        <p class="text-xs mt-2" style="color: var(--ink-3);">available units · stock</p>
+      </div>
+      <div class="col-span-3">
+        <p class="caps">Requested</p>
+        <p class="serif text-5xl mt-2 tabular" style="color: var(--crimson);">24</p>
+        <p class="text-xs mt-2" style="color: var(--ink-3);">over by 18 — 4.0 ×</p>
+      </div>
+      <div class="col-span-2">
+        <p class="caps">Buyers</p>
+        <p class="serif text-5xl mt-2 tabular">10</p>
+      </div>
+      <div class="col-span-4">
+        <p class="caps">Allocated · Stock</p>
+        <div class="flex items-baseline gap-2 mt-2">
+          <p class="serif text-5xl tabular" style="color: var(--forest);">06</p>
+          <p class="serif text-2xl" style="color: var(--ink-3);">/ 06</p>
+        </div>
+        <div class="mt-2 h-1.5 w-full" style="background: var(--paper-deep);">
+          <div class="h-full" style="width: 100%; background: var(--forest);"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toolbar -->
+    <div class="border-b rule px-10 py-3 flex items-center gap-3 surface-2">
+      <span class="caps">Auto:</span>
+      <button class="btn">prorata 比例配分</button>
+      <button class="btn">先着順</button>
+      <button class="btn">VIP優先</button>
+      <button class="btn tag-violet" style="border-color: var(--violet); color: var(--violet); background: var(--violet-bg);">⚡ AI suggest</button>
+      <span class="ml-auto text-xs" style="color: var(--ink-3);">↑↓ rows · ←→ buyers · ⏎ set · 0 zero · M max</span>
+    </div>
+
+    <!-- Allocation ledger -->
+    <div class="flex-1 overflow-y-auto scroll px-10 py-6">
+
+      <table class="ledger">
+        <thead>
+          <tr>
+            <th class="w-8">#</th>
+            <th>Buyer</th>
+            <th class="w-32">Tier · Avg / mo</th>
+            <th class="w-32">Ordered at</th>
+            <th class="text-right w-24">Requested</th>
+            <th class="text-center w-44">Allocated</th>
+            <th class="text-right w-32">Subtotal</th>
+            <th class="text-right w-20">·</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <tr class="row" style="background: rgba(45,106,61,0.05);">
+            <td class="text-xs ledger-num" style="color: var(--ink-3);">01</td>
+            <td>
+              <div class="flex items-center gap-2.5">
+                <div class="seal text-[10px]" style="width: 28px; height: 28px;">六</div>
+                <div>
+                  <p>レストラン六本木</p>
+                </div>
+              </div>
+            </td>
+            <td class="text-sm" style="color: var(--ink-2);"><span class="tag tag-amber">gold</span> ¥412k</td>
+            <td class="text-xs" style="color: var(--ink-3);">5/02 14:21</td>
+            <td class="text-right ledger-num">6</td>
+            <td class="text-center"><input class="input ledger-num text-center w-20" style="border-color: var(--forest); color: var(--forest);" value="3" /></td>
+            <td class="text-right ledger-num">¥68,400</td>
+            <td class="text-right"><span class="tag tag-forest">3 / 6</span></td>
+          </tr>
+
+          <tr class="row" style="background: rgba(45,106,61,0.05);">
+            <td class="text-xs ledger-num" style="color: var(--ink-3);">02</td>
+            <td>
+              <div class="flex items-center gap-2.5">
+                <div class="seal text-[10px]" style="width: 28px; height: 28px;">B</div>
+                <p>Bistro Verdure</p>
+              </div>
+            </td>
+            <td class="text-sm" style="color: var(--ink-2);"><span class="tag">silver</span> ¥386k</td>
+            <td class="text-xs" style="color: var(--ink-3);">5/03 11:42</td>
+            <td class="text-right ledger-num">4</td>
+            <td class="text-center"><input class="input ledger-num text-center w-20" style="border-color: var(--forest); color: var(--forest);" value="2" /></td>
+            <td class="text-right ledger-num">¥45,600</td>
+            <td class="text-right"><span class="tag tag-forest">2 / 4</span></td>
+          </tr>
+
+          <tr class="row" style="background: rgba(45,106,61,0.05);">
+            <td class="text-xs ledger-num" style="color: var(--ink-3);">03</td>
+            <td>
+              <div class="flex items-center gap-2.5">
+                <div class="seal text-[10px]" style="width: 28px; height: 28px;">寿</div>
+                <p>寿司 SHIN</p>
+              </div>
+            </td>
+            <td class="text-sm" style="color: var(--ink-2);"><span class="tag">silver</span> ¥298k</td>
+            <td class="text-xs" style="color: var(--ink-3);">5/03 16:08</td>
+            <td class="text-right ledger-num">2</td>
+            <td class="text-center"><input class="input ledger-num text-center w-20" style="border-color: var(--forest); color: var(--forest);" value="1" /></td>
+            <td class="text-right ledger-num">¥22,800</td>
+            <td class="text-right"><span class="tag tag-forest">1 / 2</span></td>
+          </tr>
+
+          <tr class="row">
+            <td class="text-xs ledger-num" style="color: var(--ink-3);">04</td>
+            <td>
+              <div class="flex items-center gap-2.5">
+                <div class="seal text-[10px]" style="width: 28px; height: 28px;">C</div>
+                <p>CARROT</p>
+              </div>
+            </td>
+            <td class="text-sm" style="color: var(--ink-3);"><span class="tag">bronze</span> ¥182k</td>
+            <td class="text-xs" style="color: var(--ink-3);">5/04 09:55</td>
+            <td class="text-right ledger-num">3</td>
+            <td class="text-center"><input class="input ledger-num text-center w-20" style="color: var(--ink-3);" value="0" /></td>
+            <td class="text-right ledger-num" style="color: var(--ink-3);">¥0</td>
+            <td class="text-right"><span class="tag">0 / 3</span></td>
+          </tr>
+
+          <tr class="row">
+            <td class="text-xs ledger-num" style="color: var(--ink-3);">05</td>
+            <td>
+              <div class="flex items-center gap-2.5">
+                <div class="seal text-[10px]" style="width: 28px; height: 28px;">T</div>
+                <p>Trattoria Kobayashi</p>
+              </div>
+            </td>
+            <td class="text-sm" style="color: var(--ink-3);"><span class="tag">bronze</span> ¥124k</td>
+            <td class="text-xs" style="color: var(--ink-3);">5/05 18:30</td>
+            <td class="text-right ledger-num">2</td>
+            <td class="text-center"><input class="input ledger-num text-center w-20" style="color: var(--ink-3);" value="0" /></td>
+            <td class="text-right ledger-num" style="color: var(--ink-3);">¥0</td>
+            <td class="text-right"><span class="tag">0 / 2</span></td>
+          </tr>
+
+          <tr class="row">
+            <td class="text-xs ledger-num" style="color: var(--ink-3);">06</td>
+            <td>
+              <div class="flex items-center gap-2.5">
+                <div class="seal text-[10px]" style="width: 28px; height: 28px;">L</div>
+                <p>La Forgeron</p>
+              </div>
+            </td>
+            <td class="text-sm" style="color: var(--ink-3);"><span class="tag">silver</span> ¥218k</td>
+            <td class="text-xs" style="color: var(--ink-3);">5/06 10:14</td>
+            <td class="text-right ledger-num">3</td>
+            <td class="text-center"><input class="input ledger-num text-center w-20" style="color: var(--ink-3);" value="0" /></td>
+            <td class="text-right ledger-num" style="color: var(--ink-3);">¥0</td>
+            <td class="text-right"><span class="tag">0 / 3</span></td>
+          </tr>
+
+          <tr class="row">
+            <td class="text-xs ledger-num" style="color: var(--ink-3);">07</td>
+            <td>
+              <div class="flex items-center gap-2.5">
+                <div class="seal text-[10px]" style="width: 28px; height: 28px;">焼</div>
+                <p>焼鳥 弦 <span class="tag ml-1">新規</span></p>
+              </div>
+            </td>
+            <td class="text-sm" style="color: var(--ink-3);"><span class="tag">bronze</span> ¥48k</td>
+            <td class="text-xs" style="color: var(--ink-3);">5/07 21:02</td>
+            <td class="text-right ledger-num">2</td>
+            <td class="text-center"><input class="input ledger-num text-center w-20" style="color: var(--ink-3);" value="0" /></td>
+            <td class="text-right ledger-num" style="color: var(--ink-3);">¥0</td>
+            <td class="text-right"><span class="tag">0 / 2</span></td>
+          </tr>
+
+          <tr class="row">
+            <td class="text-xs ledger-num" style="color: var(--ink-3);">08</td>
+            <td>
+              <div class="flex items-center gap-2.5">
+                <div class="seal text-[10px]" style="width: 28px; height: 28px;">O</div>
+                <p>Omakase Toranomon</p>
+              </div>
+            </td>
+            <td class="text-sm" style="color: var(--ink-3);"><span class="tag">silver</span> ¥276k</td>
+            <td class="text-xs" style="color: var(--ink-3);">5/07 22:45</td>
+            <td class="text-right ledger-num">1</td>
+            <td class="text-center"><input class="input ledger-num text-center w-20" style="color: var(--ink-3);" value="0" /></td>
+            <td class="text-right ledger-num" style="color: var(--ink-3);">¥0</td>
+            <td class="text-right"><span class="tag">0 / 1</span></td>
+          </tr>
+
+          <tr class="row">
+            <td class="text-xs ledger-num" style="color: var(--ink-3);">09</td>
+            <td>
+              <div class="flex items-center gap-2.5">
+                <div class="seal text-[10px]" style="width: 28px; height: 28px;">花</div>
+                <p>Hana 麻布十番</p>
+              </div>
+            </td>
+            <td class="text-sm" style="color: var(--ink-3);"><span class="tag">silver</span> ¥152k</td>
+            <td class="text-xs" style="color: var(--ink-3);">5/08 08:30</td>
+            <td class="text-right ledger-num">1</td>
+            <td class="text-center"><input class="input ledger-num text-center w-20" style="color: var(--ink-3);" value="0" /></td>
+            <td class="text-right ledger-num" style="color: var(--ink-3);">¥0</td>
+            <td class="text-right"><span class="tag">0 / 1</span></td>
+          </tr>
+
+        </tbody>
+        <tfoot>
+          <tr style="border-top: 2px solid var(--rule-strong); background: var(--paper-2);">
+            <td colspan="4" class="caps pt-3 pb-3" style="padding-left: 0;">Totals</td>
+            <td class="text-right ledger-num pt-3 pb-3">24</td>
+            <td class="text-center ledger-num pt-3 pb-3" style="color: var(--forest);">6</td>
+            <td class="text-right ledger-num pt-3 pb-3">¥136,800</td>
+            <td></td>
+          </tr>
+        </tfoot>
+      </table>
+
+    </div>
+
+    <!-- AI suggestion banner -->
+    <div class="border-t rule px-10 py-4 flex items-center gap-4 surface-2">
+      <span class="tag tag-violet">⚡ AI</span>
+      <p class="text-sm" style="color: var(--ink-2);">過去6ヶ月の購入履歴・支払い実績・銘柄相性をもとに、上位3飲食店へ <span class="ledger-num" style="color: var(--forest);">3 / 2 / 1</span> 配分を提案。当選率は購入額に比例し、希望本数を超えない範囲。</p>
+      <span class="ml-auto text-xs caps" style="color: var(--ink-3);">confidence 0.87</span>
+      <button class="btn">他案を見る</button>
+      <button class="btn btn-primary">この案で確定</button>
+    </div>
+
+    <div class="border-t rule px-10 py-3 text-xs flex justify-between" style="color: var(--ink-3);">
+      <span><span class="dot dot-forest" style="margin-right: 4px;"></span> 全数配分済 · saved 8s ago</span>
+      <span class="caps">⏎ confirm · ⌘Z undo · ESC discard</span>
+    </div>
+
+  </section>
+</div>
+</body>
+</html>

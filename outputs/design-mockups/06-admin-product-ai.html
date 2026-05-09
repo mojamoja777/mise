@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mise — Admin · Product / AI Label Reader</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+JP:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="_shared.css" />
+</head>
+<body class="scanlines vignette">
+
+<div class="flex h-screen relative" style="z-index: 2;">
+
+  <!-- Sidebar collapsed -->
+  <aside class="w-14 border-r line bg-[var(--bg)] flex flex-col items-center py-3 gap-3 flex-shrink-0">
+    <div class="w-8 h-8 rounded-md bg-[var(--bg-2)] flex items-center justify-center"><span class="dot dot-glow" style="background: var(--phosphor);"></span></div>
+    <div class="w-full border-t line"></div>
+    <button class="w-9 h-9 rounded-md hover:bg-[var(--bg-2)] flex items-center justify-center text-[var(--text-3)]">⌂</button>
+    <button class="w-9 h-9 rounded-md hover:bg-[var(--bg-2)] flex items-center justify-center text-[var(--text-3)]">◉</button>
+    <button class="w-9 h-9 rounded-md bg-[var(--bg-3)] flex items-center justify-center text-[var(--bordeaux)]">▦</button>
+    <button class="w-9 h-9 rounded-md hover:bg-[var(--bg-2)] flex items-center justify-center text-[var(--text-3)]">⏵</button>
+    <button class="w-9 h-9 rounded-md hover:bg-[var(--bg-2)] flex items-center justify-center text-[var(--text-3)]">¥</button>
+  </aside>
+
+  <section class="flex-1 flex flex-col min-w-0 overflow-hidden">
+
+    <header class="h-12 border-b line flex items-center px-5 gap-4 bg-[var(--bg)]">
+      <div class="flex items-center gap-2 text-sm">
+        <span class="text-[var(--text-3)]">/ products /</span>
+        <span>new</span>
+        <span class="tag tag-violet ml-2">⚡ ai-assisted</span>
+      </div>
+      <div class="ml-auto flex items-center gap-2">
+        <button class="btn">cancel</button>
+        <button class="btn">save draft</button>
+        <button class="btn btn-primary">公開する ⏎</button>
+      </div>
+    </header>
+
+    <div class="flex-1 overflow-hidden flex">
+
+      <!-- LEFT: photo + scan -->
+      <div class="w-[42%] border-r line p-5 flex flex-col bg-[var(--bg-1)]">
+
+        <p class="ascii-rule mb-3">━━━━━━ INPUT · label.jpg ━━━━━━</p>
+
+        <!-- Image with scanning overlay -->
+        <div class="relative aspect-[4/5] rounded-md overflow-hidden bg-[var(--bg-3)] flex items-center justify-center">
+          <span class="text-[180px]">🍷</span>
+          <!-- scanning lines -->
+          <div class="absolute inset-x-0 top-0 h-px"
+               style="background: linear-gradient(90deg, transparent, var(--phosphor), transparent); box-shadow: 0 0 12px var(--phosphor-glow); top: 70%;"></div>
+          <!-- corner crosshairs -->
+          <span class="absolute top-3 left-3 w-4 h-4 border-t-2 border-l-2" style="border-color: var(--phosphor);"></span>
+          <span class="absolute top-3 right-3 w-4 h-4 border-t-2 border-r-2" style="border-color: var(--phosphor);"></span>
+          <span class="absolute bottom-3 left-3 w-4 h-4 border-b-2 border-l-2" style="border-color: var(--phosphor);"></span>
+          <span class="absolute bottom-3 right-3 w-4 h-4 border-b-2 border-r-2" style="border-color: var(--phosphor);"></span>
+          <!-- top-left status -->
+          <div class="absolute top-3 left-10 mono text-[10px] text-[var(--phosphor)] tracking-widest">SCAN · 70%</div>
+          <div class="absolute bottom-3 right-10 mono text-[10px] text-[var(--text-3)]">3024 × 4032 · 2.4 MB</div>
+        </div>
+
+        <!-- File row -->
+        <div class="mt-4 subcard p-3 flex items-center gap-3">
+          <div class="w-10 h-10 rounded bg-[var(--bg-3)] flex items-center justify-center text-base">🖼</div>
+          <div class="flex-1 min-w-0">
+            <p class="text-xs truncate">leflaive_puligny_montrachet_2020_front.jpg</p>
+            <p class="mono text-[10px] text-[var(--text-3)]">claude-opus-4 · 2.1s · 4 images analyzed</p>
+          </div>
+          <button class="btn">差替え</button>
+        </div>
+
+        <p class="ascii-rule mt-5 mb-2">━━━━━━ MORE PHOTOS ━━━━━━</p>
+        <div class="grid grid-cols-4 gap-2">
+          <div class="aspect-square rounded bg-[var(--bg-3)] flex items-center justify-center text-2xl ring-1 ring-[var(--phosphor)]">🍷</div>
+          <div class="aspect-square rounded bg-[var(--bg-3)] flex items-center justify-center text-2xl">📜</div>
+          <div class="aspect-square rounded bg-[var(--bg-3)] flex items-center justify-center text-2xl">📜</div>
+          <div class="aspect-square rounded bg-[var(--bg-3)] flex items-center justify-center text-2xl">🍾</div>
+          <div class="aspect-square rounded border border-dashed line text-[var(--text-3)] flex items-center justify-center text-xl hover:border-[var(--bordeaux)] cursor-pointer">＋</div>
+        </div>
+
+        <p class="ascii-rule mt-5 mb-2">━━━━━━ AI EXTRACTION LOG ━━━━━━</p>
+        <div class="subcard p-3 mono text-[10px] leading-relaxed text-[var(--text-2)]">
+          <p><span class="text-[var(--phosphor)]">[14:23:01]</span> uploading 4 images → claude-opus-4</p>
+          <p><span class="text-[var(--phosphor)]">[14:23:02]</span> ocr · 312 tokens detected</p>
+          <p><span class="text-[var(--phosphor)]">[14:23:02]</span> language: fr</p>
+          <p><span class="text-[var(--phosphor)]">[14:23:03]</span> match: producer="Domaine Leflaive"</p>
+          <p><span class="text-[var(--phosphor)]">[14:23:03]</span> match: appellation="Puligny-Montrachet"</p>
+          <p><span class="text-[var(--phosphor)]">[14:23:03]</span> infer: vintage=2020 (front)</p>
+          <p><span class="text-[var(--amber)]">[14:23:03]</span> warn: alc% not on front · checking back</p>
+          <p><span class="text-[var(--phosphor)]">[14:23:04]</span> match: alc=13%vol (back)</p>
+          <p><span class="text-[var(--phosphor)]">[14:23:04]</span> done · 8 fields · confidence 0.94</p>
+        </div>
+
+      </div>
+
+      <!-- RIGHT: extracted form -->
+      <div class="flex-1 overflow-y-auto scroll p-5">
+
+        <div class="flex items-center gap-2 mb-3">
+          <p class="ascii-rule">━━━━━━ EXTRACTED · review & confirm ━━━━━━</p>
+        </div>
+
+        <div class="space-y-5">
+
+          <!-- Identity block -->
+          <div class="card p-4 space-y-4">
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <label class="mono text-[10px] text-[var(--text-3)] tracking-widest">CATEGORY <span class="tag tag-phosphor ml-1">ai 0.99</span></label>
+                <select class="input mt-1 w-full">
+                  <option>ワイン</option>
+                </select>
+              </div>
+              <div>
+                <label class="mono text-[10px] text-[var(--text-3)] tracking-widest">TYPE <span class="tag tag-phosphor ml-1">ai 0.96</span></label>
+                <select class="input mt-1 w-full">
+                  <option>白</option>
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <label class="mono text-[10px] text-[var(--text-3)] tracking-widest">NAME <span class="tag tag-phosphor ml-1">ai 0.97</span></label>
+              <input class="input mt-1 w-full" value="Puligny-Montrachet" />
+            </div>
+
+            <div class="grid grid-cols-3 gap-4">
+              <div>
+                <label class="mono text-[10px] text-[var(--text-3)] tracking-widest">PRODUCER <span class="tag tag-phosphor ml-1">ai 0.99</span></label>
+                <input class="input mt-1 w-full" value="Domaine Leflaive" />
+              </div>
+              <div>
+                <label class="mono text-[10px] text-[var(--text-3)] tracking-widest">VINTAGE <span class="tag tag-phosphor ml-1">ai 0.95</span></label>
+                <input class="input mt-1 w-full mono tabular" value="2020" />
+              </div>
+              <div>
+                <label class="mono text-[10px] text-[var(--text-3)] tracking-widest">ABV <span class="tag tag-amber ml-1">ai 0.78</span></label>
+                <input class="input mt-1 w-full mono tabular" value="13.0" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Region block -->
+          <div class="card p-4 space-y-4">
+            <p class="text-[10px] tracking-widest uppercase text-[var(--text-3)]">Region · Grape</p>
+            <div class="grid grid-cols-3 gap-4">
+              <div>
+                <label class="mono text-[10px] text-[var(--text-3)] tracking-widest">COUNTRY</label>
+                <input class="input mt-1 w-full" value="France" />
+              </div>
+              <div>
+                <label class="mono text-[10px] text-[var(--text-3)] tracking-widest">REGION</label>
+                <input class="input mt-1 w-full" value="Bourgogne" />
+              </div>
+              <div>
+                <label class="mono text-[10px] text-[var(--text-3)] tracking-widest">SUB-REGION <span class="tag tag-phosphor ml-1">ai</span></label>
+                <input class="input mt-1 w-full" value="Côte de Beaune" />
+              </div>
+            </div>
+            <div>
+              <label class="mono text-[10px] text-[var(--text-3)] tracking-widest">GRAPE <span class="tag tag-cyan ml-1">inferred</span></label>
+              <input class="input mt-1 w-full" value="Chardonnay 100%" />
+              <p class="mono text-[10px] text-[var(--text-3)] mt-1">└ 推測: Puligny-Montrachet 村は白のみ生産 (knowledge base)</p>
+            </div>
+          </div>
+
+          <!-- Pricing block -->
+          <div class="card p-4 space-y-4">
+            <p class="text-[10px] tracking-widest uppercase text-[var(--text-3)]">Pricing · Stock</p>
+            <div class="grid grid-cols-3 gap-4">
+              <div>
+                <label class="mono text-[10px] text-[var(--text-3)] tracking-widest">PRICE (税抜)</label>
+                <div class="relative">
+                  <input class="input mt-1 w-full mono tabular pl-6" value="18,000" />
+                  <span class="absolute left-2 top-1/2 mono text-[var(--text-3)]">¥</span>
+                </div>
+              </div>
+              <div>
+                <label class="mono text-[10px] text-[var(--text-3)] tracking-widest">STOCK</label>
+                <input class="input mt-1 w-full mono tabular" value="12" />
+              </div>
+              <div>
+                <label class="mono text-[10px] text-[var(--text-3)] tracking-widest">VOL</label>
+                <input class="input mt-1 w-full mono tabular" value="750ml" />
+              </div>
+            </div>
+            <label class="flex items-center gap-2 text-xs text-[var(--text-2)]">
+              <input type="checkbox" class="accent-[#c54a6f]" />
+              <span>割り当て対象（希少品）として登録する</span>
+            </label>
+          </div>
+
+          <!-- Comment block -->
+          <div class="card p-4 space-y-2">
+            <div class="flex items-center justify-between">
+              <p class="text-[10px] tracking-widest uppercase text-[var(--text-3)]">コメント</p>
+              <button class="tag tag-violet">⚡ AIで生成</button>
+            </div>
+            <textarea class="input w-full h-24 leading-relaxed" placeholder="酒屋からのコメント（テイスティングノート、料理との相性など）">骨格のしっかりした酸とミネラル感、樽は控えめ。シェフの白身魚のポワレや甘味のある貝類と。今飲んで美味しいが、5〜7年後の熟成も楽しみ。</textarea>
+          </div>
+
+          <p class="ascii-rule">━━━━━━ end · 8 fields · 0 unresolved ━━━━━━</p>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Status bar -->
+    <div class="h-8 border-t line flex items-center px-5 text-[11px] text-[var(--text-3)] gap-4 mono bg-[var(--bg)]">
+      <span><span class="text-[var(--phosphor)]">●</span> all required fields filled · ready to publish</span>
+      <span>·</span>
+      <span>autosave 4s ago</span>
+      <span class="ml-auto">⌘S save · ⌘⏎ publish · ESC cancel</span>
+    </div>
+
+  </section>
+</div>
+</body>
+</html>

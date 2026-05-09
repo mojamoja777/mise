@@ -2,6 +2,7 @@
 import { createElement } from "react";
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import { createServiceClient } from "@/lib/supabase/service";
 import { requireBuyer } from "@/lib/auth";
 import { sendNotificationEmail } from "@/lib/mailer";
 import { OrderReceivedEmail } from "@/lib/email/OrderReceived";
@@ -24,7 +25,10 @@ export type CartSyncUpdate = {
 
 /**
  * カート同期：最新の商品情報を取得し、無効な商品を弾く・割り当て状態の変化を反映する
- * クライアント側で受け取った結果をもとに localStorage を更新する
+ * クライアント側で受け取った結果をもとに localStorage を更新する。
+ *
+ * 削除済商品（deleted_at IS NOT NULL）が含まれていた場合は archived として返し、
+ * 同じ buyer × product への通知は 1 度だけ自動チャットを送信する（dedup 済）。
  */
 export async function syncCartAction(productIds: string[]): Promise<{
   products: Array<{
@@ -35,16 +39,86 @@ export async function syncCartAction(productIds: string[]): Promise<{
     name: string;
     price: number;
   }>;
+  archived: Array<{ id: string; name: string }>;
 }> {
-  if (productIds.length === 0) return { products: [] };
+  if (productIds.length === 0) return { products: [], archived: [] };
 
   const supabase = await createClient();
-  const { data } = await supabase
+
+  // active products
+  const { data: activeRows } = await supabase
     .from("products")
     .select("id, is_active, is_allocation, allocation_deadline, name, price")
-    .in("id", productIds);
+    .in("id", productIds)
+    .is("deleted_at", null);
 
-  return { products: data ?? [] };
+  // archived products (削除済)
+  const { data: archivedRows } = await supabase
+    .from("products")
+    .select("id, name")
+    .in("id", productIds)
+    .not("deleted_at", "is", null);
+
+  const archived = archivedRows ?? [];
+
+  // archived があれば「初回のみ」自動チャット通知
+  if (archived.length > 0) {
+    await notifyCartArchived(archived);
+  }
+
+  return { products: activeRows ?? [], archived };
+}
+
+/**
+ * カート内の削除済商品について buyer に自動チャットを送る。
+ * dedup テーブル `cart_archive_notifications` の PK 競合で重複通知を防止。
+ *
+ * service role client を使う理由:
+ *   - buyer のセッションでは他テナントの users / chat_messages の RLS が絡んで
+ *     admin の id を取れない可能性がある
+ *   - dedup テーブルは RLS 全閉のため authenticated 経由では触れない
+ */
+async function notifyCartArchived(
+  archived: Array<{ id: string; name: string }>
+): Promise<void> {
+  const auth = await requireBuyer();
+  if (!auth.ok) return;
+  const buyerId = auth.user.id;
+
+  const service = createServiceClient();
+
+  const { data: buyer } = await service
+    .from("users")
+    .select("tenant_id")
+    .eq("id", buyerId)
+    .single();
+  if (!buyer?.tenant_id) return;
+
+  const { data: admin } = await service
+    .from("users")
+    .select("id")
+    .eq("tenant_id", buyer.tenant_id)
+    .eq("role", "admin")
+    .limit(1)
+    .single();
+  if (!admin?.id) return;
+
+  for (const product of archived) {
+    // dedup: PK 競合 → 既送 → skip。挿入成功時のみチャット送信。
+    const { error: dedupError } = await service
+      .from("cart_archive_notifications")
+      .insert({ buyer_id: buyerId, product_id: product.id });
+
+    if (dedupError) continue;
+
+    await service.from("chat_messages").insert({
+      tenant_id: buyer.tenant_id,
+      buyer_id: buyerId,
+      sender_id: admin.id,
+      sender_role: "admin",
+      body: `「${product.name}」は商品登録が削除されたため、カートから自動的に削除されました。`,
+    });
+  }
 }
 
 type CreateOrderResult =
@@ -91,7 +165,8 @@ export async function createOrder(
   const { data: products, error: productsError } = await supabase
     .from("products")
     .select("id, is_active, is_allocation, allocation_deadline, price")
-    .in("id", productIds);
+    .in("id", productIds)
+    .is("deleted_at", null);
 
   if (productsError || !products) {
     return {
@@ -173,8 +248,12 @@ export async function createOrder(
       .insert(orderItemsPayload);
 
     if (itemsError) {
+      // race condition: 注文確定の瞬間に商品が削除された
+      const isArchived = itemsError.message?.includes("product is archived");
       return {
-        error: "通常注文の明細登録に失敗しました。",
+        error: isArchived
+          ? "注文の途中で取り扱いを終了した商品が含まれていたため、注文できませんでした。カートを更新して再度お試しください。"
+          : "通常注文の明細登録に失敗しました。",
         normalOrderId: null,
         allocationOrderId: null,
       };
@@ -216,8 +295,11 @@ export async function createOrder(
       .insert(orderItemsPayload);
 
     if (itemsError) {
+      const isArchived = itemsError.message?.includes("product is archived");
       return {
-        error: "割り当て注文の明細登録に失敗しました。",
+        error: isArchived
+          ? "注文の途中で取り扱いを終了した商品が含まれていたため、注文できませんでした。カートを更新して再度お試しください。"
+          : "割り当て注文の明細登録に失敗しました。",
         normalOrderId: null,
         allocationOrderId: null,
       };

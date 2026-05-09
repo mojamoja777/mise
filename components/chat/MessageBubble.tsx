@@ -48,16 +48,16 @@ export function MessageBubble({
         <div
           className={`px-3 py-2 rounded-2xl text-sm whitespace-pre-wrap break-words ${
             isDeleted
-              ? "bg-gray-100 text-gray-400 italic"
+              ? "bg-paper-2 text-ink-3 italic"
               : isMine
-                ? "bg-[#6B1A35] text-white rounded-br-sm"
-                : "bg-white border border-gray-200 text-gray-900 rounded-bl-sm"
+                ? "bg-[#1c3a5c] text-white rounded-br-sm"
+                : "bg-white border border-rule text-ink rounded-bl-sm"
           }`}
         >
           {isDeleted ? "（削除されたメッセージ）" : body}
         </div>
         <div
-          className={`text-[10px] text-gray-400 mt-1 px-1 flex gap-2 ${
+          className={`text-[10px] text-ink-3 mt-1 px-1 flex gap-2 ${
             isMine ? "justify-end" : "justify-start"
           }`}
         >
@@ -74,7 +74,7 @@ export function MessageBubble({
               <button
                 type="button"
                 onClick={onEdit}
-                className="p-1.5 rounded-md bg-white border border-gray-200 text-gray-500 hover:text-[#6B1A35] hover:border-[#6B1A35] shadow-sm"
+                className="p-1.5 rounded-md bg-white border border-rule text-ink-3 hover:text-[#1c3a5c] hover:border-[#1c3a5c] shadow-sm"
                 aria-label="編集"
               >
                 <Pencil className="w-3 h-3" />
@@ -84,7 +84,7 @@ export function MessageBubble({
               <button
                 type="button"
                 onClick={onDelete}
-                className="p-1.5 rounded-md bg-white border border-gray-200 text-gray-500 hover:text-red-600 hover:border-red-300 shadow-sm"
+                className="p-1.5 rounded-md bg-white border border-rule text-ink-3 hover:text-crimson hover:border-red-300 shadow-sm"
                 aria-label="削除"
               >
                 <Trash2 className="w-3 h-3" />

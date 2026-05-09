@@ -3,7 +3,7 @@
 // components/admin/AILabelExtractor.tsx
 // 1〜3 枚のラベル画像をアップロードして AI で抽出する UI
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   resizeImageToBase64,
   validateImageFile,
@@ -11,10 +11,19 @@ import {
 import type { WineExtractionResult } from "@/types/wine-extraction";
 
 interface Props {
-  onExtracted: (data: WineExtractionResult) => void;
+  /**
+   * 抽出完了時のコールバック。Promise を返した場合は完了まで loading 状態を保つ。
+   * 親側で追加の AI 呼び出し（コメント生成）を chain する用途を想定。
+   */
+  onExtracted: (data: WineExtractionResult) => void | Promise<void>;
+  /**
+   * 保持中のファイル一覧を親に伝播する。
+   * 親はこのファイル群を商品データとして Storage に保存する。
+   */
+  onFilesChange?: (files: File[]) => void;
 }
 
-export default function AILabelExtractor({ onExtracted }: Props) {
+export default function AILabelExtractor({ onExtracted, onFilesChange }: Props) {
   const [files, setFiles] = useState<File[]>([]);
   const [previews, setPreviews] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
@@ -23,6 +32,11 @@ export default function AILabelExtractor({ onExtracted }: Props) {
     cost: number;
     tokens: number;
   } | null>(null);
+
+  // files が変わったら親に通知
+  useEffect(() => {
+    onFilesChange?.(files);
+  }, [files, onFilesChange]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selected = Array.from(e.target.files || []);
@@ -85,7 +99,8 @@ export default function AILabelExtractor({ onExtracted }: Props) {
         throw new Error(json.error || "抽出に失敗しました");
       }
 
-      onExtracted(json.data);
+      // 親が後続処理（コメント生成など）を await する場合に loading を維持
+      await onExtracted(json.data);
 
       if (json.usage) {
         setLastUsage({
@@ -103,15 +118,15 @@ export default function AILabelExtractor({ onExtracted }: Props) {
   };
 
   return (
-    <div className="border border-[#6B1A35]/20 rounded-xl p-6 mb-6 bg-gradient-to-br from-[#FDF4F6] to-amber-50">
-      <h3 className="text-base font-semibold text-gray-900 mb-1">
+    <div className="border border-[#1c3a5c]/20 rounded-xl p-6 mb-6 bg-gradient-to-br from-[#ddd5c2] to-amber-50">
+      <h3 className="text-base font-semibold text-ink mb-1">
         📷 ラベル写真から自動入力
       </h3>
-      <p className="text-xs text-gray-600 mb-4 leading-relaxed">
+      <p className="text-xs text-ink-2 mb-4 leading-relaxed">
         ワインのラベル写真をアップロードすると、AI
         が商品情報を自動で読み取ります。
         <br />
-        <span className="text-gray-500">
+        <span className="text-ink-3">
           推奨: 表ラベル + 裏ラベルの 2 枚（最大 3
           枚・日本語シールがあれば 3 枚目に追加）
         </span>
@@ -124,15 +139,15 @@ export default function AILabelExtractor({ onExtracted }: Props) {
           multiple
           onChange={handleFileChange}
           disabled={loading || files.length >= 3}
-          className="block w-full text-sm text-gray-700
+          className="block w-full text-sm text-ink-2
                      file:mr-4 file:py-2 file:px-4
                      file:rounded-md file:border-0
                      file:text-sm file:font-semibold
-                     file:bg-[#6B1A35] file:text-white
-                     hover:file:bg-[#9B2D50]
+                     file:bg-[#1c3a5c] file:text-white
+                     hover:file:bg-[#0e2238]
                      disabled:opacity-50"
         />
-        <p className="text-xs text-gray-500 mt-1">
+        <p className="text-xs text-ink-3 mt-1">
           {files.length} / 3 枚選択中
         </p>
       </div>
@@ -145,14 +160,14 @@ export default function AILabelExtractor({ onExtracted }: Props) {
               <img
                 src={src}
                 alt={`preview ${i + 1}`}
-                className="w-full h-32 object-cover rounded border border-gray-200 bg-white"
+                className="w-full h-32 object-cover rounded border border-rule bg-white"
               />
               <button
                 type="button"
                 onClick={() => handleRemove(i)}
                 disabled={loading}
                 aria-label="削除"
-                className="absolute top-1 right-1 bg-white/90 rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold text-gray-700 hover:bg-white disabled:opacity-50"
+                className="absolute top-1 right-1 bg-white/90 rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold text-ink-2 hover:bg-white disabled:opacity-50"
               >
                 ×
               </button>
@@ -162,20 +177,20 @@ export default function AILabelExtractor({ onExtracted }: Props) {
       )}
 
       {error && (
-        <div className="text-xs text-red-600 mb-3 leading-relaxed">{error}</div>
+        <div className="text-xs text-crimson mb-3 leading-relaxed">{error}</div>
       )}
 
       <button
         type="button"
         onClick={handleExtract}
         disabled={loading || files.length === 0}
-        className="px-5 py-2 bg-[#6B1A35] text-white text-sm font-medium rounded-md hover:bg-[#9B2D50] disabled:bg-gray-300 disabled:cursor-not-allowed"
+        className="px-5 py-2 bg-[#1c3a5c] text-white text-sm font-medium rounded-md hover:bg-[#0e2238] disabled:bg-gray-300 disabled:cursor-not-allowed"
       >
-        {loading ? "解析中… (10〜20秒)" : "AI で抽出する"}
+        {loading ? "解析 + コメント生成中… (15〜30秒)" : "AI で抽出する"}
       </button>
 
       {lastUsage && (
-        <p className="text-xs text-gray-500 mt-3">
+        <p className="text-xs text-ink-3 mt-3">
           ✓ 抽出完了 / トークン: {lastUsage.tokens.toLocaleString()} / コスト: $
           {lastUsage.cost.toFixed(4)}
         </p>

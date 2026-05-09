@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mise — 03 和モダン</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@200;300;500;700&family=Noto+Sans+JP:wght@200;300;400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --paper: #f5f2ed;
+      --paper-2: #ece8df;
+      --line: #d8d2c4;
+      --line-2: #e6e1d3;
+      --ink: #1f1b16;
+      --ink-2: #57514a;
+      --ink-3: #8a8378;
+      --bordeaux: #6b1a35;
+      --bordeaux-soft: #8e3450;
+      --shu: #9c3a3a;
+    }
+    body { background: var(--paper); color: var(--ink); font-family: "Noto Sans JP", "Inter", sans-serif; font-weight: 300; -webkit-font-smoothing: antialiased; }
+    .mincho { font-family: "Noto Serif JP", serif; }
+    .gothic { font-family: "Noto Sans JP", "Inter", sans-serif; }
+    .vertical { writing-mode: vertical-rl; text-orientation: upright; }
+    .vertical-rl { writing-mode: vertical-rl; }
+    .line { border-color: var(--line); }
+    .line-2 { border-color: var(--line-2); }
+    .ink-2 { color: var(--ink-2); }
+    .ink-3 { color: var(--ink-3); }
+    .bg-paper-2 { background: var(--paper-2); }
+    .bordeaux { color: var(--bordeaux); }
+    .seal {
+      width: 36px; height: 36px; border: 1.2px solid var(--bordeaux);
+      color: var(--bordeaux); display: inline-flex; align-items: center; justify-content: center;
+      font-family: "Noto Serif JP", serif; font-weight: 500; letter-spacing: 0.05em;
+    }
+  </style>
+</head>
+<body class="min-h-screen">
+
+  <!-- Top bar -->
+  <header class="border-b line">
+    <div class="max-w-[1200px] mx-auto px-12 h-20 flex items-center justify-between">
+      <div class="flex items-baseline gap-4">
+        <p class="mincho text-3xl tracking-wider">店</p>
+        <p class="text-[10px] tracking-[0.4em] ink-3 uppercase">Mise — 銘酒帳</p>
+      </div>
+      <nav class="flex items-center gap-10 text-sm ink-2">
+        <a class="hover:bordeaux mincho">銘酒</a>
+        <a class="hover:bordeaux mincho">配分</a>
+        <a class="hover:bordeaux mincho">注文履歴</a>
+        <a class="hover:bordeaux mincho">請求書</a>
+        <a class="hover:bordeaux mincho">問い合わせ</a>
+        <span class="w-px h-4 bg-[var(--line)]"></span>
+        <a class="hover:bordeaux flex items-baseline gap-1.5"><span class="mincho">籠</span><span class="text-xs ink-3">2</span></a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="max-w-[1200px] mx-auto px-12 pt-20 pb-24">
+    <div class="grid grid-cols-12 gap-12 items-stretch">
+      <div class="col-span-1 flex justify-center">
+        <p class="vertical mincho text-[10px] tracking-[0.4em] ink-3" style="writing-mode: vertical-rl;">令和八年五月八日</p>
+      </div>
+      <div class="col-span-7">
+        <p class="text-[10px] tracking-[0.4em] ink-3 uppercase">May 2026 · Selection</p>
+        <h1 class="mincho text-[62px] leading-[1.15] mt-5 tracking-wide">
+          <span class="block">五月の入荷より、</span>
+          <span class="block bordeaux">十二の銘を選びました。</span>
+        </h1>
+        <p class="mincho ink-2 mt-8 leading-loose max-w-lg">
+          ブルゴーニュの白を中心に、山形と兵庫から純米大吟醸を二銘。
+          「店主が今いちばん飲みたいもの」を、少しずつ。
+        </p>
+      </div>
+      <div class="col-span-4">
+        <div class="aspect-[3/4] bg-paper-2 relative overflow-hidden">
+          <div class="absolute inset-0 flex items-center justify-center text-[140px] opacity-50">🍶</div>
+          <div class="absolute inset-x-0 bottom-0 p-6">
+            <div class="border-t line pt-4">
+              <p class="mincho text-xs ink-3 tracking-widest">店主推薦 · 今月の一本</p>
+              <p class="mincho text-xl mt-1.5">十四代 本丸<br/>秘伝玉返し</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="max-w-[1200px] mx-auto px-12">
+    <div class="border-t line"></div>
+  </div>
+
+  <!-- Catalog -->
+  <section class="max-w-[1200px] mx-auto px-12 py-16">
+    <div class="grid grid-cols-12 gap-10">
+
+      <!-- Sidebar: vertical Japanese categories -->
+      <aside class="col-span-2">
+        <div class="sticky top-8">
+          <p class="text-[10px] tracking-[0.4em] ink-3 uppercase mb-6">分類</p>
+          <ul class="space-y-1 text-sm ink-2">
+            <li class="flex items-baseline gap-3 py-1.5"><span class="seal text-xs" style="border-color: var(--bordeaux); color: var(--bordeaux);">酒</span><span class="mincho">ぶどう酒</span></li>
+            <li class="flex items-baseline gap-3 py-1.5 pl-1"><span class="w-9"></span><span class="mincho ink-3">日本酒</span></li>
+            <li class="flex items-baseline gap-3 py-1.5 pl-1"><span class="w-9"></span><span class="mincho ink-3">焼酎</span></li>
+            <li class="flex items-baseline gap-3 py-1.5 pl-1"><span class="w-9"></span><span class="mincho ink-3">ジン</span></li>
+            <li class="flex items-baseline gap-3 py-1.5 pl-1"><span class="w-9"></span><span class="mincho ink-3">威士忌</span></li>
+          </ul>
+
+          <p class="text-[10px] tracking-[0.4em] ink-3 uppercase mt-12 mb-4">産地</p>
+          <ul class="space-y-2 text-sm">
+            <li class="mincho bordeaux">ブルゴーニュ</li>
+            <li class="mincho ink-2">ボルドー</li>
+            <li class="mincho ink-2">シャンパーニュ</li>
+            <li class="mincho ink-2">ロワール</li>
+            <li class="mincho ink-2">アルザス</li>
+            <li class="mincho ink-3 pt-2">— 日本</li>
+            <li class="mincho ink-2">山形</li>
+            <li class="mincho ink-2">兵庫</li>
+          </ul>
+
+          <p class="text-[10px] tracking-[0.4em] ink-3 uppercase mt-12 mb-4">タイプ</p>
+          <div class="flex flex-wrap gap-1.5">
+            <span class="mincho text-xs px-2.5 py-1 border line">赤</span>
+            <span class="mincho text-xs px-2.5 py-1 bg-[var(--ink)] text-[var(--paper)]">白</span>
+            <span class="mincho text-xs px-2.5 py-1 border line">泡</span>
+            <span class="mincho text-xs px-2.5 py-1 border line">ロゼ</span>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Search + grid -->
+      <div class="col-span-10">
+
+        <div class="flex items-end justify-between mb-10">
+          <div>
+            <p class="text-[10px] tracking-[0.4em] ink-3 uppercase">Cellar</p>
+            <h2 class="mincho text-3xl mt-2 tracking-wide">ぶどう酒 <span class="ink-3 text-lg ml-2">二十四点</span></h2>
+          </div>
+          <div class="relative">
+            <input class="bg-transparent border-b line pl-1 pr-8 py-2 text-sm w-72 outline-none focus:border-[var(--bordeaux)] mincho placeholder:ink-3" placeholder="生産者・地域を検索" />
+            <span class="absolute right-1 top-1/2 -translate-y-1/2 ink-3 text-xs">⌕</span>
+          </div>
+        </div>
+
+        <!-- Grid -->
+        <div class="grid grid-cols-3 gap-x-6 gap-y-14">
+
+          <article class="group cursor-pointer">
+            <div class="aspect-[3/4] bg-paper-2 relative overflow-hidden">
+              <div class="absolute inset-0 flex items-center justify-center text-7xl opacity-70">🍷</div>
+              <div class="absolute top-3 right-3 seal text-[10px]">配</div>
+            </div>
+            <div class="pt-5">
+              <p class="text-[10px] tracking-[0.3em] ink-3 uppercase">Bourgogne · 2020</p>
+              <p class="mincho text-base mt-2 leading-tight">ピュリニー・モンラッシェ<br/>村名</p>
+              <p class="text-[11px] ink-3 mt-1.5">Domaine Leflaive</p>
+              <div class="flex items-baseline justify-between mt-4 border-t line-2 pt-3">
+                <p class="mincho text-sm">¥18,000</p>
+                <p class="text-[10px] ink-3">受付 〜 5/15</p>
+              </div>
+            </div>
+          </article>
+
+          <article class="group cursor-pointer">
+            <div class="aspect-[3/4] bg-paper-2 relative overflow-hidden">
+              <div class="absolute inset-0 flex items-center justify-center text-7xl opacity-70">🍾</div>
+            </div>
+            <div class="pt-5">
+              <p class="text-[10px] tracking-[0.3em] ink-3 uppercase">Champagne · NV</p>
+              <p class="mincho text-base mt-2 leading-tight">エグリ・ウーリエ<br/>ブリュット トラディション</p>
+              <p class="text-[11px] ink-3 mt-1.5">Egly-Ouriet</p>
+              <div class="flex items-baseline justify-between mt-4 border-t line-2 pt-3">
+                <p class="mincho text-sm">¥14,200</p>
+                <p class="text-[10px] ink-3">在庫 十二本</p>
+              </div>
+            </div>
+          </article>
+
+          <article class="group cursor-pointer">
+            <div class="aspect-[3/4] bg-paper-2 relative overflow-hidden">
+              <div class="absolute inset-0 flex items-center justify-center text-7xl opacity-70">🍷</div>
+              <div class="absolute top-3 right-3 seal text-[10px]">配</div>
+            </div>
+            <div class="pt-5">
+              <p class="text-[10px] tracking-[0.3em] ink-3 uppercase">Bourgogne · 2020</p>
+              <p class="mincho text-base mt-2 leading-tight">コルトン・ブレッサンド<br/>特級</p>
+              <p class="text-[11px] ink-3 mt-1.5">Tollot-Beaut</p>
+              <div class="flex items-baseline justify-between mt-4 border-t line-2 pt-3">
+                <p class="mincho text-sm">¥22,800</p>
+                <p class="text-[10px] ink-3">残 六本</p>
+              </div>
+            </div>
+          </article>
+
+          <article class="group cursor-pointer">
+            <div class="aspect-[3/4] bg-paper-2 relative overflow-hidden">
+              <div class="absolute inset-0 flex items-center justify-center text-7xl opacity-70">🍷</div>
+            </div>
+            <div class="pt-5">
+              <p class="text-[10px] tracking-[0.3em] ink-3 uppercase">Bordeaux · 2018</p>
+              <p class="mincho text-base mt-2 leading-tight">シャトー・<br/>ランシュ・バージュ</p>
+              <p class="text-[11px] ink-3 mt-1.5">ポイヤック五級</p>
+              <div class="flex items-baseline justify-between mt-4 border-t line-2 pt-3">
+                <p class="mincho text-sm">¥19,500</p>
+                <p class="text-[10px] ink-3">在庫 二十四本</p>
+              </div>
+            </div>
+          </article>
+
+          <article class="group cursor-pointer">
+            <div class="aspect-[3/4] bg-paper-2 relative overflow-hidden">
+              <div class="absolute inset-0 flex items-center justify-center text-7xl opacity-70">🍶</div>
+            </div>
+            <div class="pt-5">
+              <p class="text-[10px] tracking-[0.3em] ink-3 uppercase">Yamagata · 純米</p>
+              <p class="mincho text-base mt-2 leading-tight">十四代 本丸<br/>秘伝玉返し</p>
+              <p class="text-[11px] ink-3 mt-1.5">高木酒造</p>
+              <div class="flex items-baseline justify-between mt-4 border-t line-2 pt-3">
+                <p class="mincho text-sm">¥3,800</p>
+                <p class="text-[10px] ink-3">残 六本</p>
+              </div>
+            </div>
+          </article>
+
+          <article class="group cursor-pointer opacity-50">
+            <div class="aspect-[3/4] bg-paper-2 relative overflow-hidden">
+              <div class="absolute inset-0 flex items-center justify-center text-7xl grayscale opacity-60">🍷</div>
+              <div class="absolute top-3 right-3 mincho text-[10px] ink-3 px-2 py-0.5 border line">完売</div>
+            </div>
+            <div class="pt-5">
+              <p class="text-[10px] tracking-[0.3em] ink-3 uppercase">Bourgogne · 2019</p>
+              <p class="mincho text-base mt-2 leading-tight">ムルソー<br/>　</p>
+              <p class="text-[11px] ink-3 mt-1.5">Coche-Dury</p>
+            </div>
+          </article>
+
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Producer story (subtle) -->
+  <section class="border-t line mt-20">
+    <div class="max-w-[1200px] mx-auto px-12 py-20 grid grid-cols-12 gap-10">
+      <div class="col-span-1 flex justify-center">
+        <p class="vertical mincho text-xs ink-3 tracking-widest" style="writing-mode: vertical-rl;">今月の蔵</p>
+      </div>
+      <div class="col-span-5">
+        <p class="mincho text-3xl leading-snug tracking-wide">
+          ドメーヌ・<br/>トロ・ボー
+        </p>
+        <p class="text-[10px] tracking-[0.3em] ink-3 uppercase mt-3">Tollot-Beaut · Chorey-lès-Beaune</p>
+      </div>
+      <div class="col-span-6 mincho ink-2 leading-loose">
+        コート・ド・ボーヌの北、ショレイ・レ・ボーヌに拠点を置く五代続く家族経営。
+        化学肥料を使わない健全なぶどう栽培と、控えめな樽使いで描く透明感のある赤。<br/><br/>
+        本月は特級コルトン・ブレッサンドと村名サヴィニ・レ・ボーヌを計十八本のみ確保。
+      </div>
+    </div>
+  </section>
+
+  <footer class="border-t line">
+    <div class="max-w-[1200px] mx-auto px-12 py-8 flex justify-between items-center">
+      <p class="mincho text-xs ink-3">店 — Mise · 株式会社○○ · 通信販売酒類小売業免許</p>
+      <p class="text-[10px] tracking-[0.4em] ink-3 uppercase">May 2026</p>
+    </div>
+  </footer>
+
+</body>
+</html>

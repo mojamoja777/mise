@@ -1,18 +1,143 @@
 @import "tailwindcss";
 
 @theme inline {
-  /* フォント */
-  --font-sans: var(--font-noto-sans-jp), "Inter", sans-serif;
+  /* Fonts */
+  --font-sans: var(--font-inter-tight), var(--font-noto-sans-jp), "Inter", sans-serif;
+  --font-serif: var(--font-fraunces), var(--font-noto-serif-jp), "DM Serif Display", serif;
+  --font-mono: var(--font-plex-mono), "JetBrains Mono", monospace;
 
-  /* ブランドカラー（ボルドー系） */
+  /* Paper / Ink */
+  --color-paper: #e8e2d4;
+  --color-paper-2: #ddd5c2;
+  --color-paper-3: #d4cab3;
+  --color-paper-deep: #c8bea0;
+  --color-ink: #16110d;
+  --color-ink-2: #3f3528;
+  --color-ink-3: #6a5f4d;
+  --color-ink-4: #9c917c;
+  --color-rule: #c1b69b;
+  --color-rule-strong: #998d72;
+
+  /* Brand — Plate (deep ink-blue) is now primary */
+  --color-plate: #1c3a5c;
+  --color-plate-deep: #0e2238;
+  --color-plate-soft: #4a6b8e;
+  --color-plate-tint: rgba(28, 58, 92, 0.08);
+
+  /* Wine secondary */
+  --color-bordeaux: #5a1428;
+  --color-bordeaux-deep: #3b0a1e;
+  --color-vermilion: #b13a2a;
+
+  /* Gold rules */
+  --color-gold: #8a6a1a;
+  --color-gold-deep: #5d4710;
+
+  /* Status — clear ink-stamp colors */
+  --color-forest: #2d6a3d;
+  --color-forest-bg: #c9d9c8;
+  --color-amber: #b07515;
+  --color-amber-bg: #ead7a8;
+  --color-crimson: #962020;
+  --color-crimson-bg: #ecc6c0;
+  --color-slate: #4a5566;
+  --color-slate-bg: #c8ccd2;
+  --color-violet: #4d2e6e;
+  --color-violet-bg: #d6c8e0;
+
+  /* Legacy aliases — do not rely on these in new code */
   --color-brand-900: #3b0a1e;
-  --color-brand-700: #6b1a35;
-  --color-brand-500: #9b2d50;
+  --color-brand-700: #5a1428;
+  --color-brand-500: #8e2a47;
   --color-brand-200: #d4a0b0;
   --color-brand-50: #fdf4f6;
+}
 
-  /* セカンダリカラー（ゴールド系） */
-  --color-gold-600: #b8860b;
-  --color-gold-400: #d4a820;
-  --color-gold-100: #fbf3d5;
+/* Base — paper background, ink text */
+html, body {
+  background: var(--color-paper);
+}
+body {
+  color: var(--color-ink);
+  font-feature-settings: "tnum", "ss01", "ss02";
+  -webkit-font-smoothing: antialiased;
+  background-image:
+    radial-gradient(rgba(0, 0, 0, 0.022) 1px, transparent 1px),
+    radial-gradient(rgba(0, 0, 0, 0.018) 1px, transparent 1px);
+  background-size: 3px 3px, 5px 5px;
+  background-position: 0 0, 1px 2px;
+  background-attachment: fixed;
+}
+
+/* Tiny caps label */
+.caps {
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--color-ink-3);
+}
+
+/* Plate number — italic Fraunces, tabular */
+.plate-num {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Hairline rules */
+.hairline {
+  height: 1px;
+  background: var(--color-rule);
+}
+.hairline-gold {
+  height: 1px;
+  background: var(--color-gold);
+}
+.hairline-plate {
+  height: 1px;
+  background: var(--color-plate);
+}
+.double-rule {
+  position: relative;
+  height: 4px;
+  border-top: 1px solid var(--color-rule-strong);
+  border-bottom: 1px solid var(--color-rule-strong);
+}
+
+/* Botanical ornament */
+.ornament {
+  display: block;
+  text-align: center;
+  font-family: var(--font-serif);
+  font-style: italic;
+  color: var(--color-plate);
+  letter-spacing: 0.4em;
+}
+.ornament::before {
+  content: "—  ❦  —";
+}
+
+/* Scrollbar */
+.scroll::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.scroll::-webkit-scrollbar-thumb {
+  background: var(--color-rule-strong);
+}
+
+/* Font helpers */
+.font-italic-serif {
+  font-family: var(--font-serif);
+  font-style: italic;
+}
+
+@keyframes ink-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+.animate-ink-pulse {
+  animation: ink-pulse 2.5s ease-in-out infinite;
 }

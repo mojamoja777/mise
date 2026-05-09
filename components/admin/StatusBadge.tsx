@@ -1,5 +1,4 @@
-// components/admin/StatusBadge.tsx
-// 発注ステータスバッジ（管理者・発注者共通）
+import { Tag } from "@/components/ui";
 
 export const STATUS_LABEL: Record<string, string> = {
   pending: "受付中",
@@ -8,21 +7,13 @@ export const STATUS_LABEL: Record<string, string> = {
   cancelled: "キャンセル",
 };
 
-export const STATUS_CLASS: Record<string, string> = {
-  pending: "bg-blue-100 text-blue-700",
-  allocation_pending: "bg-amber-100 text-amber-800",
-  confirmed: "bg-yellow-100 text-yellow-700",
-  cancelled: "bg-red-100 text-red-700",
+const STATUS_VARIANT: Record<string, React.ComponentProps<typeof Tag>["variant"]> = {
+  pending: "plate",
+  allocation_pending: "amber",
+  confirmed: "forest",
+  cancelled: "crimson",
 };
 
 export function StatusBadge({ status }: { status: string }) {
-  return (
-    <span
-      className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${
-        STATUS_CLASS[status] ?? "bg-gray-100 text-gray-500"
-      }`}
-    >
-      {STATUS_LABEL[status] ?? status}
-    </span>
-  );
+  return <Tag variant={STATUS_VARIANT[status] ?? "default"}>{STATUS_LABEL[status] ?? status}</Tag>;
 }

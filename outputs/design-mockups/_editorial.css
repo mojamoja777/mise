@@ -1,0 +1,210 @@
+/* Mise · Editorial — calm, deep, ledger-like */
+:root {
+  /* Paper / ink */
+  --paper: #e8e2d4;
+  --paper-2: #ddd5c2;
+  --paper-3: #d4cab3;
+  --paper-deep: #c8bea0;
+  --ink: #1a1410;
+  --ink-2: #4a4034;
+  --ink-3: #7a6f5f;
+  --ink-4: #aa9f8a;
+  --rule: #c1b69b;
+  --rule-strong: #998d72;
+
+  /* Brand */
+  --bordeaux: #5a1428;
+  --bordeaux-deep: #3b0a1e;
+  --bordeaux-soft: #8e2a47;
+  --gold: #8a6a1a;
+  --gold-deep: #5d4710;
+
+  /* Status (clear, ink-stamp colors) */
+  --forest: #2d6a3d;
+  --forest-bg: #c9d9c8;
+  --amber: #b07515;
+  --amber-bg: #ead7a8;
+  --crimson: #962020;
+  --crimson-bg: #ecc6c0;
+  --navy: #1f3454;
+  --navy-bg: #c2cad8;
+  --violet: #4d2e6e;
+  --violet-bg: #d6c8e0;
+}
+
+* { box-sizing: border-box; }
+html, body { background: var(--paper); }
+body {
+  color: var(--ink);
+  font-family: "Inter", "Noto Sans JP", sans-serif;
+  font-weight: 400;
+  font-feature-settings: "tnum","ss01";
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Typography */
+.serif { font-family: "DM Serif Display", "Noto Serif JP", serif; font-weight: 400; }
+.mincho { font-family: "Noto Serif JP", serif; font-weight: 500; }
+.tabular { font-variant-numeric: tabular-nums; }
+.caps {
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--ink-3);
+}
+
+/* Subtle paper grain */
+.grain {
+  background-image:
+    radial-gradient(rgba(0,0,0,.022) 1px, transparent 1px),
+    radial-gradient(rgba(0,0,0,.018) 1px, transparent 1px);
+  background-size: 3px 3px, 5px 5px;
+  background-position: 0 0, 1px 2px;
+}
+
+/* Lines */
+.rule { border-color: var(--rule); }
+.rule-strong { border-color: var(--rule-strong); }
+.hairline-gold { background: var(--gold); height: 1px; }
+.hairline { background: var(--rule); height: 1px; }
+
+/* Surfaces */
+.surface { background: var(--paper); }
+.surface-2 { background: var(--paper-2); }
+.surface-3 { background: var(--paper-3); }
+.card { background: var(--paper); border: 1px solid var(--rule); }
+.card-inset { background: var(--paper-2); border: 1px solid var(--rule); }
+
+/* Status dots — round ink stamps */
+.dot { width: 8px; height: 8px; border-radius: 999px; display: inline-block; }
+.dot-forest  { background: var(--forest); }
+.dot-amber   { background: var(--amber); }
+.dot-crimson { background: var(--crimson); }
+.dot-navy    { background: var(--navy); }
+.dot-bordeaux{ background: var(--bordeaux); }
+.dot-violet  { background: var(--violet); }
+.dot-ink     { background: var(--ink-3); }
+
+/* Tags — like a stamped seal */
+.tag {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-family: "Inter", "Noto Sans JP", sans-serif;
+  font-size: 10px; font-weight: 500;
+  text-transform: uppercase; letter-spacing: 0.1em;
+  padding: 2px 8px; border: 1px solid var(--rule-strong);
+  color: var(--ink-2); background: transparent;
+}
+.tag-forest  { border-color: var(--forest); color: var(--forest); background: var(--forest-bg); }
+.tag-amber   { border-color: var(--amber); color: var(--amber); background: var(--amber-bg); }
+.tag-crimson { border-color: var(--crimson); color: var(--crimson); background: var(--crimson-bg); }
+.tag-navy    { border-color: var(--navy); color: var(--navy); background: var(--navy-bg); }
+.tag-bordeaux{ border-color: var(--bordeaux); color: var(--bordeaux); background: rgba(90,20,40,0.06); }
+.tag-violet  { border-color: var(--violet); color: var(--violet); background: var(--violet-bg); }
+
+/* Seal — round stamp for category etc */
+.seal {
+  width: 36px; height: 36px; border-radius: 999px;
+  border: 1.2px solid var(--bordeaux); color: var(--bordeaux);
+  display: inline-flex; align-items: center; justify-content: center;
+  font-family: "Noto Serif JP", serif; font-weight: 500;
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 12px; padding: 7px 14px;
+  border: 1px solid var(--rule-strong);
+  background: var(--paper);
+  color: var(--ink);
+  letter-spacing: 0.04em;
+  transition: all .15s ease;
+  cursor: pointer;
+}
+.btn:hover { background: var(--paper-2); border-color: var(--ink-3); }
+.btn-primary { background: var(--bordeaux); border-color: var(--bordeaux); color: var(--paper); }
+.btn-primary:hover { background: var(--bordeaux-deep); border-color: var(--bordeaux-deep); }
+.btn-ghost { background: transparent; border-color: transparent; }
+.btn-ghost:hover { background: var(--paper-2); border-color: var(--rule); }
+
+/* Inputs */
+.input {
+  background: var(--paper);
+  border: 1px solid var(--rule-strong);
+  padding: 7px 10px;
+  font-size: 13px;
+  color: var(--ink);
+  outline: none;
+  font-family: inherit;
+}
+.input:focus { border-color: var(--bordeaux); }
+
+/* kbd */
+kbd {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px; padding: 2px 5px;
+  border: 1px solid var(--rule-strong);
+  color: var(--ink-2); background: var(--paper-2);
+}
+
+/* Subtle scroll */
+.scroll::-webkit-scrollbar { width: 8px; height: 8px; }
+.scroll::-webkit-scrollbar-thumb { background: var(--rule-strong); }
+
+/* Row hover */
+.row:hover { background: var(--paper-2); }
+
+/* Ornament dividers */
+.fleuron {
+  text-align: center; color: var(--ink-3);
+  font-family: "DM Serif Display", serif; font-size: 14px;
+  letter-spacing: 0.6em;
+}
+.fleuron::before { content: "✦   ✦   ✦"; }
+
+/* Issue label header */
+.issue-band {
+  display: flex; align-items: center; justify-content: space-between;
+  border-top: 1px solid var(--gold);
+  border-bottom: 1px solid var(--gold);
+  padding: 8px 0;
+  font-family: "DM Serif Display", "Noto Serif JP", serif;
+  letter-spacing: 0.05em;
+}
+
+/* Pulse animation */
+@keyframes ink-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+.pulse { animation: ink-pulse 2.5s ease-in-out infinite; }
+
+/* Table */
+.ledger { width: 100%; }
+.ledger thead th {
+  text-align: left; padding: 10px 0;
+  font-weight: 500; font-size: 10px;
+  text-transform: uppercase; letter-spacing: 0.18em;
+  color: var(--ink-3);
+  border-bottom: 1px solid var(--rule-strong);
+}
+.ledger tbody td {
+  padding: 12px 0;
+  border-bottom: 1px solid var(--rule);
+  vertical-align: middle;
+}
+
+/* Numbers in serif italic for ledger feel */
+.ledger-num {
+  font-family: "DM Serif Display", "Noto Serif JP", serif;
+  font-style: italic;
+  font-variant-numeric: tabular-nums;
+  font-weight: 400;
+}
+
+/* Decorative chrome for "page" */
+.page-chrome {
+  display: flex; align-items: center; justify-content: space-between;
+  padding-bottom: 14px; border-bottom: 1px solid var(--rule);
+  margin-bottom: 28px;
+}

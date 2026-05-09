@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mise — Editorial · Chat</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+JP:wght@300;400;500&family=Noto+Serif+JP:wght@300;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="_editorial.css" />
+</head>
+<body class="grain">
+
+<div class="flex h-screen">
+
+  <aside class="w-16 border-r rule flex flex-col items-center py-4 gap-4 flex-shrink-0">
+    <p class="serif text-xl">M</p>
+    <div class="hairline w-8"></div>
+    <button class="w-10 h-10 flex items-center justify-center" style="color: var(--ink-3);"><span class="serif">⌂</span></button>
+    <button class="w-10 h-10 flex items-center justify-center" style="color: var(--ink-3);"><span class="serif">◉</span></button>
+    <button class="w-10 h-10 flex items-center justify-center" style="color: var(--ink-3);"><span class="serif">▦</span></button>
+    <button class="w-10 h-10 flex items-center justify-center bg-[var(--paper-2)]" style="color: var(--bordeaux);"><span class="serif">⏵</span></button>
+    <button class="w-10 h-10 flex items-center justify-center" style="color: var(--ink-3);"><span class="serif">¥</span></button>
+  </aside>
+
+  <section class="flex-1 flex min-w-0 overflow-hidden">
+
+    <!-- Threads list -->
+    <div class="w-80 border-r rule flex flex-col flex-shrink-0">
+      <div class="px-5 pt-6 pb-4 border-b rule">
+        <p class="caps">Correspondence</p>
+        <h2 class="serif text-2xl mt-1">往復書簡 <span class="tag tag-forest ml-2">4 unread</span></h2>
+      </div>
+      <div class="px-4 py-3 border-b rule">
+        <input class="input w-full" placeholder="search · all threads" />
+      </div>
+      <div class="flex-1 overflow-y-auto scroll">
+
+        <div class="px-5 py-3.5 border-b rule cursor-pointer flex gap-3 surface-2">
+          <div class="seal text-[10px]" style="width: 32px; height: 32px;">寿</div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center justify-between">
+              <p>寿司 SHIN</p>
+              <span class="dot dot-forest pulse"></span>
+            </div>
+            <p class="caps mt-0.5">11:55 · 白石 圭</p>
+            <p class="text-sm mt-1.5 truncate" style="color: var(--ink-2);">明日の便で発送可能ですか？</p>
+          </div>
+        </div>
+
+        <div class="px-5 py-3.5 border-b rule cursor-pointer flex gap-3 hover:surface-2">
+          <div class="seal text-[10px]" style="width: 32px; height: 32px;">六</div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center justify-between">
+              <p>レストラン六本木</p>
+              <span class="dot dot-forest"></span>
+            </div>
+            <p class="caps mt-0.5">10:42 · 米田</p>
+            <p class="text-sm mt-1.5 truncate" style="color: var(--ink-2);">Corton-Bressandes の追加について…</p>
+          </div>
+        </div>
+
+        <div class="px-5 py-3.5 border-b rule cursor-pointer flex gap-3 hover:surface-2">
+          <div class="seal text-[10px]" style="width: 32px; height: 32px;">B</div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center justify-between">
+              <p>Bistro Verdure</p>
+              <span class="dot dot-forest"></span>
+            </div>
+            <p class="caps mt-0.5">昨日 · 田中</p>
+            <p class="text-sm mt-1.5 truncate" style="color: var(--ink-2);">5月の新着リスト見ました ✓</p>
+          </div>
+        </div>
+
+        <div class="px-5 py-3.5 border-b rule cursor-pointer flex gap-3 hover:surface-2">
+          <div class="seal text-[10px]" style="width: 32px; height: 32px;">C</div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center justify-between">
+              <p>CARROT</p>
+              <span class="dot dot-forest"></span>
+            </div>
+            <p class="caps mt-0.5">5/06 · 渡辺</p>
+            <p class="text-sm mt-1.5 truncate" style="color: var(--ink-2);">来週、店舗に伺ってもいいですか？</p>
+          </div>
+        </div>
+
+        <div class="px-5 py-3.5 border-b rule cursor-pointer flex gap-3 hover:surface-2 opacity-60">
+          <div class="seal text-[10px]" style="width: 32px; height: 32px;">花</div>
+          <div class="flex-1 min-w-0">
+            <p>Hana 麻布十番</p>
+            <p class="caps mt-0.5">5/05 · 既読</p>
+            <p class="text-sm mt-1.5 truncate" style="color: var(--ink-3);">承知しました、ありがとうございます。</p>
+          </div>
+        </div>
+
+        <div class="px-5 py-3.5 border-b rule cursor-pointer flex gap-3 hover:surface-2 opacity-60">
+          <div class="seal text-[10px]" style="width: 32px; height: 32px;">焼</div>
+          <div class="flex-1 min-w-0">
+            <p>焼鳥 弦</p>
+            <p class="caps mt-0.5">5/04 · 既読</p>
+            <p class="text-sm mt-1.5 truncate" style="color: var(--ink-3);">ありがとうございます、確認します。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Conversation -->
+    <div class="flex-1 flex flex-col min-w-0">
+      <header class="border-b rule px-7 pt-5 pb-4 flex items-center gap-3">
+        <div class="seal" style="width: 40px; height: 40px;">寿</div>
+        <div class="leading-tight">
+          <p class="serif text-xl">寿司 SHIN</p>
+          <p class="caps mt-1" style="color: var(--ink-3);">silver tier · ¥298k/mo · last order 5/03</p>
+        </div>
+        <div class="ml-auto flex items-center gap-2">
+          <button class="btn">注文履歴</button>
+          <button class="btn">プロフィール</button>
+        </div>
+      </header>
+
+      <div class="flex-1 overflow-y-auto scroll px-7 py-7 space-y-6">
+
+        <p class="caps text-center">━━━━  2026 · 05 · 08  ━━━━</p>
+
+        <div class="flex gap-3 max-w-2xl">
+          <div class="seal text-[10px] flex-shrink-0" style="width: 32px; height: 32px;">寿</div>
+          <div>
+            <div class="card p-4 text-sm leading-relaxed">明日の便で発送可能ですか？</div>
+            <p class="caps mt-1.5">11:55</p>
+          </div>
+        </div>
+
+        <div class="flex gap-3 max-w-2xl">
+          <div class="seal text-[10px] flex-shrink-0" style="width: 32px; height: 32px;">寿</div>
+          <div>
+            <div class="card p-4 text-sm leading-relaxed">2件 #B7C2D + #B7E91 を一緒にまとめてもらえると助かります。</div>
+            <p class="caps mt-1.5">11:55</p>
+          </div>
+        </div>
+
+        <div class="flex gap-3 max-w-2xl ml-auto justify-end">
+          <div class="text-right">
+            <div class="p-4 text-sm leading-relaxed" style="background: var(--bordeaux); color: var(--paper);">
+              ありがとうございます。明日 5/9 の便でまとめて発送いたします。
+            </div>
+            <p class="caps mt-1.5">12:01 · 既読</p>
+          </div>
+          <div class="seal text-[10px] flex-shrink-0" style="width: 32px; height: 32px; border-color: var(--bordeaux); background: var(--bordeaux); color: var(--paper);">店</div>
+        </div>
+
+        <!-- AI suggestion -->
+        <div class="max-w-2xl mx-auto card p-4" style="border-color: var(--violet); border-style: dashed;">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="tag tag-violet">⚡ AI Assistant · 文案提案</span>
+            <span class="ml-auto caps">click to insert</span>
+          </div>
+          <div class="space-y-2">
+            <button class="btn w-full text-left justify-start">📦 「集荷時間は16:00を予定しております」を挿入</button>
+            <button class="btn w-full text-left justify-start">💡 「次回入荷予定の Egly-Ouriet もお知らせします」を挿入</button>
+          </div>
+        </div>
+
+        <p class="fleuron"></p>
+
+        <!-- Order context -->
+        <div class="max-w-2xl card p-5">
+          <div class="flex items-center justify-between mb-3 pb-3 border-b rule">
+            <div class="flex items-baseline gap-3">
+              <p class="serif text-lg">#B7C2D</p>
+              <p class="caps" style="color: var(--ink-3);">2026-05-03</p>
+            </div>
+            <span class="tag tag-forest">confirmed</span>
+          </div>
+          <ul class="space-y-2 text-sm">
+            <li class="flex justify-between"><span>Egly-Ouriet Brut Tradition GC ×4</span><span class="ledger-num">¥56,800</span></li>
+            <li class="flex justify-between"><span>Domaine Leflaive Puligny-Montrachet ×2</span><span class="ledger-num">¥36,000</span></li>
+            <li class="flex justify-between pt-2 border-t rule"><span class="caps">合計</span><span class="serif text-lg">¥92,800</span></li>
+          </ul>
+        </div>
+
+      </div>
+
+      <!-- Composer -->
+      <div class="border-t rule p-5 surface-2">
+        <div class="card p-4">
+          <textarea class="bg-transparent w-full text-sm outline-none resize-none placeholder:text-[var(--ink-3)]" rows="3" placeholder="メッセージを入力… ⌘⏎ で送信"></textarea>
+          <div class="flex items-center gap-2 mt-3">
+            <button class="btn btn-ghost">📎 添付</button>
+            <button class="btn btn-ghost">📦 注文を引用</button>
+            <button class="btn btn-ghost" style="color: var(--violet);">⚡ AIで返信</button>
+            <span class="ml-auto caps">⌘⏎ send</span>
+            <button class="btn btn-primary">送信</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Customer card -->
+    <div class="w-72 border-l rule flex flex-col flex-shrink-0">
+      <div class="px-5 pt-5 pb-4 border-b rule">
+        <p class="caps">Customer · since 2024.11</p>
+        <p class="serif text-xl mt-1">寿司 SHIN</p>
+      </div>
+      <div class="px-5 py-5 space-y-6 overflow-y-auto scroll">
+
+        <div class="space-y-2 text-sm">
+          <div class="flex justify-between"><span class="caps">Tier</span><span class="tag">silver</span></div>
+          <div class="flex justify-between"><span class="caps">Rep</span><span>白石 圭</span></div>
+          <div class="flex justify-between"><span class="caps">Phone</span><span class="ledger-num">03-xxxx-xxxx</span></div>
+          <div class="flex justify-between"><span class="caps">Address</span><span style="color: var(--ink-2);">港区西麻布</span></div>
+        </div>
+
+        <div>
+          <p class="caps mb-2">Taste profile</p>
+          <div class="flex flex-wrap gap-1.5">
+            <span class="tag">Champagne</span>
+            <span class="tag">Bourgogne 白</span>
+            <span class="tag">純米大吟醸</span>
+            <span class="tag">Sancerre</span>
+          </div>
+        </div>
+
+        <div>
+          <p class="caps mb-2">Recent activity</p>
+          <ul class="space-y-1.5 text-sm">
+            <li class="flex justify-between"><span style="color: var(--ink-2);">5/03 ordered</span><span class="ledger-num">¥92,800</span></li>
+            <li class="flex justify-between"><span style="color: var(--ink-2);">4/22 ordered</span><span class="ledger-num">¥48,400</span></li>
+            <li class="flex justify-between"><span style="color: var(--ink-2);">4/15 invoice paid</span><span class="ledger-num" style="color: var(--forest);">¥186,200</span></li>
+            <li class="flex justify-between"><span style="color: var(--ink-2);">4/08 ordered</span><span class="ledger-num">¥124,800</span></li>
+          </ul>
+        </div>
+
+        <div>
+          <p class="caps mb-2">Stats</p>
+          <div class="grid grid-cols-2 gap-3">
+            <div class="card p-3">
+              <p class="caps">Orders / mo</p>
+              <p class="serif text-xl mt-1 tabular">3.2</p>
+            </div>
+            <div class="card p-3">
+              <p class="caps">Avg ticket</p>
+              <p class="serif text-xl mt-1 tabular">¥93k</p>
+            </div>
+            <div class="card p-3">
+              <p class="caps">On-time pay</p>
+              <p class="serif text-xl mt-1 tabular" style="color: var(--forest);">100%</p>
+            </div>
+            <div class="card p-3">
+              <p class="caps">Avg reply</p>
+              <p class="serif text-xl mt-1 tabular">12m</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </section>
+</div>
+</body>
+</html>

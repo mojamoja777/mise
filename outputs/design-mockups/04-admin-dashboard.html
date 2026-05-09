@@ -1,0 +1,353 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mise — Admin · Command Center</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+JP:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="_shared.css" />
+</head>
+<body class="scanlines vignette">
+
+<div class="flex h-screen relative" style="z-index: 2;">
+
+  <!-- ==================== SIDEBAR ==================== -->
+  <aside class="w-60 border-r line bg-[var(--bg)] flex flex-col flex-shrink-0">
+    <div class="h-12 flex items-center px-4 border-b line gap-2">
+      <span class="dot dot-glow" style="background: var(--phosphor);"></span>
+      <span class="font-semibold tracking-tight">mise</span>
+      <span class="mono text-[10px] text-[var(--text-3)] ml-1">/admin</span>
+      <span class="ml-auto mono text-[10px] text-[var(--text-3)]">v2.4.1</span>
+    </div>
+
+    <div class="px-3 py-3 border-b line">
+      <div class="flex items-center gap-2 px-2 py-1.5 rounded-md bg-[var(--bg-2)] text-xs text-[var(--text-2)]">
+        <span class="mono">⌘K</span>
+        <span class="text-[10px] ml-1">jump to…</span>
+      </div>
+    </div>
+
+    <nav class="px-2 py-3 text-sm space-y-0.5 flex-1 overflow-y-auto scroll">
+      <p class="px-2 text-[10px] tracking-widest uppercase text-[var(--text-3)] mb-2">Today</p>
+      <a class="flex items-center gap-2 px-2 py-1.5 rounded-md bg-[var(--bg-3)] text-[var(--text)]">
+        <span class="dot" style="background: var(--bordeaux);"></span> Inbox
+        <span class="ml-auto tag tag-bordeaux">7</span>
+      </a>
+      <a class="flex items-center gap-2 px-2 py-1.5 rounded-md text-[var(--text-2)] hover:bg-[var(--bg-2)]">
+        <span>◯</span> Allocations
+        <span class="ml-auto tag tag-amber">3</span>
+      </a>
+      <a class="flex items-center gap-2 px-2 py-1.5 rounded-md text-[var(--text-2)] hover:bg-[var(--bg-2)]">
+        <span>◯</span> Chat
+        <span class="ml-auto dot dot-glow" style="background: var(--phosphor);"></span>
+      </a>
+
+      <p class="px-2 text-[10px] tracking-widest uppercase text-[var(--text-3)] mt-5 mb-2">Manage</p>
+      <a class="flex items-center gap-2 px-2 py-1.5 rounded-md text-[var(--text-2)] hover:bg-[var(--bg-2)]">◯ Orders</a>
+      <a class="flex items-center gap-2 px-2 py-1.5 rounded-md text-[var(--text-2)] hover:bg-[var(--bg-2)]">◯ Products <kbd class="ml-auto">P</kbd></a>
+      <a class="flex items-center gap-2 px-2 py-1.5 rounded-md text-[var(--text-2)] hover:bg-[var(--bg-2)]">◯ Buyers <kbd class="ml-auto">B</kbd></a>
+      <a class="flex items-center gap-2 px-2 py-1.5 rounded-md text-[var(--text-2)] hover:bg-[var(--bg-2)]">◯ Invoices <kbd class="ml-auto">I</kbd></a>
+
+      <p class="px-2 text-[10px] tracking-widest uppercase text-[var(--text-3)] mt-5 mb-2">System</p>
+      <a class="flex items-center gap-2 px-2 py-1.5 rounded-md text-[var(--text-2)] hover:bg-[var(--bg-2)]">◯ Settings</a>
+    </nav>
+
+    <div class="border-t line p-3">
+      <div class="flex items-center gap-2 mb-2">
+        <div class="w-7 h-7 rounded-md bg-[var(--bordeaux-3)] flex items-center justify-center text-xs">M</div>
+        <div class="leading-tight">
+          <p class="text-xs">Maison Sagawa</p>
+          <p class="text-[10px] text-[var(--text-3)]">admin · 港区</p>
+        </div>
+      </div>
+      <div class="text-[10px] text-[var(--text-3)] mono space-y-0.5">
+        <div class="flex justify-between"><span>uptime</span><span>14d 02:41</span></div>
+        <div class="flex justify-between"><span>region</span><span>nrt1</span></div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ==================== MAIN ==================== -->
+  <section class="flex-1 flex flex-col min-w-0 overflow-hidden">
+
+    <!-- Top bar -->
+    <header class="h-12 border-b line flex items-center px-5 gap-4 bg-[var(--bg)]">
+      <div class="flex items-center gap-2 text-sm">
+        <span class="text-[var(--text-3)]">/</span>
+        <span>Inbox</span>
+        <span class="tag tag-phosphor ml-2">live</span>
+      </div>
+      <div class="ml-auto flex items-center gap-2 text-xs">
+        <span class="mono text-[var(--text-3)]">2026-05-08 · 14:23 JST</span>
+        <span class="text-[var(--text-4)]">·</span>
+        <span class="mono text-[var(--text-3)]">$ active session 02:14</span>
+      </div>
+    </header>
+
+    <!-- Content -->
+    <div class="flex-1 overflow-y-auto scroll p-6">
+
+      <!-- Hero / status strip -->
+      <div class="grid grid-cols-4 gap-3 mb-5">
+        <div class="card p-4">
+          <div class="flex items-center justify-between mb-3">
+            <p class="text-[10px] tracking-widest uppercase text-[var(--text-3)]">New orders</p>
+            <span class="tag tag-bordeaux">requires action</span>
+          </div>
+          <p class="mono text-3xl tabular">07</p>
+          <p class="ascii-rule mt-2">▒▒▒▒▒▒▒░░ +3 vs yesterday</p>
+        </div>
+        <div class="card p-4">
+          <div class="flex items-center justify-between mb-3">
+            <p class="text-[10px] tracking-widest uppercase text-[var(--text-3)]">Allocation pending</p>
+            <span class="tag tag-amber">deadline soon</span>
+          </div>
+          <p class="mono text-3xl tabular">03</p>
+          <p class="ascii-rule mt-2">▒▒▒░░░░░░ next: 5/15 18:00</p>
+        </div>
+        <div class="card p-4">
+          <div class="flex items-center justify-between mb-3">
+            <p class="text-[10px] tracking-widest uppercase text-[var(--text-3)]">Today's revenue</p>
+            <span class="tag tag-phosphor">+12%</span>
+          </div>
+          <p class="mono text-3xl tabular">¥482,300</p>
+          <p class="ascii-rule mt-2">▒▒▒▒▒▒▒▒░ goal ¥600,000</p>
+        </div>
+        <div class="card p-4">
+          <div class="flex items-center justify-between mb-3">
+            <p class="text-[10px] tracking-widest uppercase text-[var(--text-3)]">Unread chat</p>
+            <span class="dot pulse" style="background: var(--phosphor);"></span>
+          </div>
+          <p class="mono text-3xl tabular">04</p>
+          <p class="ascii-rule mt-2">last reply: ７分前</p>
+        </div>
+      </div>
+
+      <p class="ascii-rule mb-3">────────────────────────  inbox  ────────────────────────</p>
+
+      <!-- Inbox -->
+      <div class="card overflow-hidden">
+
+        <div class="border-b line px-4 py-2 flex items-center gap-2">
+          <button class="btn btn-ghost text-[var(--bordeaux)]">Action required <span class="tag tag-bordeaux ml-1">7</span></button>
+          <button class="btn btn-ghost text-[var(--text-2)]">All <span class="text-[10px] mono ml-1">/ 24</span></button>
+          <button class="btn btn-ghost text-[var(--text-2)]">Snoozed <span class="text-[10px] mono ml-1">/ 2</span></button>
+          <span class="ml-auto mono text-[10px] text-[var(--text-3)]">↵ open · J/K navigate · E archive</span>
+        </div>
+
+        <table class="w-full text-sm">
+          <tbody class="divide-y line">
+
+            <tr class="row cursor-pointer">
+              <td class="pl-4 py-3 w-2"><span class="dot pulse" style="background: var(--bordeaux);"></span></td>
+              <td class="py-3 mono text-[10px] text-[var(--text-3)] w-12">14:21</td>
+              <td class="py-3 w-44">
+                <div class="flex items-center gap-2">
+                  <div class="w-6 h-6 rounded bg-[var(--bg-3)] flex items-center justify-center mono text-[10px]">RR</div>
+                  <span class="text-[var(--text)]">レストラン六本木</span>
+                </div>
+              </td>
+              <td class="py-3">
+                <span class="tag tag-bordeaux">new order</span>
+                <span class="ml-2">Tollot-Beaut Corton-Bressandes 2020 ×6 + 2 items</span>
+              </td>
+              <td class="py-3 mono text-right text-[var(--text)] w-32">¥189,400</td>
+              <td class="py-3 pr-4 text-right w-32">
+                <button class="btn btn-primary">確認 ↵</button>
+              </td>
+            </tr>
+
+            <tr class="row cursor-pointer">
+              <td class="pl-4 py-3 w-2"><span class="dot" style="background: var(--bordeaux);"></span></td>
+              <td class="py-3 mono text-[10px] text-[var(--text-3)] w-12">13:48</td>
+              <td class="py-3 w-44">
+                <div class="flex items-center gap-2">
+                  <div class="w-6 h-6 rounded bg-[var(--bg-3)] flex items-center justify-center mono text-[10px]">BV</div>
+                  <span class="text-[var(--text)]">Bistro Verdure</span>
+                </div>
+              </td>
+              <td class="py-3">
+                <span class="tag tag-bordeaux">new order</span>
+                <span class="ml-2">Egly-Ouriet Brut Tradition GC ×4</span>
+              </td>
+              <td class="py-3 mono text-right text-[var(--text)] w-32">¥56,800</td>
+              <td class="py-3 pr-4 text-right w-32">
+                <button class="btn">確認 ↵</button>
+              </td>
+            </tr>
+
+            <tr class="row cursor-pointer">
+              <td class="pl-4 py-3 w-2"><span class="dot" style="background: var(--amber);"></span></td>
+              <td class="py-3 mono text-[10px] text-[var(--text-3)] w-12">12:02</td>
+              <td class="py-3 w-44">
+                <div class="flex items-center gap-2">
+                  <div class="w-6 h-6 rounded bg-[var(--bg-3)] flex items-center justify-center mono text-[10px]">$</div>
+                  <span class="text-[var(--text)]">SYS</span>
+                </div>
+              </td>
+              <td class="py-3">
+                <span class="tag tag-amber">allocation deadline</span>
+                <span class="ml-2">Tollot-Beaut Corton-Bressandes 2020 — 受付終了 18:00 (残 3:38:00)</span>
+              </td>
+              <td class="py-3 mono text-right text-[var(--text-2)] w-32">10件 / 24本希望</td>
+              <td class="py-3 pr-4 text-right w-32">
+                <button class="btn">按分する →</button>
+              </td>
+            </tr>
+
+            <tr class="row cursor-pointer">
+              <td class="pl-4 py-3 w-2"><span class="dot dot-glow" style="background: var(--phosphor);"></span></td>
+              <td class="py-3 mono text-[10px] text-[var(--text-3)] w-12">11:55</td>
+              <td class="py-3 w-44">
+                <div class="flex items-center gap-2">
+                  <div class="w-6 h-6 rounded bg-[var(--bg-3)] flex items-center justify-center mono text-[10px]">SP</div>
+                  <span class="text-[var(--text)]">寿司 SHIN</span>
+                </div>
+              </td>
+              <td class="py-3">
+                <span class="tag tag-phosphor">chat</span>
+                <span class="ml-2 text-[var(--text-2)]">「明日の便で発送可能ですか？」</span>
+              </td>
+              <td class="py-3 mono text-right text-[var(--text-3)] w-32">— —</td>
+              <td class="py-3 pr-4 text-right w-32">
+                <button class="btn">返信 →</button>
+              </td>
+            </tr>
+
+            <tr class="row cursor-pointer">
+              <td class="pl-4 py-3 w-2"><span class="dot" style="background: var(--violet);"></span></td>
+              <td class="py-3 mono text-[10px] text-[var(--text-3)] w-12">11:30</td>
+              <td class="py-3 w-44">
+                <div class="flex items-center gap-2">
+                  <div class="w-6 h-6 rounded bg-[var(--bg-3)] flex items-center justify-center mono text-[10px]">$</div>
+                  <span class="text-[var(--text)]">SYS</span>
+                </div>
+              </td>
+              <td class="py-3">
+                <span class="tag tag-violet">ai · label</span>
+                <span class="ml-2 text-[var(--text-2)]">9枚のラベル写真から商品情報を抽出 — 確認待ち</span>
+              </td>
+              <td class="py-3 mono text-right text-[var(--text-3)] w-32">9 件</td>
+              <td class="py-3 pr-4 text-right w-32">
+                <button class="btn">確認 →</button>
+              </td>
+            </tr>
+
+            <tr class="row cursor-pointer">
+              <td class="pl-4 py-3 w-2"><span class="dot" style="background: var(--text-3);"></span></td>
+              <td class="py-3 mono text-[10px] text-[var(--text-3)] w-12">09:12</td>
+              <td class="py-3 w-44">
+                <div class="flex items-center gap-2">
+                  <div class="w-6 h-6 rounded bg-[var(--bg-3)] flex items-center justify-center mono text-[10px]">CR</div>
+                  <span class="text-[var(--text)]">CARROT</span>
+                </div>
+              </td>
+              <td class="py-3">
+                <span class="tag">order confirmed</span>
+                <span class="ml-2 text-[var(--text-2)]">5/10発送予定 · 出荷ラベル印刷待ち</span>
+              </td>
+              <td class="py-3 mono text-right text-[var(--text)] w-32">¥34,200</td>
+              <td class="py-3 pr-4 text-right w-32">
+                <button class="btn btn-ghost text-[var(--text-3)]">処理済 ✓</button>
+              </td>
+            </tr>
+
+            <tr class="row cursor-pointer">
+              <td class="pl-4 py-3 w-2"><span class="dot" style="background: var(--cyan);"></span></td>
+              <td class="py-3 mono text-[10px] text-[var(--text-3)] w-12">08:00</td>
+              <td class="py-3 w-44">
+                <div class="flex items-center gap-2">
+                  <div class="w-6 h-6 rounded bg-[var(--bg-3)] flex items-center justify-center mono text-[10px]">$</div>
+                  <span class="text-[var(--text)]">SYS</span>
+                </div>
+              </td>
+              <td class="py-3">
+                <span class="tag tag-cyan">monthly</span>
+                <span class="ml-2 text-[var(--text-2)]">4月分の請求書を一括生成 — 18件</span>
+              </td>
+              <td class="py-3 mono text-right text-[var(--text-2)] w-32">¥3,420,800</td>
+              <td class="py-3 pr-4 text-right w-32">
+                <button class="btn">生成 →</button>
+              </td>
+            </tr>
+
+          </tbody>
+        </table>
+      </div>
+
+      <p class="ascii-rule mt-5 mb-3">────────────────────────  signals  ────────────────────────</p>
+
+      <!-- Bottom: signals / glanceable widgets -->
+      <div class="grid grid-cols-3 gap-3">
+
+        <div class="card p-4">
+          <div class="flex items-center justify-between mb-3">
+            <p class="text-[10px] tracking-widest uppercase text-[var(--text-3)]">Low stock</p>
+            <span class="text-[10px] mono text-[var(--text-3)]">5 items</span>
+          </div>
+          <div class="space-y-1.5 text-xs">
+            <div class="flex justify-between"><span class="text-[var(--text-2)]">Juyondai Honmaru</span><span class="mono"><span class="text-[var(--amber)]">6</span> / 24</span></div>
+            <div class="flex justify-between"><span class="text-[var(--text-2)]">Coche-Dury Meursault</span><span class="mono"><span class="text-[var(--rose)]">0</span> / 12</span></div>
+            <div class="flex justify-between"><span class="text-[var(--text-2)]">Egly-Ouriet Tradition</span><span class="mono"><span class="text-[var(--amber)]">4</span> / 24</span></div>
+            <div class="flex justify-between"><span class="text-[var(--text-2)]">Lynch-Bages 2018</span><span class="mono"><span class="text-[var(--amber)]">8</span> / 24</span></div>
+          </div>
+        </div>
+
+        <div class="card p-4">
+          <div class="flex items-center justify-between mb-3">
+            <p class="text-[10px] tracking-widest uppercase text-[var(--text-3)]">Top buyers · this month</p>
+          </div>
+          <div class="space-y-1.5 text-xs">
+            <div class="flex justify-between items-center"><span class="text-[var(--text-2)]">レストラン六本木</span><span class="mono">¥412,800</span></div>
+            <div class="flex justify-between items-center"><span class="text-[var(--text-2)]">Bistro Verdure</span><span class="mono">¥386,400</span></div>
+            <div class="flex justify-between items-center"><span class="text-[var(--text-2)]">寿司 SHIN</span><span class="mono">¥298,200</span></div>
+            <div class="flex justify-between items-center"><span class="text-[var(--text-2)]">CARROT</span><span class="mono">¥182,000</span></div>
+          </div>
+        </div>
+
+        <div class="card p-4">
+          <div class="flex items-center justify-between mb-3">
+            <p class="text-[10px] tracking-widest uppercase text-[var(--text-3)]">Sales · last 14 days</p>
+            <span class="text-[10px] mono text-[var(--phosphor)]">+18.4%</span>
+          </div>
+          <!-- ASCII bar chart -->
+          <div class="mono text-[10px] leading-[10px] text-[var(--text-2)] space-y-[2px]">
+            <div>4/25 ▎▎▎▎▎          <span class="text-[var(--text-3)]">¥182k</span></div>
+            <div>4/26 ▎▎▎▎▎▎         <span class="text-[var(--text-3)]">¥204k</span></div>
+            <div>4/27 ▎▎▎▎           <span class="text-[var(--text-3)]">¥146k</span></div>
+            <div>4/28 ▎▎▎▎▎▎▎        <span class="text-[var(--text-3)]">¥248k</span></div>
+            <div>4/29 ▎▎▎▎▎▎▎▎▎      <span class="text-[var(--text-3)]">¥318k</span></div>
+            <div>4/30 ▎▎▎▎▎▎▎▎       <span class="text-[var(--text-3)]">¥282k</span></div>
+            <div>5/01 ▎▎▎▎▎▎         <span class="text-[var(--text-3)]">¥208k</span></div>
+            <div>5/02 ▎▎▎▎▎▎▎▎▎▎     <span class="text-[var(--text-3)]">¥352k</span></div>
+            <div>5/03 ▎▎▎▎▎          <span class="text-[var(--text-3)]">¥176k</span></div>
+            <div>5/04 ▎▎▎▎▎▎▎        <span class="text-[var(--text-3)]">¥240k</span></div>
+            <div>5/05 ▎▎▎▎▎▎▎▎▎▎▎    <span class="text-[var(--text-3)]">¥384k</span></div>
+            <div>5/06 ▎▎▎▎▎▎▎▎▎      <span class="text-[var(--text-3)]">¥314k</span></div>
+            <div>5/07 ▎▎▎▎▎▎▎▎▎▎▎▎   <span class="text-[var(--text-3)]">¥412k</span></div>
+            <div class="text-[var(--phosphor)]">5/08 ▎▎▎▎▎▎▎▎▎▎▎▎▎▎ <span>¥482k</span></div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Status bar -->
+    <div class="h-8 border-t line flex items-center px-5 text-[11px] text-[var(--text-3)] gap-4 mono bg-[var(--bg)]">
+      <span><span class="text-[var(--phosphor)]">●</span> connected</span>
+      <span>·</span>
+      <span>realtime: orders, chat</span>
+      <span>·</span>
+      <span>tenant: maison_sagawa</span>
+      <span class="ml-auto">⌘K palette · ⌘/ help · ESC clear</span>
+    </div>
+
+  </section>
+
+</div>
+</body>
+</html>

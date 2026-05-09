@@ -218,7 +218,7 @@ export function TenantSettingsForm({ tenant }: Props) {
             <img
               src={form.logo_url}
               alt="ロゴ プレビュー"
-              className="mt-2 h-12 object-contain border border-gray-200 rounded p-1 bg-white"
+              className="mt-2 h-12 object-contain border border-rule rounded p-1 bg-white"
             />
           )}
         </Field>
@@ -238,7 +238,7 @@ export function TenantSettingsForm({ tenant }: Props) {
             <img
               src={form.stamp_url}
               alt="印影 プレビュー"
-              className="mt-2 h-16 w-16 object-contain border border-gray-200 rounded p-1 bg-white"
+              className="mt-2 h-16 w-16 object-contain border border-rule rounded p-1 bg-white"
             />
           )}
         </Field>
@@ -250,14 +250,14 @@ export function TenantSettingsForm({ tenant }: Props) {
           type="button"
           onClick={handleSave}
           disabled={pending}
-          className="bg-[#6B1A35] text-white px-6 py-2 rounded-lg text-sm hover:bg-[#5a1630] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          className="bg-[#1c3a5c] text-white px-6 py-2 rounded-lg text-sm hover:bg-[#0e2238] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
           {pending ? "保存中..." : "変更を保存"}
         </button>
         {message && (
           <span
             className={`text-sm ${
-              message.startsWith("エラー") ? "text-red-600" : "text-green-600"
+              message.startsWith("エラー") ? "text-crimson" : "text-green-600"
             }`}
           >
             {message}
@@ -269,7 +269,7 @@ export function TenantSettingsForm({ tenant }: Props) {
 }
 
 const inputClass =
-  "w-full text-sm border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:border-[#6B1A35]";
+  "w-full text-sm border border-rule rounded-lg px-3 py-2 focus:outline-none focus:border-[#1c3a5c]";
 
 function Section({
   title,
@@ -279,8 +279,8 @@ function Section({
   children: React.ReactNode;
 }) {
   return (
-    <div className="bg-white rounded-xl border border-gray-200 p-5">
-      <h2 className="text-sm font-semibold text-gray-700 mb-4">{title}</h2>
+    <div className="bg-white rounded-xl border border-rule p-5">
+      <h2 className="text-sm font-semibold text-ink-2 mb-4">{title}</h2>
       <div className="space-y-4">{children}</div>
     </div>
   );
@@ -299,12 +299,12 @@ function Field({
 }) {
   return (
     <div>
-      <label className="block text-xs font-medium text-gray-600 mb-1">
+      <label className="block text-xs font-medium text-ink-2 mb-1">
         {label}
-        {required && <span className="text-red-500 ml-1">*</span>}
+        {required && <span className="text-crimson ml-1">*</span>}
       </label>
       {children}
-      {hint && <p className="text-xs text-gray-400 mt-1">{hint}</p>}
+      {hint && <p className="text-xs text-ink-3 mt-1">{hint}</p>}
     </div>
   );
 }

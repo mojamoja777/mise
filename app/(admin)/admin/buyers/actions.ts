@@ -15,6 +15,9 @@ type BuyerInput = {
   postal_code: string | null;
   address: string | null;
   phone: string | null;
+  tier?: "gold" | "silver" | "bronze";
+  taste_tags?: string[];
+  internal_note?: string | null;
 };
 
 /**
@@ -158,6 +161,11 @@ export async function updateBuyerAction(
       postal_code: normalize(input.postal_code),
       address: normalize(input.address),
       phone: normalize(input.phone),
+      ...(input.tier ? { tier: input.tier } : {}),
+      ...(input.taste_tags ? { taste_tags: input.taste_tags } : {}),
+      ...(input.internal_note !== undefined
+        ? { internal_note: normalize(input.internal_note) }
+        : {}),
     })
     .eq("id", buyerId);
 

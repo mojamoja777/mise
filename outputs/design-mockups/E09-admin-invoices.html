@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mise — Editorial · Invoices</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+JP:wght@300;400;500&family=Noto+Serif+JP:wght@300;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="_editorial.css" />
+</head>
+<body class="grain">
+
+<div class="flex h-screen">
+
+  <aside class="w-16 border-r rule flex flex-col items-center py-4 gap-4 flex-shrink-0">
+    <p class="serif text-xl">M</p>
+    <div class="hairline w-8"></div>
+    <button class="w-10 h-10 flex items-center justify-center" style="color: var(--ink-3);"><span class="serif">⌂</span></button>
+    <button class="w-10 h-10 flex items-center justify-center" style="color: var(--ink-3);"><span class="serif">◉</span></button>
+    <button class="w-10 h-10 flex items-center justify-center" style="color: var(--ink-3);"><span class="serif">▦</span></button>
+    <button class="w-10 h-10 flex items-center justify-center" style="color: var(--ink-3);"><span class="serif">⏵</span></button>
+    <button class="w-10 h-10 flex items-center justify-center bg-[var(--paper-2)]" style="color: var(--bordeaux);"><span class="serif">¥</span></button>
+  </aside>
+
+  <section class="flex-1 flex flex-col min-w-0 overflow-hidden">
+
+    <header class="border-b rule px-10 pt-7 pb-5">
+      <div class="flex items-baseline gap-3 caps mb-2">
+        <span style="color: var(--ink-3);">Invoices · 2026 · April</span>
+        <span class="tag tag-navy">Monthly batch</span>
+      </div>
+      <div class="flex items-baseline justify-between">
+        <h1 class="serif text-4xl">請求簿 — <span style="color: var(--bordeaux);">十八件</span></h1>
+        <div class="flex items-center gap-2">
+          <button class="btn">フィルタ</button>
+          <button class="btn">CSV</button>
+          <button class="btn btn-primary">＋ 新規</button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Stats strip -->
+    <div class="border-b rule grid grid-cols-5 divide-x" style="border-color: var(--gold); border-top-width: 1px; border-bottom-width: 1px;">
+      <div class="p-5" style="border-right: 1px solid var(--rule);">
+        <p class="caps">Total</p>
+        <p class="serif text-4xl mt-2 tabular">18</p>
+      </div>
+      <div class="p-5" style="border-right: 1px solid var(--rule);">
+        <p class="caps">Outstanding</p>
+        <p class="serif text-4xl mt-2 tabular" style="color: var(--amber);">¥1.82M</p>
+      </div>
+      <div class="p-5" style="border-right: 1px solid var(--rule);">
+        <p class="caps">Paid</p>
+        <p class="serif text-4xl mt-2 tabular" style="color: var(--forest);">¥1.60M</p>
+      </div>
+      <div class="p-5" style="border-right: 1px solid var(--rule);">
+        <p class="caps">Overdue</p>
+        <p class="serif text-4xl mt-2 tabular" style="color: var(--crimson);">¥248k</p>
+      </div>
+      <div class="p-5">
+        <p class="caps">Avg DSO</p>
+        <p class="serif text-4xl mt-2 tabular">22<span class="text-xl" style="color: var(--ink-3);"> 日</span></p>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="border-b rule px-10 py-3 flex items-center gap-3">
+      <button class="btn" style="background: var(--ink); color: var(--paper); border-color: var(--ink);">All <span class="ml-1 text-[10px]" style="color: var(--ink-4);">18</span></button>
+      <button class="btn">Draft <span class="ml-1 text-[10px]" style="color: var(--ink-3);">2</span></button>
+      <button class="btn">Sent <span class="ml-1 text-[10px]" style="color: var(--ink-3);">12</span></button>
+      <button class="btn">Paid <span class="ml-1 text-[10px]" style="color: var(--ink-3);">3</span></button>
+      <button class="btn" style="border-color: var(--crimson); color: var(--crimson);">Overdue <span class="ml-1 text-[10px]">1</span></button>
+      <span class="ml-auto caps" style="color: var(--ink-3);">月次一括生成 · 毎月1日 08:00 JST</span>
+    </div>
+
+    <div class="flex-1 overflow-y-auto scroll px-10 py-2">
+      <table class="ledger">
+        <thead>
+          <tr>
+            <th class="w-8"><input type="checkbox" class="accent-[#5a1428]"/></th>
+            <th class="w-32">Invoice #</th>
+            <th>Buyer</th>
+            <th class="w-28">Issue</th>
+            <th class="w-28">Due</th>
+            <th class="text-right w-28">Subtotal</th>
+            <th class="text-right w-24">Tax</th>
+            <th class="text-right w-32">Total</th>
+            <th class="text-center w-32">Status</th>
+            <th class="text-right w-24">·</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <tr class="row cursor-pointer">
+            <td><input type="checkbox" class="accent-[#5a1428]"/></td>
+            <td class="ledger-num" style="color: var(--ink-3);">INV-2604-001</td>
+            <td>
+              <div class="flex items-center gap-2.5">
+                <div class="seal text-[10px]" style="width: 26px; height: 26px;">六</div>
+                <span>レストラン六本木</span>
+              </div>
+            </td>
+            <td class="ledger-num text-xs" style="color: var(--ink-2);">2026-05-01</td>
+            <td class="ledger-num text-xs" style="color: var(--ink-2);">2026-05-31</td>
+            <td class="text-right ledger-num">¥374,800</td>
+            <td class="text-right ledger-num" style="color: var(--ink-2);">¥37,480</td>
+            <td class="text-right ledger-num">¥412,280</td>
+            <td class="text-center"><span class="tag tag-forest">paid</span></td>
+            <td class="text-right">…</td>
+          </tr>
+
+          <tr class="row cursor-pointer">
+            <td><input type="checkbox" class="accent-[#5a1428]"/></td>
+            <td class="ledger-num" style="color: var(--ink-3);">INV-2604-002</td>
+            <td>
+              <div class="flex items-center gap-2.5">
+                <div class="seal text-[10px]" style="width: 26px; height: 26px;">B</div>
+                <span>Bistro Verdure</span>
+              </div>
+            </td>
+            <td class="ledger-num text-xs" style="color: var(--ink-2);">2026-05-01</td>
+            <td class="ledger-num text-xs" style="color: var(--ink-2);">2026-05-31</td>
+            <td class="text-right ledger-num">¥351,300</td>
+            <td class="text-right ledger-num" style="color: var(--ink-2);">¥35,130</td>
+            <td class="text-right ledger-num">¥386,430</td>
+            <td class="text-center"><span class="tag">sent</span></td>
+            <td class="text-right">…</td>
+          </tr>
+
+          <tr class="row cursor-pointer">
+            <td><input type="checkbox" class="accent-[#5a1428]"/></td>
+            <td class="ledger-num" style="color: var(--ink-3);">INV-2604-003</td>
+            <td>
+              <div class="flex items-center gap-2.5">
+                <div class="seal text-[10px]" style="width: 26px; height: 26px;">寿</div>
+                <span>寿司 SHIN</span>
+              </div>
+            </td>
+            <td class="ledger-num text-xs" style="color: var(--ink-2);">2026-05-01</td>
+            <td class="ledger-num text-xs" style="color: var(--ink-2);">2026-05-31</td>
+            <td class="text-right ledger-num">¥271,000</td>
+            <td class="text-right ledger-num" style="color: var(--ink-2);">¥27,200</td>
+            <td class="text-right ledger-num">¥298,200</td>
+            <td class="text-center"><span class="tag">sent</span></td>
+            <td class="text-right">…</td>
+          </tr>
+
+          <tr class="row cursor-pointer">
+            <td><input type="checkbox" class="accent-[#5a1428]"/></td>
+            <td class="ledger-num" style="color: var(--ink-3);">INV-2604-004</td>
+            <td>
+              <div class="flex items-center gap-2.5">
+                <div class="seal text-[10px]" style="width: 26px; height: 26px;">C</div>
+                <span>CARROT</span>
+              </div>
+            </td>
+            <td class="ledger-num text-xs" style="color: var(--ink-2);">2026-05-01</td>
+            <td class="ledger-num text-xs" style="color: var(--crimson);">2026-04-30</td>
+            <td class="text-right ledger-num">¥225,400</td>
+            <td class="text-right ledger-num" style="color: var(--ink-2);">¥22,540</td>
+            <td class="text-right ledger-num">¥247,940</td>
+            <td class="text-center"><span class="tag tag-crimson">overdue · 8d</span></td>
+            <td class="text-right"><button class="btn">督促 →</button></td>
+          </tr>
+
+          <tr class="row cursor-pointer">
+            <td><input type="checkbox" class="accent-[#5a1428]"/></td>
+            <td class="ledger-num" style="color: var(--ink-3);">INV-2604-005</td>
+            <td>
+              <div class="flex items-center gap-2.5">
+                <div class="seal text-[10px]" style="width: 26px; height: 26px;">T</div>
+                <span>Trattoria Kobayashi</span>
+              </div>
+            </td>
+            <td class="ledger-num text-xs" style="color: var(--ink-2);">2026-05-01</td>
+            <td class="ledger-num text-xs" style="color: var(--ink-2);">2026-05-31</td>
+            <td class="text-right ledger-num">¥112,720</td>
+            <td class="text-right ledger-num" style="color: var(--ink-2);">¥11,272</td>
+            <td class="text-right ledger-num">¥123,992</td>
+            <td class="text-center"><span class="tag">sent</span></td>
+            <td class="text-right">…</td>
+          </tr>
+
+          <tr class="row cursor-pointer">
+            <td><input type="checkbox" class="accent-[#5a1428]"/></td>
+            <td class="ledger-num" style="color: var(--ink-3);">INV-2604-006</td>
+            <td>
+              <div class="flex items-center gap-2.5">
+                <div class="seal text-[10px]" style="width: 26px; height: 26px;">L</div>
+                <span>La Forgeron</span>
+              </div>
+            </td>
+            <td class="ledger-num text-xs" style="color: var(--ink-2);">2026-05-01</td>
+            <td class="ledger-num text-xs" style="color: var(--ink-2);">2026-05-31</td>
+            <td class="text-right ledger-num">¥198,400</td>
+            <td class="text-right ledger-num" style="color: var(--ink-2);">¥19,840</td>
+            <td class="text-right ledger-num">¥218,240</td>
+            <td class="text-center"><span class="tag tag-forest">paid</span></td>
+            <td class="text-right">…</td>
+          </tr>
+
+          <tr class="row cursor-pointer">
+            <td><input type="checkbox" class="accent-[#5a1428]"/></td>
+            <td class="ledger-num" style="color: var(--ink-3);">INV-2604-007</td>
+            <td>
+              <div class="flex items-center gap-2.5">
+                <div class="seal text-[10px]" style="width: 26px; height: 26px;">焼</div>
+                <span>焼鳥 弦</span>
+              </div>
+            </td>
+            <td class="ledger-num text-xs" style="color: var(--ink-2);">2026-05-01</td>
+            <td class="ledger-num text-xs" style="color: var(--ink-2);">2026-05-31</td>
+            <td class="text-right ledger-num">¥43,800</td>
+            <td class="text-right ledger-num" style="color: var(--ink-2);">¥4,380</td>
+            <td class="text-right ledger-num">¥48,180</td>
+            <td class="text-center"><span class="tag">sent</span></td>
+            <td class="text-right">…</td>
+          </tr>
+
+          <tr class="row cursor-pointer" style="background: var(--violet-bg);">
+            <td><input type="checkbox" class="accent-[#5a1428]"/></td>
+            <td class="ledger-num" style="color: var(--violet);">INV-2605-008</td>
+            <td>
+              <div class="flex items-center gap-2.5">
+                <div class="seal text-[10px]" style="width: 26px; height: 26px; border-color: var(--violet); color: var(--violet);">O</div>
+                <span style="color: var(--ink-2);">Omakase Toranomon</span>
+              </div>
+            </td>
+            <td class="ledger-num text-xs" style="color: var(--ink-3);">— —</td>
+            <td class="ledger-num text-xs" style="color: var(--ink-3);">— —</td>
+            <td class="text-right ledger-num" style="color: var(--ink-2);">¥276,400</td>
+            <td class="text-right ledger-num" style="color: var(--ink-3);">¥27,640</td>
+            <td class="text-right ledger-num" style="color: var(--ink-2);">¥304,040</td>
+            <td class="text-center"><span class="tag tag-violet">draft · ai 0.92</span></td>
+            <td class="text-right"><button class="btn">確認</button></td>
+          </tr>
+
+          <tr class="row cursor-pointer" style="background: var(--violet-bg);">
+            <td><input type="checkbox" class="accent-[#5a1428]"/></td>
+            <td class="ledger-num" style="color: var(--violet);">INV-2605-009</td>
+            <td>
+              <div class="flex items-center gap-2.5">
+                <div class="seal text-[10px]" style="width: 26px; height: 26px; border-color: var(--violet); color: var(--violet);">花</div>
+                <span style="color: var(--ink-2);">Hana 麻布十番</span>
+              </div>
+            </td>
+            <td class="ledger-num text-xs" style="color: var(--ink-3);">— —</td>
+            <td class="ledger-num text-xs" style="color: var(--ink-3);">— —</td>
+            <td class="text-right ledger-num" style="color: var(--ink-2);">¥138,200</td>
+            <td class="text-right ledger-num" style="color: var(--ink-3);">¥13,820</td>
+            <td class="text-right ledger-num" style="color: var(--ink-2);">¥152,020</td>
+            <td class="text-center"><span class="tag tag-violet">draft · ai 0.95</span></td>
+            <td class="text-right"><button class="btn">確認</button></td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Bulk action bar -->
+    <div class="border-t rule px-10 py-4 flex items-center gap-3 surface-2">
+      <span class="caps"><span class="ledger-num" style="color: var(--bordeaux);">2 selected</span> · 合計 <span class="ledger-num">¥456,060</span></span>
+      <button class="btn">PDF生成</button>
+      <button class="btn">メール送信</button>
+      <button class="btn">支払済にする</button>
+      <span class="ml-auto caps" style="color: var(--ink-3);">ESC clear · A select all</span>
+    </div>
+
+    <div class="border-t rule px-10 py-3 text-xs flex justify-between" style="color: var(--ink-3);">
+      <span><span class="dot dot-forest" style="margin-right: 4px;"></span>next batch · 2026-06-01 08:00 JST</span>
+      <span class="caps">⌘N new · ⌘E export · ⌘F filter</span>
+    </div>
+
+  </section>
+</div>
+</body>
+</html>

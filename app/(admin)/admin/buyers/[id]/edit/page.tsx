@@ -1,12 +1,10 @@
-// app/(admin)/admin/buyers/[id]/edit/page.tsx
-// 管理者 - 飲食店（buyer）の編集
-
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ChevronLeft } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { createServiceClient } from "@/lib/supabase/service";
 import { BuyerForm } from "@/components/admin/BuyerForm";
+import { PlateCorner, Tag } from "@/components/ui";
 
 type Props = {
   params: Promise<{ id: string }>;
@@ -19,7 +17,7 @@ export default async function EditBuyerPage({ params }: Props) {
   const { data: buyer, error } = await supabase
     .from("users")
     .select(
-      "id, role, company_name, customer_code, postal_code, address, phone, is_active"
+      "id, role, company_name, customer_code, postal_code, address, phone, is_active, tier, taste_tags, internal_note",
     )
     .eq("id", id)
     .eq("role", "buyer")
@@ -27,32 +25,27 @@ export default async function EditBuyerPage({ params }: Props) {
 
   if (error || !buyer) notFound();
 
-  // メールアドレスは Supabase Auth から取得する
   const serviceClient = createServiceClient();
   const { data: authUser } = await serviceClient.auth.admin.getUserById(id);
   const email = authUser?.user?.email ?? "";
 
   return (
-    <div className="p-8 max-w-3xl">
-      <Link
-        href="/admin/buyers"
-        className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700 mb-4"
-      >
-        <ChevronLeft className="w-4 h-4" />
-        顧客一覧に戻る
+    <div className="px-10 pt-7 pb-10 max-w-4xl relative">
+      <PlateCorner number="07" />
+
+      <Link href="/admin/buyers" className="caps inline-flex items-center gap-1 text-ink-3 hover:text-plate mb-4">
+        <ChevronLeft className="w-3.5 h-3.5" />
+        顧客台帳に戻る
       </Link>
 
-      <div className="mb-6 flex items-start justify-between">
+      <header className="border-b border-rule pb-5 mb-7 flex items-start justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">顧客情報の編集</h1>
-          <p className="text-sm text-gray-500 mt-1">{buyer.company_name}</p>
+          <p className="caps">Buyer · Edit</p>
+          <h1 className="font-serif text-4xl mt-2 tracking-tight">{buyer.company_name}</h1>
+          <p className="font-italic-serif text-sm mt-1 text-ink-3">顧客情報の編集</p>
         </div>
-        {!buyer.is_active && (
-          <span className="inline-block text-xs text-gray-500 bg-gray-200 rounded-full px-3 py-1">
-            無効化済み
-          </span>
-        )}
-      </div>
+        {!buyer.is_active && <Tag>無効化済み</Tag>}
+      </header>
 
       <BuyerForm
         mode="edit"
@@ -65,8 +58,13 @@ export default async function EditBuyerPage({ params }: Props) {
           address: buyer.address,
           phone: buyer.phone,
           is_active: buyer.is_active,
+          tier: buyer.tier,
+          taste_tags: buyer.taste_tags,
+          internal_note: buyer.internal_note,
         }}
       />
+
+      <p className="ornament mt-10" />
     </div>
   );
 }

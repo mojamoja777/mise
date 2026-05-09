@@ -1,9 +1,7 @@
-// app/(buyer)/buyer/orders/page.tsx
-// 発注者 - 発注履歴ページ
-
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { StatusBadge } from "@/components/admin/StatusBadge";
+import { PlateCorner, Button } from "@/components/ui";
 
 export default async function OrdersPage() {
   const supabase = await createClient();
@@ -20,26 +18,32 @@ export default async function OrdersPage() {
         allocated_quantity,
         unit_price
       )
-    `
+    `,
     )
     .order("ordered_at", { ascending: false });
 
   return (
-    <div className="px-4 py-4">
-      <h1 className="text-lg font-semibold text-gray-900 mb-4">発注履歴</h1>
+    <div className="px-4 sm:px-6 py-6 max-w-3xl mx-auto relative">
+      <PlateCorner number="06" />
+
+      <header className="mb-6">
+        <p className="caps">Plate VI · Orders</p>
+        <h1 className="font-serif text-4xl mt-2 tracking-tight">
+          発注履歴 <span className="font-italic-serif text-ink-3 text-2xl ml-1">— {orders?.length ?? 0}件</span>
+        </h1>
+      </header>
 
       {orders && orders.length > 0 ? (
         <div className="space-y-3">
           {orders.map((order) => {
             const isPendingAllocation = order.status === "allocation_pending";
             const total = order.order_items.reduce(
-              (sum, item) =>
-                sum + item.unit_price * (item.allocated_quantity ?? item.quantity),
-              0
+              (sum, item) => sum + item.unit_price * (item.allocated_quantity ?? item.quantity),
+              0,
             );
             const totalQty = order.order_items.reduce(
               (sum, item) => sum + (item.allocated_quantity ?? item.quantity),
-              0
+              0,
             );
             const date = new Date(order.ordered_at);
 
@@ -47,28 +51,26 @@ export default async function OrdersPage() {
               <Link
                 key={order.id}
                 href={`/buyer/orders/${order.id}`}
-                className="block bg-white rounded-xl border border-gray-200 p-4 hover:shadow-md transition-shadow"
+                className="block bg-paper border border-rule p-5 hover:border-plate transition-colors"
               >
-                <div className="flex items-start justify-between mb-2">
+                <div className="flex items-start justify-between mb-3">
                   <div>
-                    <p className="text-xs text-gray-400 font-mono">
-                      #{order.id.slice(0, 8).toUpperCase()}
-                    </p>
-                    <p className="text-xs text-gray-400">
+                    <p className="caps font-mono">#{order.id.slice(0, 8).toUpperCase()}</p>
+                    <p className="font-italic-serif text-sm text-ink-3 mt-1">
                       {date.toLocaleDateString("ja-JP", {
                         year: "numeric",
-                        month: "2-digit",
-                        day: "2-digit",
+                        month: "long",
+                        day: "numeric",
                       })}
                     </p>
                   </div>
                   <StatusBadge status={order.status} />
                 </div>
-                <div className="flex justify-between items-end">
-                  <p className="text-sm text-gray-600">
+                <div className="flex justify-between items-baseline pt-3 border-t border-rule">
+                  <p className="text-sm text-ink-2 font-italic-serif">
                     {isPendingAllocation ? `希望 ${totalQty}本` : `${totalQty}本`}
                   </p>
-                  <p className="text-base font-bold text-[#3B0A1E]">
+                  <p className="font-serif text-2xl plate-num text-plate">
                     {isPendingAllocation ? "—" : `¥${total.toLocaleString()}`}
                   </p>
                 </div>
@@ -77,14 +79,10 @@ export default async function OrdersPage() {
           })}
         </div>
       ) : (
-        <div className="flex flex-col items-center justify-center py-20 text-gray-400">
-          <span className="text-4xl mb-3">📋</span>
-          <p className="text-sm mb-6">発注履歴がありません</p>
-          <Link
-            href="/buyer"
-            className="px-6 py-2.5 bg-[#6B1A35] text-white text-sm font-medium rounded-xl hover:bg-[#9B2D50] transition-colors"
-          >
-            商品一覧へ
+        <div className="bg-paper-2 border border-rule flex flex-col items-center justify-center py-20 text-ink-3">
+          <p className="font-italic-serif text-base mb-6">まだ発注履歴がありません</p>
+          <Link href="/buyer">
+            <Button variant="primary" size="lg">セラーへ戻る →</Button>
           </Link>
         </div>
       )}

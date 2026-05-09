@@ -32,6 +32,7 @@ export default async function AdminAllocationDetailPage({ params }: Props) {
       "id, name, producer, vintage, region, stock, allocation_deadline, is_allocation"
     )
     .eq("id", productId)
+    .is("deleted_at", null)
     .single();
 
   if (!product) notFound();
@@ -71,35 +72,35 @@ export default async function AdminAllocationDetailPage({ params }: Props) {
     <div className="p-8 max-w-5xl mx-auto">
       <Link
         href="/admin/allocations"
-        className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-[#6B1A35] mb-4"
+        className="inline-flex items-center gap-1 text-sm text-ink-3 hover:text-[#1c3a5c] mb-4"
       >
         <ChevronLeft className="w-4 h-4" />
         割り当て一覧に戻る
       </Link>
 
-      <div className="bg-white rounded-xl border border-gray-200 p-6 mb-6">
+      <div className="bg-white rounded-xl border border-rule p-6 mb-6">
         <div className="flex items-start justify-between gap-4">
           <div>
-            <h1 className="text-xl font-bold text-gray-900">
+            <h1 className="text-xl font-bold text-ink">
               {product.name}
               {product.vintage && (
-                <span className="text-sm text-gray-400 ml-2">
+                <span className="text-sm text-ink-3 ml-2">
                   {product.vintage}
                 </span>
               )}
             </h1>
             {product.producer && (
-              <p className="text-sm text-gray-500 mt-0.5">
+              <p className="text-sm text-ink-3 mt-0.5">
                 {product.producer}
                 {product.region && ` ・ ${product.region}`}
               </p>
             )}
           </div>
-          <div className="text-right text-xs text-gray-500">
+          <div className="text-right text-xs text-ink-3">
             {product.allocation_deadline && (
               <p>
                 受付締切：
-                <span className="text-gray-800 ml-1">
+                <span className="text-ink ml-1">
                   {new Date(product.allocation_deadline).toLocaleString(
                     "ja-JP",
                     {
@@ -112,11 +113,11 @@ export default async function AdminAllocationDetailPage({ params }: Props) {
                   )}
                 </span>
                 {expired ? (
-                  <span className="ml-2 inline-block text-[10px] text-red-700 bg-red-100 rounded-full px-2 py-0.5">
+                  <span className="ml-2 inline-block text-[10px] text-crimson bg-crimson-bg rounded-full px-2 py-0.5">
                     受付終了
                   </span>
                 ) : (
-                  <span className="ml-2 inline-block text-[10px] text-blue-700 bg-blue-100 rounded-full px-2 py-0.5">
+                  <span className="ml-2 inline-block text-[10px] text-slate bg-slate-bg rounded-full px-2 py-0.5">
                     受付中
                   </span>
                 )}
@@ -125,42 +126,42 @@ export default async function AdminAllocationDetailPage({ params }: Props) {
           </div>
         </div>
 
-        <div className="grid grid-cols-3 gap-4 mt-5 pt-5 border-t border-gray-100">
+        <div className="grid grid-cols-3 gap-4 mt-5 pt-5 border-t border-rule">
           <div>
-            <p className="text-xs text-gray-500">在庫</p>
-            <p className="text-lg font-semibold text-gray-900 mt-1">
+            <p className="text-xs text-ink-3">在庫</p>
+            <p className="text-lg font-semibold text-ink mt-1">
               {product.stock}
             </p>
           </div>
           <div>
-            <p className="text-xs text-gray-500">希望本数合計</p>
+            <p className="text-xs text-ink-3">希望本数合計</p>
             <p
               className={`text-lg font-semibold mt-1 ${
                 totalRequested > product.stock
-                  ? "text-red-600"
-                  : "text-gray-900"
+                  ? "text-crimson"
+                  : "text-ink"
               }`}
             >
               {totalRequested}
             </p>
           </div>
           <div>
-            <p className="text-xs text-gray-500">リクエスト件数</p>
-            <p className="text-lg font-semibold text-gray-900 mt-1">
+            <p className="text-xs text-ink-3">リクエスト件数</p>
+            <p className="text-lg font-semibold text-ink mt-1">
               {requests.length}件
             </p>
           </div>
         </div>
 
         {!expired && (
-          <div className="mt-4 bg-amber-50 border border-amber-200 text-amber-800 text-xs px-3 py-2 rounded-lg">
+          <div className="mt-4 bg-amber-bg border border-amber text-amber text-xs px-3 py-2 rounded-lg">
             まだ受付期間中です。締切後の按分を推奨します。
           </div>
         )}
       </div>
 
       {error && (
-        <div className="bg-red-50 border border-red-200 text-red-700 text-sm px-4 py-3 rounded-xl mb-4">
+        <div className="bg-crimson-bg border border-crimson text-crimson text-sm px-4 py-3 rounded-xl mb-4">
           リクエスト一覧の取得に失敗しました。
         </div>
       )}
@@ -179,7 +180,7 @@ export default async function AdminAllocationDetailPage({ params }: Props) {
           }))}
         />
       ) : (
-        <div className="bg-white rounded-xl border border-gray-200 px-6 py-10 text-center text-sm text-gray-400">
+        <div className="bg-white rounded-xl border border-rule px-6 py-10 text-center text-sm text-ink-3">
           按分待ちのリクエストはありません
         </div>
       )}

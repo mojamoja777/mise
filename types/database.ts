@@ -21,6 +21,9 @@ export type Database = {
           is_active: boolean;
           last_chat_seen_at: string | null;
           created_at: string;
+          tier: "gold" | "silver" | "bronze";
+          taste_tags: string[];
+          internal_note: string | null;
         };
         Insert: {
           id: string;
@@ -34,6 +37,9 @@ export type Database = {
           is_active?: boolean;
           last_chat_seen_at?: string | null;
           created_at?: string;
+          tier?: "gold" | "silver" | "bronze";
+          taste_tags?: string[];
+          internal_note?: string | null;
         };
         Update: {
           role?: "admin" | "buyer";
@@ -45,6 +51,9 @@ export type Database = {
           phone?: string | null;
           is_active?: boolean;
           last_chat_seen_at?: string | null;
+          tier?: "gold" | "silver" | "bronze";
+          taste_tags?: string[];
+          internal_note?: string | null;
         };
         Relationships: [
           {
@@ -137,6 +146,8 @@ export type Database = {
           is_allocation: boolean;
           allocation_deadline: string | null;
           tax_class: "standard" | "reduced" | "exempt";
+          status: "draft" | "published";
+          deleted_at: string | null;
         };
         Insert: {
           id?: string;
@@ -156,6 +167,8 @@ export type Database = {
           is_allocation?: boolean;
           allocation_deadline?: string | null;
           tax_class?: "standard" | "reduced" | "exempt";
+          status?: "draft" | "published";
+          deleted_at?: string | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -176,8 +189,57 @@ export type Database = {
           is_allocation?: boolean;
           allocation_deadline?: string | null;
           tax_class?: "standard" | "reduced" | "exempt";
+          status?: "draft" | "published";
+          deleted_at?: string | null;
         };
         Relationships: [];
+      };
+      product_images: {
+        Row: {
+          id: string;
+          product_id: string;
+          storage_path: string;
+          storage_url: string;
+          image_role: "main" | "back" | "japanese" | "other";
+          is_main: boolean;
+          display_order: number;
+          file_size: number | null;
+          width: number | null;
+          height: number | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          product_id: string;
+          storage_path: string;
+          storage_url: string;
+          image_role?: "main" | "back" | "japanese" | "other";
+          is_main?: boolean;
+          display_order?: number;
+          file_size?: number | null;
+          width?: number | null;
+          height?: number | null;
+          created_at?: string;
+        };
+        Update: {
+          storage_path?: string;
+          storage_url?: string;
+          image_role?: "main" | "back" | "japanese" | "other";
+          is_main?: boolean;
+          display_order?: number;
+          file_size?: number | null;
+          width?: number | null;
+          height?: number | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "product_images_product_id_fkey";
+            columns: ["product_id"];
+            isOneToOne: false;
+            referencedRelation: "products";
+            referencedColumns: ["id"];
+          }
+        ];
       };
       orders: {
         Row: {
@@ -353,6 +415,22 @@ export type Database = {
           }
         ];
       };
+      cart_archive_notifications: {
+        Row: {
+          buyer_id: string;
+          product_id: string;
+          notified_at: string;
+        };
+        Insert: {
+          buyer_id: string;
+          product_id: string;
+          notified_at?: string;
+        };
+        Update: {
+          notified_at?: string;
+        };
+        Relationships: [];
+      };
       chat_messages: {
         Row: {
           id: string;
@@ -400,7 +478,19 @@ export type Database = {
         Relationships: [];
       };
     };
-    Views: Record<string, never>;
+    Views: {
+      buyer_stats: {
+        Row: {
+          buyer_id: string;
+          tenant_id: string;
+          amount_30d: number;
+          amount_total: number;
+          orders_total: number;
+          last_ordered_at: string | null;
+        };
+        Relationships: [];
+      };
+    };
     Functions: {
       confirm_product_allocations: {
         Args: {

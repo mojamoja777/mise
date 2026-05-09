@@ -96,13 +96,13 @@ export function InvoiceEditor({ invoiceId, initialItems, initialNote }: Props) {
 
   return (
     <div className="space-y-6">
-      <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-        <div className="px-5 py-3 border-b border-gray-200 flex items-center justify-between">
-          <h2 className="text-sm font-semibold text-gray-700">明細</h2>
+      <div className="bg-white rounded-xl border border-rule overflow-hidden">
+        <div className="px-5 py-3 border-b border-rule flex items-center justify-between">
+          <h2 className="text-sm font-semibold text-ink-2">明細</h2>
           <button
             type="button"
             onClick={addItem}
-            className="inline-flex items-center gap-1 text-xs text-[#6B1A35] hover:underline"
+            className="inline-flex items-center gap-1 text-xs text-[#1c3a5c] hover:underline"
           >
             <Plus className="w-3.5 h-3.5" />
             行を追加
@@ -110,30 +110,30 @@ export function InvoiceEditor({ invoiceId, initialItems, initialNote }: Props) {
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
-            <thead className="bg-gray-50 border-b border-gray-200">
+            <thead className="bg-paper-2 border-b border-rule">
               <tr>
-                <th className="text-left px-4 py-2 text-xs font-semibold text-gray-500 w-[30%]">
+                <th className="text-left px-4 py-2 text-xs font-semibold text-ink-3 w-[30%]">
                   商品名
                 </th>
-                <th className="text-left px-4 py-2 text-xs font-semibold text-gray-500 w-[22%]">
+                <th className="text-left px-4 py-2 text-xs font-semibold text-ink-3 w-[22%]">
                   生産者 / 産地
                 </th>
-                <th className="text-right px-4 py-2 text-xs font-semibold text-gray-500 w-[12%]">
+                <th className="text-right px-4 py-2 text-xs font-semibold text-ink-3 w-[12%]">
                   単価（税抜）
                 </th>
-                <th className="text-right px-4 py-2 text-xs font-semibold text-gray-500 w-[8%]">
+                <th className="text-right px-4 py-2 text-xs font-semibold text-ink-3 w-[8%]">
                   数量
                 </th>
-                <th className="text-left px-4 py-2 text-xs font-semibold text-gray-500 w-[12%]">
+                <th className="text-left px-4 py-2 text-xs font-semibold text-ink-3 w-[12%]">
                   税区分
                 </th>
-                <th className="text-right px-4 py-2 text-xs font-semibold text-gray-500 w-[12%]">
+                <th className="text-right px-4 py-2 text-xs font-semibold text-ink-3 w-[12%]">
                   小計（税抜）
                 </th>
                 <th className="w-8" />
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100">
+            <tbody className="divide-y divide-rule">
               {items.map((item, index) => {
                 const subtotal = item.quantity * item.unit_price;
                 const currentClass = classForRate(item.tax_rate);
@@ -146,7 +146,7 @@ export function InvoiceEditor({ invoiceId, initialItems, initialNote }: Props) {
                         onChange={(e) =>
                           updateItem(index, { product_name: e.target.value })
                         }
-                        className="w-full text-sm border border-gray-200 rounded px-2 py-1 focus:outline-none focus:border-[#6B1A35]"
+                        className="w-full text-sm border border-rule rounded px-2 py-1 focus:outline-none focus:border-[#1c3a5c]"
                       />
                     </td>
                     <td className="px-4 py-2">
@@ -160,7 +160,7 @@ export function InvoiceEditor({ invoiceId, initialItems, initialNote }: Props) {
                               producer: e.target.value || null,
                             })
                           }
-                          className="w-1/2 text-xs border border-gray-200 rounded px-2 py-1 focus:outline-none focus:border-[#6B1A35]"
+                          className="w-1/2 text-xs border border-rule rounded px-2 py-1 focus:outline-none focus:border-[#1c3a5c]"
                         />
                         <input
                           type="text"
@@ -171,7 +171,7 @@ export function InvoiceEditor({ invoiceId, initialItems, initialNote }: Props) {
                               region: e.target.value || null,
                             })
                           }
-                          className="w-1/2 text-xs border border-gray-200 rounded px-2 py-1 focus:outline-none focus:border-[#6B1A35]"
+                          className="w-1/2 text-xs border border-rule rounded px-2 py-1 focus:outline-none focus:border-[#1c3a5c]"
                         />
                       </div>
                     </td>
@@ -186,7 +186,7 @@ export function InvoiceEditor({ invoiceId, initialItems, initialNote }: Props) {
                             unit_price: Number(e.target.value),
                           })
                         }
-                        className="w-full text-sm text-right border border-gray-200 rounded px-2 py-1 focus:outline-none focus:border-[#6B1A35]"
+                        className="w-full text-sm text-right border border-rule rounded px-2 py-1 focus:outline-none focus:border-[#1c3a5c]"
                       />
                     </td>
                     <td className="px-4 py-2">
@@ -200,7 +200,7 @@ export function InvoiceEditor({ invoiceId, initialItems, initialNote }: Props) {
                             quantity: Number(e.target.value),
                           })
                         }
-                        className="w-full text-sm text-right border border-gray-200 rounded px-2 py-1 focus:outline-none focus:border-[#6B1A35]"
+                        className="w-full text-sm text-right border border-rule rounded px-2 py-1 focus:outline-none focus:border-[#1c3a5c]"
                       />
                     </td>
                     <td className="px-4 py-2">
@@ -211,7 +211,7 @@ export function InvoiceEditor({ invoiceId, initialItems, initialNote }: Props) {
                             tax_rate: rateForClass(e.target.value as TaxClass),
                           })
                         }
-                        className="w-full text-xs border border-gray-200 rounded px-2 py-1 focus:outline-none focus:border-[#6B1A35]"
+                        className="w-full text-xs border border-rule rounded px-2 py-1 focus:outline-none focus:border-[#1c3a5c]"
                       >
                         {TAX_CLASSES.map((tc) => (
                           <option key={tc} value={tc}>
@@ -220,14 +220,14 @@ export function InvoiceEditor({ invoiceId, initialItems, initialNote }: Props) {
                         ))}
                       </select>
                     </td>
-                    <td className="px-4 py-2 text-right font-medium text-gray-900">
+                    <td className="px-4 py-2 text-right font-medium text-ink">
                       ¥{subtotal.toLocaleString()}
                     </td>
                     <td className="px-2 py-2">
                       <button
                         type="button"
                         onClick={() => removeItem(index)}
-                        className="text-gray-400 hover:text-red-600"
+                        className="text-ink-3 hover:text-crimson"
                         aria-label="この明細を削除"
                       >
                         <Trash2 className="w-4 h-4" />
@@ -240,22 +240,22 @@ export function InvoiceEditor({ invoiceId, initialItems, initialNote }: Props) {
                 <tr>
                   <td
                     colSpan={7}
-                    className="px-4 py-8 text-center text-sm text-gray-400"
+                    className="px-4 py-8 text-center text-sm text-ink-3"
                   >
                     明細がありません。「行を追加」から追加してください。
                   </td>
                 </tr>
               )}
             </tbody>
-            <tfoot className="bg-gray-50 border-t border-gray-200">
+            <tfoot className="bg-paper-2 border-t border-rule">
               <tr>
                 <td
                   colSpan={5}
-                  className="px-4 py-2 text-right text-xs text-gray-500"
+                  className="px-4 py-2 text-right text-xs text-ink-3"
                 >
                   税抜小計
                 </td>
-                <td className="px-4 py-2 text-right text-sm text-gray-700">
+                <td className="px-4 py-2 text-right text-sm text-ink-2">
                   ¥{summary.subtotal.toLocaleString()}
                 </td>
                 <td />
@@ -264,11 +264,11 @@ export function InvoiceEditor({ invoiceId, initialItems, initialNote }: Props) {
                 <tr key={b.rate}>
                   <td
                     colSpan={5}
-                    className="px-4 py-1 text-right text-xs text-gray-500"
+                    className="px-4 py-1 text-right text-xs text-ink-3"
                   >
                     消費税（{Math.round(b.rate * 100)}%対象 ¥{b.subtotal.toLocaleString()}）
                   </td>
-                  <td className="px-4 py-1 text-right text-sm text-gray-700">
+                  <td className="px-4 py-1 text-right text-sm text-ink-2">
                     ¥{b.tax.toLocaleString()}
                   </td>
                   <td />
@@ -277,11 +277,11 @@ export function InvoiceEditor({ invoiceId, initialItems, initialNote }: Props) {
               <tr>
                 <td
                   colSpan={5}
-                  className="px-4 py-3 text-right text-sm font-semibold text-gray-700"
+                  className="px-4 py-3 text-right text-sm font-semibold text-ink-2"
                 >
                   税込合計
                 </td>
-                <td className="px-4 py-3 text-right text-base font-bold text-gray-900">
+                <td className="px-4 py-3 text-right text-base font-bold text-ink">
                   ¥{summary.total.toLocaleString()}
                 </td>
                 <td />
@@ -291,8 +291,8 @@ export function InvoiceEditor({ invoiceId, initialItems, initialNote }: Props) {
         </div>
       </div>
 
-      <div className="bg-white rounded-xl border border-gray-200 p-5">
-        <label className="block text-sm font-semibold text-gray-700 mb-2">
+      <div className="bg-white rounded-xl border border-rule p-5">
+        <label className="block text-sm font-semibold text-ink-2 mb-2">
           備考
         </label>
         <textarea
@@ -300,7 +300,7 @@ export function InvoiceEditor({ invoiceId, initialItems, initialNote }: Props) {
           onChange={(e) => setNote(e.target.value)}
           rows={3}
           placeholder="請求書に記載する備考（任意）"
-          className="w-full text-sm border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:border-[#6B1A35]"
+          className="w-full text-sm border border-rule rounded-lg px-3 py-2 focus:outline-none focus:border-[#1c3a5c]"
         />
       </div>
 
@@ -309,14 +309,14 @@ export function InvoiceEditor({ invoiceId, initialItems, initialNote }: Props) {
           type="button"
           onClick={handleSave}
           disabled={pending}
-          className="bg-[#6B1A35] text-white px-6 py-2 rounded-lg text-sm hover:bg-[#5a1630] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          className="bg-[#1c3a5c] text-white px-6 py-2 rounded-lg text-sm hover:bg-[#0e2238] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
           {pending ? "保存中..." : "変更を保存"}
         </button>
         {message && (
           <span
             className={`text-sm ${
-              message.startsWith("エラー") ? "text-red-600" : "text-green-600"
+              message.startsWith("エラー") ? "text-crimson" : "text-green-600"
             }`}
           >
             {message}

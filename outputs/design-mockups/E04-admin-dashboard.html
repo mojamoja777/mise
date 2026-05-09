@@ -1,0 +1,333 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mise — Editorial · Inbox</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+JP:wght@300;400;500&family=Noto+Serif+JP:wght@300;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="_editorial.css" />
+</head>
+<body class="grain">
+
+<div class="flex h-screen">
+
+  <!-- Sidebar -->
+  <aside class="w-60 border-r rule flex flex-col flex-shrink-0">
+    <div class="px-5 pt-5 pb-4 border-b rule">
+      <p class="serif text-2xl">Mise</p>
+      <p class="caps mt-1">Maison du Vin</p>
+    </div>
+
+    <nav class="px-4 py-5 text-sm flex-1 overflow-y-auto scroll">
+      <p class="caps mb-3">Today</p>
+      <ul class="space-y-1.5 mb-7">
+        <li class="flex items-center gap-3 py-1"><span class="dot dot-bordeaux"></span><span style="color: var(--bordeaux); font-weight: 500;">Inbox</span><span class="ml-auto tag tag-bordeaux">7</span></li>
+        <li class="flex items-center gap-3 py-1"><span class="dot dot-amber"></span><span style="color: var(--ink-2);">Allocations</span><span class="ml-auto tag tag-amber">3</span></li>
+        <li class="flex items-center gap-3 py-1"><span class="dot dot-forest"></span><span style="color: var(--ink-2);">Chat</span><span class="ml-auto tag tag-forest">4</span></li>
+      </ul>
+
+      <p class="caps mb-3">Manage</p>
+      <ul class="space-y-1.5 mb-7" style="color: var(--ink-2);">
+        <li class="flex items-center gap-3 py-1"><span class="dot dot-ink"></span>Orders</li>
+        <li class="flex items-center gap-3 py-1"><span class="dot dot-ink"></span>Cellar / Products <kbd class="ml-auto">P</kbd></li>
+        <li class="flex items-center gap-3 py-1"><span class="dot dot-ink"></span>Buyers <kbd class="ml-auto">B</kbd></li>
+        <li class="flex items-center gap-3 py-1"><span class="dot dot-ink"></span>Invoices <kbd class="ml-auto">I</kbd></li>
+      </ul>
+
+      <p class="caps mb-3">House</p>
+      <ul class="space-y-1.5" style="color: var(--ink-2);">
+        <li class="flex items-center gap-3 py-1"><span class="dot dot-ink"></span>Settings</li>
+      </ul>
+    </nav>
+
+    <div class="border-t rule px-4 py-4">
+      <div class="flex items-center gap-3">
+        <div class="seal text-xs">店</div>
+        <div class="leading-tight">
+          <p class="text-sm">Maison Sagawa</p>
+          <p class="text-[11px]" style="color: var(--ink-3);">admin · 港区</p>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <section class="flex-1 flex flex-col min-w-0 overflow-hidden">
+
+    <header class="border-b rule px-10 pt-7 pb-5">
+      <div class="flex items-baseline justify-between">
+        <div>
+          <p class="caps">Today · Message Box</p>
+          <h1 class="serif text-5xl mt-2 tracking-tight">メッセージボックス</h1>
+        </div>
+        <div class="text-right">
+          <p class="serif text-xl">No. 0508</p>
+          <p class="caps mt-1">May 8, 2026 · 14:23 JST</p>
+        </div>
+      </div>
+    </header>
+
+    <div class="flex-1 overflow-y-auto scroll px-10 py-7">
+
+      <!-- Hero stats — like newspaper masthead numbers -->
+      <div class="grid grid-cols-4 gap-0 border-y" style="border-color: var(--gold);">
+        <div class="p-5" style="border-right: 1px solid var(--rule);">
+          <p class="caps">New orders</p>
+          <p class="serif text-5xl mt-2 tabular" style="color: var(--bordeaux);">07</p>
+          <p class="text-xs mt-2" style="color: var(--ink-3);">▲ 3 vs yesterday · requires action</p>
+        </div>
+        <div class="p-5" style="border-right: 1px solid var(--rule);">
+          <p class="caps">Allocation pending</p>
+          <p class="serif text-5xl mt-2 tabular" style="color: var(--amber);">03</p>
+          <p class="text-xs mt-2" style="color: var(--ink-3);">next deadline · 5/15 18:00</p>
+        </div>
+        <div class="p-5" style="border-right: 1px solid var(--rule);">
+          <p class="caps">Today's revenue</p>
+          <p class="serif text-5xl mt-2 tabular">¥482k</p>
+          <p class="text-xs mt-2" style="color: var(--forest);">▲ 12% · goal ¥600k</p>
+        </div>
+        <div class="p-5">
+          <p class="caps">Unread chat</p>
+          <p class="serif text-5xl mt-2 tabular">04</p>
+          <p class="text-xs mt-2" style="color: var(--ink-3);">last reply · 7 分前</p>
+        </div>
+      </div>
+
+      <div class="fleuron my-10"></div>
+
+      <!-- Message Box -->
+      <div class="page-chrome">
+        <h2 class="serif text-2xl">メッセージボックス</h2>
+        <div class="flex items-center gap-2">
+          <button class="btn btn-ghost" style="color: var(--bordeaux);">Action required <span class="tag tag-bordeaux ml-1">7</span></button>
+          <button class="btn btn-ghost" style="color: var(--ink-3);">All · 24</button>
+          <button class="btn btn-ghost" style="color: var(--ink-3);">Snoozed · 2</button>
+        </div>
+      </div>
+
+      <table class="ledger">
+        <thead>
+          <tr>
+            <th class="w-8"></th>
+            <th class="w-16">Time</th>
+            <th class="w-48">From</th>
+            <th>Subject</th>
+            <th class="text-right w-32">Amount</th>
+            <th class="text-right w-32"></th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <tr class="row cursor-pointer">
+            <td><span class="dot dot-bordeaux pulse"></span></td>
+            <td class="text-xs" style="color: var(--ink-3);">14:21</td>
+            <td>
+              <div class="flex items-center gap-2.5">
+                <div class="seal text-[10px]" style="width: 28px; height: 28px;">六</div>
+                <span>レストラン六本木</span>
+              </div>
+            </td>
+            <td>
+              <span class="tag tag-bordeaux">new order</span>
+              <span class="ml-2">Tollot-Beaut Corton-Bressandes 2020 ×6 + 2 items</span>
+            </td>
+            <td class="text-right ledger-num">¥189,400</td>
+            <td class="text-right"><button class="btn btn-primary">確認 ⏎</button></td>
+          </tr>
+
+          <tr class="row cursor-pointer">
+            <td><span class="dot dot-bordeaux"></span></td>
+            <td class="text-xs" style="color: var(--ink-3);">13:48</td>
+            <td>
+              <div class="flex items-center gap-2.5">
+                <div class="seal text-[10px]" style="width: 28px; height: 28px;">B</div>
+                <span>Bistro Verdure</span>
+              </div>
+            </td>
+            <td>
+              <span class="tag tag-bordeaux">new order</span>
+              <span class="ml-2">Egly-Ouriet Brut Tradition Grand Cru ×4</span>
+            </td>
+            <td class="text-right ledger-num">¥56,800</td>
+            <td class="text-right"><button class="btn">確認</button></td>
+          </tr>
+
+          <tr class="row cursor-pointer">
+            <td><span class="dot dot-amber"></span></td>
+            <td class="text-xs" style="color: var(--ink-3);">12:02</td>
+            <td>
+              <div class="flex items-center gap-2.5">
+                <div class="seal text-[10px]" style="width: 28px; height: 28px; border-color: var(--amber); color: var(--amber);">系</div>
+                <span style="color: var(--ink-2);">System</span>
+              </div>
+            </td>
+            <td>
+              <span class="tag tag-amber">allocation deadline</span>
+              <span class="ml-2">Tollot-Beaut Corton-Bressandes 2020 — 受付終了 18:00（残 3 時間 38 分）</span>
+            </td>
+            <td class="text-right text-xs" style="color: var(--ink-3);">10件 / 24本</td>
+            <td class="text-right"><button class="btn">按分する →</button></td>
+          </tr>
+
+          <tr class="row cursor-pointer">
+            <td><span class="dot dot-forest"></span></td>
+            <td class="text-xs" style="color: var(--ink-3);">11:55</td>
+            <td>
+              <div class="flex items-center gap-2.5">
+                <div class="seal text-[10px]" style="width: 28px; height: 28px;">寿</div>
+                <span>寿司 SHIN</span>
+              </div>
+            </td>
+            <td>
+              <span class="tag tag-forest">chat</span>
+              <span class="ml-2" style="color: var(--ink-2);">「明日の便で発送可能ですか？」</span>
+            </td>
+            <td class="text-right text-xs" style="color: var(--ink-3);">— —</td>
+            <td class="text-right"><button class="btn">返信 →</button></td>
+          </tr>
+
+          <tr class="row cursor-pointer">
+            <td><span class="dot dot-violet"></span></td>
+            <td class="text-xs" style="color: var(--ink-3);">11:30</td>
+            <td>
+              <div class="flex items-center gap-2.5">
+                <div class="seal text-[10px]" style="width: 28px; height: 28px; border-color: var(--violet); color: var(--violet);">AI</div>
+                <span style="color: var(--ink-2);">System</span>
+              </div>
+            </td>
+            <td>
+              <span class="tag tag-violet">label reader</span>
+              <span class="ml-2" style="color: var(--ink-2);">9 枚のラベル写真から商品情報を抽出 — 確認待ち</span>
+            </td>
+            <td class="text-right text-xs" style="color: var(--ink-3);">9 件</td>
+            <td class="text-right"><button class="btn">確認 →</button></td>
+          </tr>
+
+          <tr class="row cursor-pointer">
+            <td><span class="dot dot-ink"></span></td>
+            <td class="text-xs" style="color: var(--ink-3);">09:12</td>
+            <td>
+              <div class="flex items-center gap-2.5">
+                <div class="seal text-[10px]" style="width: 28px; height: 28px;">C</div>
+                <span>CARROT</span>
+              </div>
+            </td>
+            <td>
+              <span class="tag tag-forest">order confirmed</span>
+              <span class="ml-2" style="color: var(--ink-2);">5/10 発送予定 · 出荷ラベル印刷待ち</span>
+            </td>
+            <td class="text-right ledger-num">¥34,200</td>
+            <td class="text-right"><span class="caps">処理済</span></td>
+          </tr>
+
+          <tr class="row cursor-pointer">
+            <td><span class="dot dot-navy"></span></td>
+            <td class="text-xs" style="color: var(--ink-3);">08:00</td>
+            <td>
+              <div class="flex items-center gap-2.5">
+                <div class="seal text-[10px]" style="width: 28px; height: 28px; border-color: var(--navy); color: var(--navy);">月</div>
+                <span style="color: var(--ink-2);">System</span>
+              </div>
+            </td>
+            <td>
+              <span class="tag tag-navy">monthly batch</span>
+              <span class="ml-2" style="color: var(--ink-2);">4月分の請求書を一括生成 — 18 件</span>
+            </td>
+            <td class="text-right ledger-num">¥3,420,800</td>
+            <td class="text-right"><button class="btn">生成 →</button></td>
+          </tr>
+
+        </tbody>
+      </table>
+
+      <div class="fleuron my-10"></div>
+
+      <!-- Signals -->
+      <div class="grid grid-cols-3 gap-0 border-y" style="border-color: var(--gold);">
+
+        <div class="p-5" style="border-right: 1px solid var(--rule);">
+          <div class="flex items-baseline justify-between mb-3">
+            <p class="caps">Low stock</p>
+            <p class="text-xs" style="color: var(--ink-3);">5 items</p>
+          </div>
+          <ul class="space-y-2 text-sm">
+            <li class="flex justify-between"><span style="color: var(--ink-2);">Juyondai 本丸</span><span class="ledger-num"><span style="color: var(--amber);">6</span> / 24</span></li>
+            <li class="flex justify-between"><span style="color: var(--ink-2);">Coche-Dury Meursault</span><span class="ledger-num"><span style="color: var(--crimson);">0</span> / 12</span></li>
+            <li class="flex justify-between"><span style="color: var(--ink-2);">Egly-Ouriet Tradition</span><span class="ledger-num"><span style="color: var(--amber);">4</span> / 24</span></li>
+            <li class="flex justify-between"><span style="color: var(--ink-2);">Lynch-Bages 2018</span><span class="ledger-num"><span style="color: var(--amber);">8</span> / 24</span></li>
+          </ul>
+        </div>
+
+        <div class="p-5" style="border-right: 1px solid var(--rule);">
+          <div class="flex items-baseline justify-between mb-3">
+            <p class="caps">Top buyers · this month</p>
+          </div>
+          <ul class="space-y-2 text-sm">
+            <li class="flex justify-between"><span style="color: var(--ink-2);">レストラン六本木</span><span class="ledger-num">¥412,800</span></li>
+            <li class="flex justify-between"><span style="color: var(--ink-2);">Bistro Verdure</span><span class="ledger-num">¥386,400</span></li>
+            <li class="flex justify-between"><span style="color: var(--ink-2);">寿司 SHIN</span><span class="ledger-num">¥298,200</span></li>
+            <li class="flex justify-between"><span style="color: var(--ink-2);">CARROT</span><span class="ledger-num">¥182,000</span></li>
+          </ul>
+        </div>
+
+        <div class="p-5">
+          <div class="flex items-baseline justify-between mb-3">
+            <p class="caps">Sales · last 14 days</p>
+            <p class="text-xs" style="color: var(--forest);">▲ 18.4%</p>
+          </div>
+          <!-- Bar chart with serif numbers -->
+          <div class="space-y-1 text-xs">
+            <div class="flex items-center gap-2">
+              <span class="caps w-10 text-right">5/02</span>
+              <span class="h-3 inline-block" style="width: 60%; background: var(--paper-deep);"></span>
+              <span class="ledger-num ml-auto" style="color: var(--ink-3);">¥352k</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="caps w-10 text-right">5/03</span>
+              <span class="h-3 inline-block" style="width: 30%; background: var(--paper-deep);"></span>
+              <span class="ledger-num ml-auto" style="color: var(--ink-3);">¥176k</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="caps w-10 text-right">5/04</span>
+              <span class="h-3 inline-block" style="width: 42%; background: var(--paper-deep);"></span>
+              <span class="ledger-num ml-auto" style="color: var(--ink-3);">¥240k</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="caps w-10 text-right">5/05</span>
+              <span class="h-3 inline-block" style="width: 65%; background: var(--paper-deep);"></span>
+              <span class="ledger-num ml-auto" style="color: var(--ink-3);">¥384k</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="caps w-10 text-right">5/06</span>
+              <span class="h-3 inline-block" style="width: 53%; background: var(--paper-deep);"></span>
+              <span class="ledger-num ml-auto" style="color: var(--ink-3);">¥314k</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="caps w-10 text-right">5/07</span>
+              <span class="h-3 inline-block" style="width: 70%; background: var(--paper-deep);"></span>
+              <span class="ledger-num ml-auto" style="color: var(--ink-3);">¥412k</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="caps w-10 text-right" style="color: var(--bordeaux);">5/08</span>
+              <span class="h-3 inline-block" style="width: 82%; background: var(--bordeaux);"></span>
+              <span class="ledger-num ml-auto" style="color: var(--bordeaux);">¥482k</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="border-t rule px-10 py-3 text-xs flex justify-between" style="color: var(--ink-3);">
+      <span>Mise · 株式会社○○ · 通信販売酒類小売業免許 [99-9999999-99]</span>
+      <span class="caps">⌘K palette · ⌘/ help</span>
+    </div>
+
+  </section>
+</div>
+</body>
+</html>

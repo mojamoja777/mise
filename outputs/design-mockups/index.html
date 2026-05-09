@@ -1,0 +1,365 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mise — Design Mockups</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+JP:wght@300;400;500&family=Noto+Serif+JP:wght@300;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --paper: #e8e2d4; --paper-2: #ddd5c2; --paper-3: #d4cab3;
+      --ink: #1a1410; --ink-2: #4a4034; --ink-3: #7a6f5f; --ink-4: #aa9f8a;
+      --rule: #c1b69b; --rule-strong: #998d72;
+      --bordeaux: #5a1428; --bordeaux-deep: #3b0a1e; --bordeaux-soft: #8e2a47;
+      --gold: #8a6a1a;
+      --forest: #2d6a3d; --forest-bg: #c9d9c8;
+      --amber: #b07515; --amber-bg: #ead7a8;
+      --crimson: #962020; --crimson-bg: #ecc6c0;
+      --navy: #1f3454; --navy-bg: #c2cad8;
+      --violet: #4d2e6e; --violet-bg: #d6c8e0;
+    }
+    body { background: var(--paper); color: var(--ink); font-family: "Inter", "Noto Sans JP", sans-serif; -webkit-font-smoothing: antialiased; }
+    .serif { font-family: "DM Serif Display", "Noto Serif JP", serif; }
+    .mono { font-family: "JetBrains Mono", monospace; }
+    .caps { text-transform: uppercase; letter-spacing: 0.22em; font-size: 10px; font-weight: 500; color: var(--ink-3); }
+    .grain { background-image: radial-gradient(rgba(0,0,0,.022) 1px, transparent 1px), radial-gradient(rgba(0,0,0,.018) 1px, transparent 1px); background-size: 3px 3px, 5px 5px; background-position: 0 0, 1px 2px; }
+    .card { background: var(--paper); border: 1px solid var(--rule); transition: all .2s ease; }
+    .card:hover { border-color: var(--bordeaux); transform: translateY(-2px); }
+    .dot { width: 8px; height: 8px; border-radius: 999px; display: inline-block; }
+    .tag { display: inline-flex; align-items: center; gap: 4px; font-size: 10px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.1em; padding: 2px 8px; border: 1px solid var(--rule-strong); color: var(--ink-2); background: transparent; }
+    .tag-forest { border-color: var(--forest); color: var(--forest); background: var(--forest-bg); }
+    .tag-amber { border-color: var(--amber); color: var(--amber); background: var(--amber-bg); }
+    .tag-bordeaux { border-color: var(--bordeaux); color: var(--bordeaux); background: rgba(90,20,40,0.06); }
+    .tag-violet { border-color: var(--violet); color: var(--violet); background: var(--violet-bg); }
+    .hairline-gold { background: var(--gold); height: 1px; }
+    .fleuron { text-align: center; color: var(--ink-3); font-family: "DM Serif Display", serif; font-size: 14px; letter-spacing: 0.6em; }
+    .fleuron::before { content: "✦   ✦   ✦"; }
+    .seal { width: 36px; height: 36px; border-radius: 999px; border: 1.2px solid var(--bordeaux); color: var(--bordeaux); display: inline-flex; align-items: center; justify-content: center; font-family: "Noto Serif JP", serif; font-weight: 500; }
+    a { color: inherit; text-decoration: none; }
+  </style>
+</head>
+<body class="grain min-h-screen">
+
+  <header class="max-w-6xl mx-auto px-10 pt-20 pb-12">
+    <p class="caps mb-3">Mise · Design Refresh · No. 17</p>
+    <h1 class="serif text-7xl leading-[0.95] tracking-tight">
+      落ち着いた紙のうえに、<br/>
+      <span style="color: var(--bordeaux);">確かなインクの色</span>を。
+    </h1>
+    <p class="mt-7 max-w-2xl leading-relaxed" style="color: var(--ink-2);">
+      古本のような深い紙色に、ボルドー・森・琥珀・深紅の<span style="color: var(--ink); font-weight: 500;">インクスタンプ的な明示色</span>を載せる。
+      編集デザインの落ち着きと、業務 SaaS の判別性を両立させた方向です。
+    </p>
+    <div class="hairline-gold mt-10"></div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-10 pb-32 space-y-14">
+
+    <!-- Color system reference -->
+    <section>
+      <p class="caps mb-4">Status palette · 一目で判別できるインク色</p>
+      <div class="grid grid-cols-6 gap-3">
+        <div class="card p-4">
+          <span class="dot" style="background: var(--forest);"></span>
+          <p class="text-sm mt-2 serif">Forest</p>
+          <p class="caps mt-1">Paid · Confirmed · OK</p>
+        </div>
+        <div class="card p-4">
+          <span class="dot" style="background: var(--amber);"></span>
+          <p class="text-sm mt-2 serif">Amber</p>
+          <p class="caps mt-1">Allocation · Low</p>
+        </div>
+        <div class="card p-4">
+          <span class="dot" style="background: var(--crimson);"></span>
+          <p class="text-sm mt-2 serif">Crimson</p>
+          <p class="caps mt-1">Overdue · Out</p>
+        </div>
+        <div class="card p-4">
+          <span class="dot" style="background: var(--bordeaux);"></span>
+          <p class="text-sm mt-2 serif">Bordeaux</p>
+          <p class="caps mt-1">Action · Brand</p>
+        </div>
+        <div class="card p-4">
+          <span class="dot" style="background: var(--navy);"></span>
+          <p class="text-sm mt-2 serif">Navy</p>
+          <p class="caps mt-1">System · Info</p>
+        </div>
+        <div class="card p-4">
+          <span class="dot" style="background: var(--violet);"></span>
+          <p class="text-sm mt-2 serif">Violet</p>
+          <p class="caps mt-1">AI · Draft</p>
+        </div>
+      </div>
+    </section>
+
+    <div class="fleuron"></div>
+
+    <!-- Plate variation -->
+    <section>
+      <div class="flex items-baseline gap-4 mb-3">
+        <h2 class="serif text-3xl">もう一案 — Plate</h2>
+        <p class="caps">/ Variation</p>
+      </div>
+      <p class="text-sm leading-relaxed mb-7" style="color: var(--ink-2); max-width: 720px;">
+        同じ紙肌をベースに、書体を <span style="font-family: 'Fraunces', serif; font-style: italic;">Fraunces</span>（現代エディトリアル）へ、主役の差し色をボルドー → <span style="color: #1c3a5c; font-weight: 500;">深い藍墨</span> に。
+        商品はボトルの線画＋「Plate №」の角印で、銅版画のような図譜の趣に。
+      </p>
+      <div class="grid md:grid-cols-2 gap-5">
+
+        <a href="P01-plate-catalog.html" target="_blank" class="card p-6 block" style="border-color: #1c3a5c;">
+          <div class="aspect-video mb-4 p-4 overflow-hidden flex flex-col relative" style="background: var(--paper-2); border: 1px solid #1c3a5c;">
+            <p class="caps" style="color: #1c3a5c;">No. 17 · Mai · MMXXVI</p>
+            <p style="font-family: 'Fraunces', serif; font-size: 28px; line-height: 1; margin-top: 4px; color: var(--ink);">
+              <span style="font-style: italic; color: #1c3a5c;">Bourgogne,</span><br/>
+              forgotten slopes.
+            </p>
+            <div class="mt-auto flex items-center gap-2">
+              <span class="dot" style="background: var(--forest);"></span>
+              <span class="dot" style="background: var(--amber);"></span>
+              <span class="dot" style="background: var(--crimson);"></span>
+            </div>
+            <p class="absolute top-3 right-3 caps" style="color: #1c3a5c;">Plate № 01</p>
+          </div>
+          <p class="caps">P01 / Catalog</p>
+          <p class="serif text-xl mt-1" style="font-family: 'Fraunces', 'Noto Serif JP', serif;">商品カタログ <span style="font-style: italic; color: #1c3a5c;">— Plate</span></p>
+          <p class="text-sm mt-2 leading-relaxed" style="color: var(--ink-2);">特集記事＋ボトル線画の図譜。Fraunces セリフ、藍墨アクセント、Fig. (a) のキャプション。</p>
+        </a>
+
+        <a href="P04-plate-dashboard.html" target="_blank" class="card p-6 block" style="border-color: #1c3a5c;">
+          <div class="aspect-video mb-4 p-4 overflow-hidden relative" style="background: var(--paper-2); border: 1px solid #1c3a5c;">
+            <p class="caps">Today · Message Box</p>
+            <p style="font-family: 'Fraunces', serif; font-size: 28px; line-height: 1; margin-top: 4px;">メッセージボックス</p>
+            <div class="grid grid-cols-4 gap-2 mt-3">
+              <div><p class="caps" style="font-size: 8px;">new</p><p class="text-lg" style="font-family: 'Fraunces', serif; color: #1c3a5c;">07</p></div>
+              <div><p class="caps" style="font-size: 8px;">pend</p><p class="text-lg" style="font-family: 'Fraunces', serif; color: var(--amber);">03</p></div>
+              <div><p class="caps" style="font-size: 8px;">rev</p><p class="text-lg" style="font-family: 'Fraunces', serif;">¥482k</p></div>
+              <div><p class="caps" style="font-size: 8px;">chat</p><p class="text-lg" style="font-family: 'Fraunces', serif;">04</p></div>
+            </div>
+            <p class="absolute top-3 right-3 caps" style="color: #1c3a5c;">Plate № 04</p>
+          </div>
+          <p class="caps">P04 / Dashboard</p>
+          <p class="serif text-xl mt-1" style="font-family: 'Fraunces', 'Noto Serif JP', serif;">メッセージボックス <span style="font-style: italic; color: #1c3a5c;">— Plate</span></p>
+          <p class="text-sm mt-2 leading-relaxed" style="color: var(--ink-2);">受信した便りを時系列で。藍墨のドット＋ Fraunces 数字＋ Plate № 角印。</p>
+        </a>
+
+      </div>
+    </section>
+
+    <div class="fleuron"></div>
+
+    <!-- Buyer section -->
+    <section>
+      <div class="flex items-baseline gap-4 mb-7">
+        <h2 class="serif text-3xl">買い手の画面</h2>
+        <p class="caps">/ Buyer</p>
+      </div>
+      <div class="grid md:grid-cols-3 gap-5">
+
+        <a href="01-editorial.html" target="_blank" class="card p-6 block">
+          <div class="aspect-video mb-4 p-3 overflow-hidden flex flex-col" style="background: var(--paper-2);">
+            <p class="caps">No. 17 · May</p>
+            <p class="serif text-2xl leading-tight mt-1">ブルゴーニュ、<br/>忘れられた斜面から。</p>
+            <div class="mt-auto flex gap-1.5">
+              <span class="dot" style="background: var(--forest);"></span>
+              <span class="dot" style="background: var(--amber);"></span>
+              <span class="dot" style="background: var(--crimson);"></span>
+            </div>
+          </div>
+          <p class="caps">01 / Catalog</p>
+          <p class="serif text-xl mt-1">商品カタログ</p>
+          <p class="text-sm mt-2 leading-relaxed" style="color: var(--ink-2);">特集記事＋グリッド。在庫・割当・残少を明示色のドットで瞬時に判別。</p>
+        </a>
+
+        <a href="E08-buyer-order-detail.html" target="_blank" class="card p-6 block">
+          <div class="aspect-video mb-4 p-3 overflow-hidden" style="background: var(--paper-2);">
+            <div class="flex items-baseline justify-between">
+              <p class="caps">#B7E91C-3F</p>
+              <span class="tag tag-amber">Allocation</span>
+            </div>
+            <p class="serif text-3xl mt-2 tabular">¥189,400</p>
+            <div class="grid grid-cols-4 gap-1 mt-3">
+              <div class="h-1" style="background: var(--forest);"></div>
+              <div class="h-1" style="background: var(--amber);"></div>
+              <div class="h-1" style="background: var(--rule-strong);"></div>
+              <div class="h-1" style="background: var(--rule-strong);"></div>
+            </div>
+            <p class="caps mt-2">ordered → deadline → allocated → shipped</p>
+          </div>
+          <p class="caps">08 / Order</p>
+          <p class="serif text-xl mt-1">注文詳細</p>
+          <p class="text-sm mt-2 leading-relaxed" style="color: var(--ink-2);">4ステップタイムライン。割当中はインクスタンプ風の amber でパルス。</p>
+        </a>
+
+        <a class="card p-6 block opacity-50 cursor-not-allowed">
+          <div class="aspect-video mb-4 flex items-center justify-center caps" style="background: var(--paper-2); color: var(--ink-3);">— next —</div>
+          <p class="caps">— / Cart</p>
+          <p class="serif text-xl mt-1" style="color: var(--ink-3);">カート / 決済</p>
+        </a>
+
+      </div>
+    </section>
+
+    <div class="fleuron"></div>
+
+    <!-- Admin section -->
+    <section>
+      <div class="flex items-baseline gap-4 mb-7">
+        <h2 class="serif text-3xl">店舗の画面</h2>
+        <p class="caps">/ Admin</p>
+      </div>
+      <div class="grid md:grid-cols-3 gap-5">
+
+        <a href="E04-admin-dashboard.html" target="_blank" class="card p-6 block">
+          <div class="aspect-video mb-4 p-3 overflow-hidden" style="background: var(--paper-2);">
+            <div class="grid grid-cols-4 gap-2 mb-2">
+              <div><p class="caps" style="font-size: 8px;">new</p><p class="serif text-lg" style="color: var(--bordeaux);">07</p></div>
+              <div><p class="caps" style="font-size: 8px;">pend</p><p class="serif text-lg" style="color: var(--amber);">03</p></div>
+              <div><p class="caps" style="font-size: 8px;">rev</p><p class="serif text-lg">¥482k</p></div>
+              <div><p class="caps" style="font-size: 8px;">chat</p><p class="serif text-lg">04</p></div>
+            </div>
+            <div class="space-y-1 mt-2">
+              <div class="h-2" style="background: var(--paper-3);"></div>
+              <div class="h-2" style="background: var(--paper-3);"></div>
+              <div class="h-2" style="background: var(--paper-3);"></div>
+            </div>
+          </div>
+          <p class="caps">04 / Inbox</p>
+          <p class="serif text-xl mt-1">ダッシュボード</p>
+          <p class="text-sm mt-2 leading-relaxed" style="color: var(--ink-2);">本日の入れ子（インボックス型）。新規注文／割当締切／チャット／AI 抽出が時系列で。</p>
+        </a>
+
+        <a href="E05-admin-allocation.html" target="_blank" class="card p-6 block">
+          <div class="aspect-video mb-4 p-3 overflow-hidden" style="background: var(--paper-2);">
+            <div class="flex items-baseline justify-between">
+              <p class="caps">stock</p>
+              <p class="serif text-2xl">06</p>
+              <p style="color: var(--ink-3);">/</p>
+              <p class="serif text-2xl" style="color: var(--crimson);">24</p>
+              <p class="caps">req</p>
+            </div>
+            <div class="space-y-1 mt-3 text-xs" style="color: var(--ink-2);">
+              <div class="flex justify-between"><span>六 · 6 →</span><span class="serif" style="color: var(--forest);">3</span></div>
+              <div class="flex justify-between"><span>B · 4 →</span><span class="serif" style="color: var(--forest);">2</span></div>
+              <div class="flex justify-between"><span>寿 · 2 →</span><span class="serif" style="color: var(--forest);">1</span></div>
+              <div class="flex justify-between" style="color: var(--ink-3);"><span>C · 3 →</span><span>0</span></div>
+            </div>
+          </div>
+          <p class="caps">05 / Allocation</p>
+          <p class="serif text-xl mt-1">割り当て編集</p>
+          <p class="text-sm mt-2 leading-relaxed" style="color: var(--ink-2);">買い手 × 希少銘柄の按分。AI が比例配分／VIP優先／先着順を提案。</p>
+        </a>
+
+        <a href="E06-admin-product-ai.html" target="_blank" class="card p-6 block">
+          <div class="aspect-video mb-4 p-3 overflow-hidden" style="background: var(--paper-2);">
+            <div class="flex gap-3">
+              <div class="w-12 h-16 flex items-center justify-center text-2xl" style="background: var(--paper-3);">🍷</div>
+              <div class="flex-1 space-y-1.5">
+                <div class="h-2" style="background: var(--paper-3);"></div>
+                <div class="h-2 w-3/4" style="background: var(--paper-3);"></div>
+                <div class="h-2 w-1/2" style="background: var(--paper-3);"></div>
+                <div class="flex gap-1 mt-2">
+                  <span class="tag tag-violet">⚡ ai 0.94</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <p class="caps">06 / Product · AI</p>
+          <p class="serif text-xl mt-1">商品登録（AI）</p>
+          <p class="text-sm mt-2 leading-relaxed" style="color: var(--ink-2);">写真→AIが8項目抽出→信頼度バッジで人間が確認。</p>
+        </a>
+
+        <a href="E07-admin-chat.html" target="_blank" class="card p-6 block">
+          <div class="aspect-video mb-4 p-3 overflow-hidden" style="background: var(--paper-2);">
+            <div class="grid grid-cols-3 gap-2 h-full">
+              <div class="space-y-1">
+                <div class="h-3" style="background: var(--paper-3);"></div>
+                <div class="h-3" style="background: var(--paper-3);"></div>
+                <div class="h-3" style="background: var(--paper-3);"></div>
+              </div>
+              <div class="col-span-2 space-y-1.5">
+                <div class="h-3 w-3/4" style="background: var(--paper-3);"></div>
+                <div class="h-3 w-1/2 ml-auto" style="background: var(--bordeaux);"></div>
+                <div class="h-3 w-2/3" style="background: var(--paper-3);"></div>
+              </div>
+            </div>
+          </div>
+          <p class="caps">07 / Chat</p>
+          <p class="serif text-xl mt-1">往復書簡</p>
+          <p class="text-sm mt-2 leading-relaxed" style="color: var(--ink-2);">スレッド／会話／顧客カルテの3カラム。AIが返信文案を提案。</p>
+        </a>
+
+        <a href="E09-admin-invoices.html" target="_blank" class="card p-6 block">
+          <div class="aspect-video mb-4 p-3 overflow-hidden" style="background: var(--paper-2);">
+            <div class="grid grid-cols-4 gap-2 mb-2">
+              <div><p class="caps" style="font-size: 8px;">total</p><p class="serif text-lg">18</p></div>
+              <div><p class="caps" style="font-size: 8px;">paid</p><p class="serif text-lg" style="color: var(--forest);">¥1.6M</p></div>
+              <div><p class="caps" style="font-size: 8px;">due</p><p class="serif text-lg" style="color: var(--amber);">¥1.8M</p></div>
+              <div><p class="caps" style="font-size: 8px;">over</p><p class="serif text-lg" style="color: var(--crimson);">¥248k</p></div>
+            </div>
+            <div class="space-y-1 mt-3">
+              <div class="h-2" style="background: var(--paper-3);"></div>
+              <div class="h-2" style="background: var(--paper-3);"></div>
+              <div class="h-2" style="background: var(--paper-3);"></div>
+            </div>
+          </div>
+          <p class="caps">09 / Invoices</p>
+          <p class="serif text-xl mt-1">請求簿</p>
+          <p class="text-sm mt-2 leading-relaxed" style="color: var(--ink-2);">月次バッチ＋AI下書き。督促・PDF・送信を一括操作。</p>
+        </a>
+
+        <a class="card p-6 block opacity-50 cursor-not-allowed">
+          <div class="aspect-video mb-4 flex items-center justify-center caps" style="background: var(--paper-2); color: var(--ink-3);">— next —</div>
+          <p class="caps">— / Settings</p>
+          <p class="serif text-xl mt-1" style="color: var(--ink-3);">設定 / テナント</p>
+        </a>
+
+      </div>
+    </section>
+
+    <div class="fleuron"></div>
+
+    <!-- Archive of other directions -->
+    <section>
+      <p class="caps mb-5">Archive · 他方向の参考案</p>
+      <div class="grid md:grid-cols-3 gap-5">
+        <a href="02-operator.html" target="_blank" class="card p-5 block">
+          <div class="aspect-video mb-3" style="background: #0c0c0e;">
+            <div class="p-3 mono text-[10px]" style="color: #4ade80;">$ mise · v2.4</div>
+          </div>
+          <p class="caps">Operator (dark)</p>
+          <p class="serif text-lg mt-1">高密度 SaaS / レトロモダン</p>
+          <p class="text-xs mt-2" style="color: var(--ink-3);">→ 04〜09 ダーク版もこちら系統で展開済</p>
+        </a>
+        <a href="03-wamodern.html" target="_blank" class="card p-5 block">
+          <div class="aspect-video mb-3" style="background: #efece4;">
+            <div class="p-3" style="color: #1f1b16; font-family: 'Noto Serif JP', serif;">店<span class="caps ml-1">mise</span></div>
+          </div>
+          <p class="caps">和モダン</p>
+          <p class="serif text-lg mt-1">明朝 × 余白</p>
+          <p class="text-xs mt-2" style="color: var(--ink-3);">日本酒・割烹を中心にする場合の代替案</p>
+        </a>
+        <a href="04-admin-dashboard.html" target="_blank" class="card p-5 block">
+          <div class="aspect-video mb-3" style="background: #0c0c0e; padding: 12px;">
+            <div class="text-[10px] mono" style="color: #e8e8ec;">▒▒▒▒▒▒▒░░ inbox · 7</div>
+            <div class="text-[10px] mono mt-2" style="color: #4ade80;">● connected</div>
+          </div>
+          <p class="caps">Operator · Dashboard</p>
+          <p class="serif text-lg mt-1">ダーク版ダッシュボード</p>
+          <p class="text-xs mt-2" style="color: var(--ink-3);">04〜09 のダーク系を直接見るならこちら</p>
+        </a>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="max-w-6xl mx-auto px-10 pb-20 text-xs leading-relaxed" style="color: var(--ink-3);">
+    <div class="hairline-gold mb-5"></div>
+    <p>各モックは static HTML · Tailwind CDN · 共通トークンは <span style="color: var(--ink-2);">_editorial.css</span> に集約済。</p>
+    <p class="mt-1">→ 採用後は <span style="color: var(--ink-2);">tailwind.config</span> + <span style="color: var(--ink-2);">app/globals.css</span> に流し込み、buyer/admin の主要画面から差し替え。</p>
+  </footer>
+
+</body>
+</html>

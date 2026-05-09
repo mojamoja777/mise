@@ -51,6 +51,70 @@ export async function resizeImageToBase64(
 }
 
 /**
+ * Supabase Storage 保存用にリサイズ
+ * - 最大 2048px に縮小（アスペクト比維持）
+ * - JPEG 品質 90%
+ * - File オブジェクトとして返す（Storage アップロード用）
+ *
+ * メモリ上の File を直接 storage.upload() に渡せるよう Blob ではなく File で返す。
+ */
+export async function resizeImageForStorage(
+  file: File,
+  maxSize: number = 2048
+): Promise<File> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        let { width, height } = img;
+
+        if (width > height && width > maxSize) {
+          height = (height * maxSize) / width;
+          width = maxSize;
+        } else if (height > maxSize) {
+          width = (width * maxSize) / height;
+          height = maxSize;
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext("2d");
+        if (!ctx) {
+          reject(new Error("Canvas context not available"));
+          return;
+        }
+        ctx.drawImage(img, 0, 0, width, height);
+
+        canvas.toBlob(
+          (blob) => {
+            if (!blob) {
+              reject(new Error("Blob conversion failed"));
+              return;
+            }
+            // 名前は保持しつつ JPEG として返す
+            const baseName = file.name.replace(/\.[^.]+$/, "");
+            resolve(
+              new File([blob], `${baseName}.jpg`, {
+                type: "image/jpeg",
+                lastModified: Date.now(),
+              })
+            );
+          },
+          "image/jpeg",
+          0.9
+        );
+      };
+      img.onerror = () => reject(new Error("Image load failed"));
+      img.src = e.target?.result as string;
+    };
+    reader.onerror = () => reject(new Error("File read failed"));
+    reader.readAsDataURL(file);
+  });
+}
+
+/**
  * ファイルバリデーション（5MB 上限）
  */
 export function validateImageFile(file: File): {

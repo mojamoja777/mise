@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mise — Admin · Invoices</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+JP:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="_shared.css" />
+</head>
+<body class="scanlines vignette">
+
+<div class="flex h-screen relative" style="z-index: 2;">
+
+  <aside class="w-14 border-r line bg-[var(--bg)] flex flex-col items-center py-3 gap-3 flex-shrink-0">
+    <div class="w-8 h-8 rounded-md bg-[var(--bg-2)] flex items-center justify-center"><span class="dot dot-glow" style="background: var(--phosphor);"></span></div>
+    <div class="w-full border-t line"></div>
+    <button class="w-9 h-9 rounded-md hover:bg-[var(--bg-2)] flex items-center justify-center text-[var(--text-3)]">⌂</button>
+    <button class="w-9 h-9 rounded-md hover:bg-[var(--bg-2)] flex items-center justify-center text-[var(--text-3)]">◉</button>
+    <button class="w-9 h-9 rounded-md hover:bg-[var(--bg-2)] flex items-center justify-center text-[var(--text-3)]">▦</button>
+    <button class="w-9 h-9 rounded-md hover:bg-[var(--bg-2)] flex items-center justify-center text-[var(--text-3)]">⏵</button>
+    <button class="w-9 h-9 rounded-md bg-[var(--bg-3)] flex items-center justify-center text-[var(--bordeaux)]">¥</button>
+  </aside>
+
+  <section class="flex-1 flex flex-col min-w-0 overflow-hidden">
+
+    <header class="h-12 border-b line flex items-center px-5 gap-4 bg-[var(--bg)]">
+      <div class="flex items-center gap-2 text-sm">
+        <span class="text-[var(--text-3)]">/ invoices</span>
+        <span class="tag tag-cyan ml-2">monthly · 2026-04</span>
+      </div>
+      <div class="ml-auto flex items-center gap-2">
+        <button class="btn">フィルタ</button>
+        <button class="btn">CSV出力</button>
+        <button class="btn btn-primary">+ 新規</button>
+      </div>
+    </header>
+
+    <!-- Stats strip -->
+    <div class="border-b line bg-[var(--bg-1)] grid grid-cols-5 divide-x line">
+      <div class="p-4">
+        <p class="text-[10px] tracking-widest uppercase text-[var(--text-3)]">Total</p>
+        <p class="mono text-2xl tabular mt-1">18</p>
+      </div>
+      <div class="p-4">
+        <p class="text-[10px] tracking-widest uppercase text-[var(--text-3)]">Outstanding</p>
+        <p class="mono text-2xl tabular mt-1 text-[var(--amber)]">¥1.82M</p>
+      </div>
+      <div class="p-4">
+        <p class="text-[10px] tracking-widest uppercase text-[var(--text-3)]">Paid</p>
+        <p class="mono text-2xl tabular mt-1 text-[var(--phosphor)]">¥1.60M</p>
+      </div>
+      <div class="p-4">
+        <p class="text-[10px] tracking-widest uppercase text-[var(--text-3)]">Overdue</p>
+        <p class="mono text-2xl tabular mt-1 text-[var(--rose)]">¥248k</p>
+      </div>
+      <div class="p-4">
+        <p class="text-[10px] tracking-widest uppercase text-[var(--text-3)]">Avg DSO</p>
+        <p class="mono text-2xl tabular mt-1">22d</p>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="h-10 border-b line flex items-center px-5 gap-1 text-xs">
+      <button class="px-3 py-1 rounded-md bg-[var(--bg-2)]">All <span class="mono text-[10px] text-[var(--text-3)] ml-1">18</span></button>
+      <button class="px-3 py-1 rounded-md text-[var(--text-2)] hover:bg-[var(--bg-2)]">Draft <span class="mono text-[10px] text-[var(--text-3)] ml-1">2</span></button>
+      <button class="px-3 py-1 rounded-md text-[var(--text-2)] hover:bg-[var(--bg-2)]">Sent <span class="mono text-[10px] text-[var(--text-3)] ml-1">12</span></button>
+      <button class="px-3 py-1 rounded-md text-[var(--text-2)] hover:bg-[var(--bg-2)]">Paid <span class="mono text-[10px] text-[var(--text-3)] ml-1">3</span></button>
+      <button class="px-3 py-1 rounded-md text-[var(--rose)] hover:bg-[var(--bg-2)]">Overdue <span class="mono text-[10px] ml-1">1</span></button>
+      <span class="ml-auto text-[var(--text-3)] mono">月次一括生成は毎月1日 08:00 JST</span>
+    </div>
+
+    <div class="flex-1 overflow-auto scroll">
+      <table class="w-full text-sm">
+        <thead class="sticky top-0 bg-[var(--bg)] border-b line text-[10px] uppercase tracking-widest text-[var(--text-3)] z-10">
+          <tr>
+            <th class="text-left font-normal py-2.5 pl-5 w-8"><input type="checkbox" class="accent-[#c54a6f]"/></th>
+            <th class="text-left font-normal py-2.5 w-32">Invoice #</th>
+            <th class="text-left font-normal py-2.5">Buyer</th>
+            <th class="text-left font-normal py-2.5 w-28">Issue date</th>
+            <th class="text-left font-normal py-2.5 w-28">Due</th>
+            <th class="text-right font-normal py-2.5 w-28">Subtotal</th>
+            <th class="text-right font-normal py-2.5 w-20">Tax</th>
+            <th class="text-right font-normal py-2.5 w-32">Total</th>
+            <th class="text-center font-normal py-2.5 w-32">Status</th>
+            <th class="text-right font-normal py-2.5 w-24 pr-5">Action</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y line">
+
+          <tr class="row cursor-pointer">
+            <td class="pl-5"><input type="checkbox" class="accent-[#c54a6f]"/></td>
+            <td class="mono text-[var(--text-3)]">INV-2604-001</td>
+            <td class="py-3">レストラン六本木</td>
+            <td class="mono text-[var(--text-2)]">2026-05-01</td>
+            <td class="mono text-[var(--text-2)]">2026-05-31</td>
+            <td class="mono text-right">¥374,800</td>
+            <td class="mono text-right text-[var(--text-2)]">¥37,480</td>
+            <td class="mono text-right">¥412,280</td>
+            <td class="text-center"><span class="tag tag-phosphor">paid</span></td>
+            <td class="text-right pr-5"><button class="btn btn-ghost text-[var(--text-3)]">…</button></td>
+          </tr>
+
+          <tr class="row cursor-pointer">
+            <td class="pl-5"><input type="checkbox" class="accent-[#c54a6f]"/></td>
+            <td class="mono text-[var(--text-3)]">INV-2604-002</td>
+            <td class="py-3">Bistro Verdure</td>
+            <td class="mono text-[var(--text-2)]">2026-05-01</td>
+            <td class="mono text-[var(--text-2)]">2026-05-31</td>
+            <td class="mono text-right">¥351,300</td>
+            <td class="mono text-right text-[var(--text-2)]">¥35,130</td>
+            <td class="mono text-right">¥386,430</td>
+            <td class="text-center"><span class="tag">sent</span></td>
+            <td class="text-right pr-5"><button class="btn btn-ghost text-[var(--text-3)]">…</button></td>
+          </tr>
+
+          <tr class="row cursor-pointer">
+            <td class="pl-5"><input type="checkbox" class="accent-[#c54a6f]"/></td>
+            <td class="mono text-[var(--text-3)]">INV-2604-003</td>
+            <td class="py-3">寿司 SHIN</td>
+            <td class="mono text-[var(--text-2)]">2026-05-01</td>
+            <td class="mono text-[var(--text-2)]">2026-05-31</td>
+            <td class="mono text-right">¥271,000</td>
+            <td class="mono text-right text-[var(--text-2)]">¥27,200</td>
+            <td class="mono text-right">¥298,200</td>
+            <td class="text-center"><span class="tag">sent</span></td>
+            <td class="text-right pr-5"><button class="btn btn-ghost text-[var(--text-3)]">…</button></td>
+          </tr>
+
+          <tr class="row cursor-pointer">
+            <td class="pl-5"><input type="checkbox" class="accent-[#c54a6f]"/></td>
+            <td class="mono text-[var(--text-3)]">INV-2604-004</td>
+            <td class="py-3">CARROT</td>
+            <td class="mono text-[var(--text-2)]">2026-05-01</td>
+            <td class="mono text-[var(--rose)]">2026-04-30</td>
+            <td class="mono text-right">¥225,400</td>
+            <td class="mono text-right text-[var(--text-2)]">¥22,540</td>
+            <td class="mono text-right">¥247,940</td>
+            <td class="text-center"><span class="tag" style="border-color: rgba(251,113,133,0.40); background: rgba(251,113,133,0.10); color: var(--rose);">overdue · 8d</span></td>
+            <td class="text-right pr-5"><button class="btn">督促 →</button></td>
+          </tr>
+
+          <tr class="row cursor-pointer">
+            <td class="pl-5"><input type="checkbox" class="accent-[#c54a6f]"/></td>
+            <td class="mono text-[var(--text-3)]">INV-2604-005</td>
+            <td class="py-3">Trattoria Kobayashi</td>
+            <td class="mono text-[var(--text-2)]">2026-05-01</td>
+            <td class="mono text-[var(--text-2)]">2026-05-31</td>
+            <td class="mono text-right">¥112,720</td>
+            <td class="mono text-right text-[var(--text-2)]">¥11,272</td>
+            <td class="mono text-right">¥123,992</td>
+            <td class="text-center"><span class="tag">sent</span></td>
+            <td class="text-right pr-5"><button class="btn btn-ghost text-[var(--text-3)]">…</button></td>
+          </tr>
+
+          <tr class="row cursor-pointer">
+            <td class="pl-5"><input type="checkbox" class="accent-[#c54a6f]"/></td>
+            <td class="mono text-[var(--text-3)]">INV-2604-006</td>
+            <td class="py-3">La Forgeron</td>
+            <td class="mono text-[var(--text-2)]">2026-05-01</td>
+            <td class="mono text-[var(--text-2)]">2026-05-31</td>
+            <td class="mono text-right">¥198,400</td>
+            <td class="mono text-right text-[var(--text-2)]">¥19,840</td>
+            <td class="mono text-right">¥218,240</td>
+            <td class="text-center"><span class="tag tag-phosphor">paid</span></td>
+            <td class="text-right pr-5"><button class="btn btn-ghost text-[var(--text-3)]">…</button></td>
+          </tr>
+
+          <tr class="row cursor-pointer">
+            <td class="pl-5"><input type="checkbox" class="accent-[#c54a6f]"/></td>
+            <td class="mono text-[var(--text-3)]">INV-2604-007</td>
+            <td class="py-3">焼鳥 弦</td>
+            <td class="mono text-[var(--text-2)]">2026-05-01</td>
+            <td class="mono text-[var(--text-2)]">2026-05-31</td>
+            <td class="mono text-right">¥43,800</td>
+            <td class="mono text-right text-[var(--text-2)]">¥4,380</td>
+            <td class="mono text-right">¥48,180</td>
+            <td class="text-center"><span class="tag">sent</span></td>
+            <td class="text-right pr-5"><button class="btn btn-ghost text-[var(--text-3)]">…</button></td>
+          </tr>
+
+          <tr class="row cursor-pointer" style="background: rgba(167,139,250,0.04);">
+            <td class="pl-5"><input type="checkbox" class="accent-[#c54a6f]"/></td>
+            <td class="mono text-[var(--violet)]">INV-2605-008</td>
+            <td class="py-3 text-[var(--text-2)]">Omakase Toranomon</td>
+            <td class="mono text-[var(--text-3)]">— —</td>
+            <td class="mono text-[var(--text-3)]">— —</td>
+            <td class="mono text-right text-[var(--text-2)]">¥276,400</td>
+            <td class="mono text-right text-[var(--text-3)]">¥27,640</td>
+            <td class="mono text-right text-[var(--text-2)]">¥304,040</td>
+            <td class="text-center"><span class="tag tag-violet">draft · ai 0.92</span></td>
+            <td class="text-right pr-5"><button class="btn">確認</button></td>
+          </tr>
+
+          <tr class="row cursor-pointer" style="background: rgba(167,139,250,0.04);">
+            <td class="pl-5"><input type="checkbox" class="accent-[#c54a6f]"/></td>
+            <td class="mono text-[var(--violet)]">INV-2605-009</td>
+            <td class="py-3 text-[var(--text-2)]">Hana 麻布十番</td>
+            <td class="mono text-[var(--text-3)]">— —</td>
+            <td class="mono text-[var(--text-3)]">— —</td>
+            <td class="mono text-right text-[var(--text-2)]">¥138,200</td>
+            <td class="mono text-right text-[var(--text-3)]">¥13,820</td>
+            <td class="mono text-right text-[var(--text-2)]">¥152,020</td>
+            <td class="text-center"><span class="tag tag-violet">draft · ai 0.95</span></td>
+            <td class="text-right pr-5"><button class="btn">確認</button></td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Bulk action bar -->
+    <div class="border-t line bg-[var(--bg-1)] px-5 py-3 flex items-center gap-3">
+      <span class="mono text-xs text-[var(--text-3)]">2 selected · 合計 ¥456,060</span>
+      <button class="btn">PDF生成</button>
+      <button class="btn">メール送信</button>
+      <button class="btn">支払済にする</button>
+      <span class="ml-auto mono text-[10px] text-[var(--text-3)]">ESC clear · A select all</span>
+    </div>
+
+    <div class="h-8 border-t line flex items-center px-5 text-[11px] text-[var(--text-3)] gap-4 mono bg-[var(--bg)]">
+      <span><span class="text-[var(--phosphor)]">●</span> next batch · 2026-06-01 08:00 JST</span>
+      <span class="ml-auto">⌘N new · ⌘E export · ⌘F filter</span>
+    </div>
+
+  </section>
+</div>
+</body>
+</html>

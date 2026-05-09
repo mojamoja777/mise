@@ -34,12 +34,12 @@ export function GenerateInvoicesButton() {
 
   return (
     <div className="flex items-center gap-3">
-      {message && <span className="text-xs text-gray-600">{message}</span>}
+      {message && <span className="text-xs text-ink-2">{message}</span>}
       <button
         type="button"
         onClick={handleClick}
         disabled={pending}
-        className="inline-flex items-center gap-1.5 bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-lg text-sm hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        className="inline-flex items-center gap-1.5 bg-white border border-rule-strong text-ink-2 px-4 py-2 rounded-lg text-sm hover:bg-paper-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
       >
         <RefreshCw className={`w-4 h-4 ${pending ? "animate-spin" : ""}`} />
         {pending ? "生成中..." : "前月分を手動生成"}

@@ -7,7 +7,7 @@ export default function BuyerCartLoading() {
       {Array.from({ length: 3 }).map((_, i) => (
         <div
           key={i}
-          className="bg-white rounded-xl border border-gray-200 p-4 flex gap-3"
+          className="bg-white rounded-xl border border-rule p-4 flex gap-3"
         >
           <Skeleton className="w-16 h-16 shrink-0" />
           <SkeletonText lines={2} className="flex-1" />

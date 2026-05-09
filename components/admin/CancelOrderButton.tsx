@@ -41,11 +41,11 @@ export function CancelOrderButton({ orderId, currentStatus }: Props) {
 
   return (
     <div className="flex gap-3">
-      {error && <p className="text-red-600 text-sm">{error}</p>}
+      {error && <p className="text-crimson text-sm">{error}</p>}
       <button
         onClick={handleCancel}
         disabled={loading}
-        className="px-5 py-2.5 border border-red-300 text-red-600 text-sm font-medium rounded-xl hover:bg-red-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        className="px-5 py-2.5 border border-red-300 text-crimson text-sm font-medium rounded-xl hover:bg-crimson-bg disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
       >
         {loading ? "処理中..." : "キャンセル"}
       </button>

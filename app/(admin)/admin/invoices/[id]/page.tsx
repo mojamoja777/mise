@@ -68,7 +68,7 @@ export default async function AdminInvoiceDetailPage({ params }: Props) {
     <div className="p-8 max-w-4xl">
       <Link
         href="/admin/invoices"
-        className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700 mb-4"
+        className="inline-flex items-center gap-1 text-sm text-ink-3 hover:text-ink-2 mb-4"
       >
         <ChevronLeft className="w-4 h-4" />
         請求書一覧に戻る
@@ -76,15 +76,15 @@ export default async function AdminInvoiceDetailPage({ params }: Props) {
 
       <div className="flex items-start justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">
+          <h1 className="text-2xl font-bold text-ink">
             請求書 #{invoice.id.slice(0, 8).toUpperCase()}
           </h1>
-          <p className="text-sm text-gray-600 mt-1">
+          <p className="text-sm text-ink-2 mt-1">
             {buyer?.company_name ?? "—"} / {invoice.period_start} 〜{" "}
             {invoice.period_end}
           </p>
           {dueDate && (
-            <p className="text-xs text-gray-500 mt-1">
+            <p className="text-xs text-ink-3 mt-1">
               お支払期限：
               {new Date(dueDate).toLocaleDateString("ja-JP", {
                 year: "numeric",
@@ -94,7 +94,7 @@ export default async function AdminInvoiceDetailPage({ params }: Props) {
             </p>
           )}
           {revised && (
-            <p className="text-xs text-red-600 mt-1">
+            <p className="text-xs text-crimson mt-1">
               最終更新：
               {new Date(invoice.updated_at).toLocaleString("ja-JP")}（修正済み）
             </p>
@@ -102,7 +102,7 @@ export default async function AdminInvoiceDetailPage({ params }: Props) {
         </div>
         <a
           href={`/api/invoices/${invoice.id}/pdf`}
-          className="inline-flex items-center gap-1.5 bg-[#6B1A35] text-white px-4 py-2 rounded-lg text-sm hover:bg-[#5a1630] transition-colors"
+          className="inline-flex items-center gap-1.5 bg-[#1c3a5c] text-white px-4 py-2 rounded-lg text-sm hover:bg-[#0e2238] transition-colors"
         >
           <FileText className="w-4 h-4" />
           PDFダウンロード
