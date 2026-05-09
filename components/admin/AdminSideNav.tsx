@@ -54,7 +54,7 @@ export function AdminSideNav({ chatUnread = 0 }: Props) {
   };
 
   return (
-    <aside className="w-60 bg-paper border-r border-rule flex flex-col shrink-0">
+    <aside className="w-60 bg-paper-pale border-r border-rule flex flex-col shrink-0">
       <div className="px-5 pt-6 pb-5 border-b border-rule">
         <p className="font-serif text-3xl tracking-tight">Mise</p>
         <p className="caps mt-1">Maison du Vin · admin</p>

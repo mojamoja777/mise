@@ -22,7 +22,7 @@ export default function AdminLayout({
 }) {
   return (
     <div className="flex min-h-screen">
-      <Suspense fallback={<aside className="w-60 bg-paper border-r border-rule shrink-0" />}>
+      <Suspense fallback={<aside className="w-60 bg-paper-pale border-r border-rule shrink-0" />}>
         <AdminSideNavWithUnread />
       </Suspense>
       <main className="flex-1 overflow-auto">{children}</main>

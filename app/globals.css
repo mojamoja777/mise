@@ -7,6 +7,7 @@
   --font-mono: var(--font-plex-mono), "JetBrains Mono", monospace;
 
   /* Paper / Ink */
+  --color-paper-pale: #f1ece0;  /* paper より明るい。サイドバーや軽量パネル用 */
   --color-paper: #e8e2d4;
   --color-paper-2: #ddd5c2;
   --color-paper-3: #d4cab3;
