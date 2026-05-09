@@ -146,7 +146,7 @@ export function CommandPalette({ role }: Props) {
                   onSelect={() =>
                     go(
                       role === "admin"
-                        ? `/admin/products/${p.id}/edit`
+                        ? `/admin/products/${p.id}`
                         : `/buyer`
                     )
                   }

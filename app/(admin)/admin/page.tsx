@@ -138,7 +138,7 @@ export default async function AdminDashboard() {
             {lowStock.data.map((p) => (
               <Link
                 key={p.id}
-                href={`/admin/products/${p.id}/edit`}
+                href={`/admin/products/${p.id}`}
                 className="card-float p-3 hover:border-amber transition-colors group"
               >
                 <p className="font-serif text-sm leading-tight truncate">
