@@ -74,6 +74,7 @@ incident-YYYY-MM-DD-NNN.md
 | [incident-2026-05-09-006](incident-2026-05-09-006.md) | Low | 削除済商品の復元手段が無く、AI 抽出のトークンを節約しづらい | resolved |
 | [incident-2026-05-09-007](incident-2026-05-09-007.md) | Medium | チャットの既読更新 Server Action が render 中に revalidatePath を呼びエラー（Next.js 16 制約） | resolved |
 | [incident-2026-05-09-008](incident-2026-05-09-008.md) | Medium | 商品保存時に Cannot read properties of null（条件 render フィールドの formData 未送信） | resolved |
+| [incident-2026-05-09-009](incident-2026-05-09-009.md) | Medium | 割当商品でも希望本数が在庫数を上限にされ、割当機能の目的を達成できない | resolved |
 
 ### 症状カテゴリ別
 

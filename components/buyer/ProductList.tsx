@@ -534,7 +534,15 @@ export function ProductList({ products }: { products: Product[] }) {
                       onChange={(e) => setQuantity(Number(e.target.value))}
                       className="border border-rule-strong bg-paper px-4 py-2 text-base font-serif plate-num focus:outline-none focus:border-plate min-w-[100px]"
                     >
-                      {Array.from({ length: Math.max(selected.stock, 1) }, (_, i) => i + 1).map((n) => (
+                      {/* 割当商品: 在庫より多い希望本数を受付可（最大99）。通常商品: 在庫まで */}
+                      {Array.from(
+                        {
+                          length: selected.is_allocation
+                            ? 99
+                            : Math.max(selected.stock, 1),
+                        },
+                        (_, i) => i + 1
+                      ).map((n) => (
                         <option key={n} value={n}>
                           {n} 本
                         </option>

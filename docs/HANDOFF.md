@@ -1,44 +1,69 @@
 # Mise — Claude Code 引き継ぎ資料
 
-最終更新: 2026-05-09 / 担当ブランチ: `main` / コミット: 未（95 ファイル変更が working tree に残存）
+最終更新: 2026-05-09 (夕方) / 担当ブランチ: `main` / コミット: `973fea2` (push 済 → Vercel 本番デプロイ走行中)
 
 ---
 
 ## 1. 直近の状態スナップショット
 
-### 完了している作業
+### 完了している作業（commit 973fea2 に集約）
 
-- **Plate デザイン刷新**（Phase 1〜4 のうち Phase 1〜3 完了、Phase 4 一部）
-- **顧客カルテ機能**（DB + UI）
-- **AI 機能 3 種**：割当提案 / コメント生成 / チャット返信文案
-- **DB マイグレーション実行済み** ✅
-  - `outputs/db/migration_customer_profile.sql` を Supabase Dashboard で実行済み
-  - `users.tier` / `users.taste_tags` / `users.internal_note` / `buyer_stats` view が live
+#### Plate デザイン刷新 + 顧客カルテ + AI 機能（前 session 起点）
+- Plate トークン (paper / plate / vermilion / forest / amber 等) + UI primitives + Fraunces / Inter Tight / IBM Plex Mono
+- admin / buyer の主要画面を Plate テンプレに刷新
+- 顧客カルテ（tier / taste_tags / internal_note + buyer_stats view）
+- AI 機能 4 種: ラベル抽出 / 割当提案 / コメント生成 / チャット返信文案
+
+#### 商品削除フロー全面再設計（本 session）
+- ALWAYS soft-delete（`deleted_at` 列、ハード削除廃止）
+- 削除前モーダル: 確定前注文の店舗一覧 + チャット導線
+- DB トリガー: 削除済商品への `order_items` INSERT 阻止（race 対策）
+- アーカイブビュー + 復元ボタン（AI 抽出のトークン節約）
+- カート内削除商品の自動チャット通知（dedup 付き）
+- buyer 側チャット未読バッジを Realtime で増分
+
+#### AI ラベル抽出のマルチカテゴリ対応（本 session）
+- ワイン / 日本酒 / 焼酎 / ジン / ウイスキー / その他を判定
+- prefecture（都道府県）抽出 → 日本酒・焼酎の region に
+- 「⚡ AIで生成」ボタン廃止 → ラベル抽出 chain で polished comment 自動生成
+- 想定小売価格帯を出力から削除（トークン節約）
+
+#### UX / 安全策（本 session）
+- WINE_REGIONS を 14 ヶ国に拡充 + datalist で自由入力可
+- formData の null セーフ化
+- Next.js 16 制約対応: render 中 revalidatePath 削除、Suspense + Provider hydration の mounted ゲート
+
+### DB マイグレーション（Supabase Dashboard 実行済）
+
+- ✅ `outputs/db/migration_customer_profile.sql`
+- ✅ `outputs/db/migration_product_soft_delete.sql`
+- ✅ `outputs/db/migration_product_delete_safety.sql`
+- ✅ `outputs/db/migration_cart_archive_notifications.sql`
 
 ### Git の状態
 
 ```
-working tree: 95 ファイル変更（ M = 既存変更、?? = 新規）
-直近のコミット: a6adce0 feat: rebuild AI label reader for the local demo
-                ※ Plate 刷新は未コミット
+working tree: clean (.claude/settings.local.json のみ変更、運用上無視で OK)
+直近のコミット: 973fea2 feat: product soft-delete redesign, cart auto-notify, multi-category AI extract, Plate UI
+push: ✅ origin/main へ反映済 (Vercel 本番デプロイ走行中)
 ```
 
-**未コミットの主な追加ファイル**:
-- `components/ui/{Tag,Emblem,StatusDot,PlateCorner,Card,Button,index}.tsx`
-- `components/admin/CustomerProfile.tsx`
-- `lib/ai/{allocation-suggest,chat-reply,comment-generate}.ts`
-- `app/api/ai/{suggest-allocation,generate-comment,suggest-reply}/route.ts`
-- `outputs/db/migration_customer_profile.sql`
-- `outputs/design-mockups/`（モックアップ）
-- `docs/releases/2026-05-09-plate-redesign.md`
-- `docs/HANDOFF.md`（本ファイル）
-
-### 動作確認済み
+### 動作確認済み（本 session で実機検証）
 
 - `npm run build` ✅
 - `npx tsc --noEmit` ✅
-- ログイン画面 200 OK
-- dev サーバは停止済み
+- 商品削除（注文ゼロ / 確定前注文あり / 注文確定済の 3 パターン全て soft-delete）
+- アーカイブから復元
+- カート内削除商品の自動消去 + チャット通知 + 未読バッジ Realtime 増分
+- AI ラベル抽出（ドイツワイン + 日本酒 御前酒 / 岡山 で動作確認）
+- AI コメント自動生成（ラベル抽出後に chain）
+
+### 未検証の P0 項目（次セッション推奨）
+
+- [ ] 顧客カルテ編集・保存（tier / taste_tags / internal_note）
+- [ ] チャット右ペイン stats 表示（buyer_stats view）
+- [ ] AI 割当提案（`/admin/allocations/{productId}` の 3 ボタン）
+- [ ] AI チャット返信文案（composer 右の「⚡ AI」ボタン）
 
 ---
 
@@ -74,17 +99,14 @@ npm run dev                     # http://localhost:3000
 
 ## 3. 次タスク（優先度順）
 
-### 🔴 P0 — まず確認したいこと
+### 🔴 P0 — 残った検証項目（5 月 9 日 夕方までで未着手）
 
-- [ ] **DB マイグレーションが実際に動いているかランタイム確認**
-  - `/admin/buyers/{id}/edit` を開いて顧客カルテ（tier ボタン / 嗜好タグ / 店主メモ）を編集 → 保存できるか
-  - `/admin/chat/{buyerId}` で右ペインに stats（注文数・売上など）が表示されるか
-  - 失敗したら型と実 DB のずれを疑う：`types/database.ts` 12〜57 行 + `outputs/db/migration_customer_profile.sql`
+- [ ] **顧客カルテ A** `/admin/buyers/{id}/edit`：tier / 嗜好タグ / 店主メモを編集 → 保存して再表示
+- [ ] **顧客カルテ B** `/admin/chat/{buyerId}`：右ペインに 30日売上 / 累計売上 / 累計注文数 / 最終注文日 が出るか
+- [ ] **AI 割当提案** `/admin/allocations/{productId}` の「AI 比例 / VIP優先 / 先着順」3 ボタン
+- [ ] **AI チャット返信文案** チャット composer 右の「⚡ AI」ボタン
 
-- [ ] **AI 機能の動作確認**（ANTHROPIC_API_KEY が必要）
-  - `/admin/products/new` にラベル画像 → AI 抽出 → コメント欄の「⚡ AIで生成」ボタン
-  - 割当待ちの商品があれば `/admin/allocations/{productId}` で「AI 比例 / VIP優先 / 先着順」ボタン
-  - チャットの composer 右の「⚡ AI」ボタン
+検証で詰まった場合の参考: `docs/incidents/incident-2026-05-09-002.md`〜`-008.md` で同種症状を漁る
 
 ### 🟡 P1 — ユーザー指示の残タスク（前回の終了時点）
 
@@ -197,6 +219,23 @@ npm run dev                     # http://localhost:3000
 - **Anthropic SDK 直叩き**（`@anthropic-ai/sdk`）。モデル `claude-sonnet-4-6`
 - **AI Gateway 移行は保留**（hooks が頻繁に勧めてくるが、現状の commit a6adce0 で「ローカルデモは直叩きに戻す」と決まっている）
 - API ルートは全部 `requireAdmin()` で認可、`maxDuration` 30〜60s、Fluid Compute / Node.js
+- **コメント生成は ProductForm のボタンではなく** ラベル抽出 chain で自動生成（commit 973fea2）。NewProductPanel が extract-label → generate-comment を await して seed に流す
+- **ラベル抽出は全カテゴリ対応**（ワイン / 日本酒 / 焼酎 / ジン / ウイスキー / その他）。`product_category` と `prefecture` を JSON で返す。`type` は category に応じて意味が変わる（ワイン: 辛口/中辛口、日本酒: 純米/吟醸、焼酎: 麦/芋）
+
+### 商品削除と soft-delete
+
+- **常に soft-delete**（`products.deleted_at` を NOW() に）。ハード削除パスは無し（commit 973fea2）。物理削除が必要なら future-improvements 経由
+- 一覧クエリは全箇所で `WHERE deleted_at IS NULL` 必須。アーカイブビューは `?view=archived` で `IS NOT NULL`
+- buyer の `order_items` INSERT は **DB トリガー** で削除済商品を弾く（race 対策）
+- 削除前モーダル: `getProductDeleteImpact` で確定前注文を引いて表示
+- カート内商品が削除された buyer には service-role client で **自動チャット通知**（dedup: `cart_archive_notifications` PK 競合）
+- buyer 側ヘッダー / ボトムナビは Realtime で未読バッジ即時 +1（mounted ゲート必須）
+
+### dev / 検証パターン
+
+- **dev サーバ起動と同時に persistent Monitor を必ず仕込む**（memory `feedback_dev_monitor_always_on.md`）。Hydration / TypeError / PostgrestError を tail し、AbortError は除外
+- **dedup を使う機能の検証時は事前 DELETE が必須**（memory `feedback_dedup_test_cleanup.md`）。例: `DELETE FROM cart_archive_notifications;`
+- migration ファイル末尾に **`NOTIFY pgrst, 'reload schema';`** を必ず入れる（memory `feedback_supabase_pgrst_notify.md`）
 - レスポンスは `{ success: true, ... } | { success: false, error }` の判別共用体
 
 ### sed 一括置換のコツ

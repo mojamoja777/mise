@@ -27,6 +27,43 @@ function fallbackComment(e: WineExtractionResult): string | null {
 }
 
 /**
+ * 抽出結果のテクニカルデータ（appellation / 度数 / 認証 / 亜硫酸 / 濾過 / 輸入元 / 甘辛 / 備考）を
+ * 改行区切りでまとめる。フォームの構造化フィールドに入らない情報を comment 末尾に保持する。
+ * 想定小売価格帯は意図的に出力しない（買い手向け文書に混入するのを避けるため、incident-001 参照）。
+ */
+function buildMetadataLines(e: WineExtractionResult): string {
+  const lines: string[] = [];
+  if (e.appellation) lines.push(`原産地呼称: ${e.appellation}`);
+  if (e.alcohol_percent != null) lines.push(`アルコール度数: ${e.alcohol_percent}%`);
+  if (e.volume_ml != null) lines.push(`容量: ${e.volume_ml}ml`);
+  if (e.certifications && e.certifications.length > 0) {
+    lines.push(`認証: ${e.certifications.join(", ")}`);
+  }
+  if (e.additives && e.additives !== "不明") lines.push(`亜硫酸: ${e.additives}`);
+  if (e.filtration && e.filtration !== "不明") lines.push(`濾過: ${e.filtration}`);
+  if (e.importer) lines.push(`輸入元: ${e.importer}`);
+  if (e.type && e.type !== "不明") lines.push(`タイプ: ${e.type}`);
+  if (e.notes) lines.push(`備考: ${e.notes}`);
+  return lines.join("\n");
+}
+
+/**
+ * polished comment（AI 生成 or fallback）+ metadata を `\n\n---\n` で結合。
+ * AI コメントが上、参考情報のテクニカルデータが下。
+ */
+function composeComment(
+  polished: string | null,
+  extracted: WineExtractionResult
+): string | null {
+  const top = polished ?? extracted.tasting_note ?? "";
+  const meta = buildMetadataLines(extracted);
+  if (!top && !meta) return null;
+  if (!meta) return top;
+  if (!top) return meta;
+  return `${top}\n\n---\n${meta}`;
+}
+
+/**
  * Mise の ProductForm が想定するワインタイプは「赤 / 白 / ロゼ / スパークリング / オレンジ」。
  * AI スキーマの category（赤/白/ロゼ/スパークリング/オレンジ/酒精強化）から、
  * フォームに合うものだけマップする。
@@ -216,13 +253,27 @@ async function fetchPolishedComment(seed: Partial<Product>): Promise<string | nu
 }
 
 export function NewProductPanel({ action }: Props) {
+  // seed / files / extractorReset を内部 state にする
+  // extractorReset は AILabelExtractor の key として使い、クリア時に画像選択・抽出結果ごと remount
   const [seed, setSeed] = useState<Partial<Product> | null>(null);
   const [files, setFiles] = useState<File[]>([]);
+  const [extractorEpoch, setExtractorEpoch] = useState(0);
 
-  // useEffect 経由で AILabelExtractor から file 配列を貰うため stable な参照にする
   const handleFilesChange = useCallback((next: File[]) => {
     setFiles(next);
   }, []);
+
+  function handleClear() {
+    if (
+      !window.confirm(
+        "AI 抽出結果と画像選択をクリアして空のフォームに戻します。よろしいですか？"
+      )
+    )
+      return;
+    setSeed(null);
+    setFiles([]);
+    setExtractorEpoch((n) => n + 1);
+  }
 
   // seed が変わるたびに ProductForm を remount して defaultValue を反映する
   const formKey = useMemo(
@@ -231,21 +282,37 @@ export function NewProductPanel({ action }: Props) {
         ? `${seed.name ?? ""}|${seed.producer ?? ""}|${seed.vintage ?? ""}|${
             seed.region ?? ""
           }`
-        : "blank",
-    [seed]
+        : `blank-${extractorEpoch}`,
+    [seed, extractorEpoch]
   );
+
+  const hasContent = seed !== null || files.length > 0;
 
   return (
     <>
       <AILabelExtractor
+        key={extractorEpoch}
         onExtracted={async (data) => {
           const initialSeed = toProductSeed(data);
-          // 抽出フィールドを使って polished コメントを生成。失敗しても fallback (tasting_note) が残る
           const polished = await fetchPolishedComment(initialSeed);
-          setSeed(polished ? { ...initialSeed, comment: polished } : initialSeed);
+          // polished AI コメント + テクニカルデータ（appellation / 度数 / 認証 等）を結合
+          setSeed({ ...initialSeed, comment: composeComment(polished, data) });
         }}
         onFilesChange={handleFilesChange}
       />
+
+      {hasContent && (
+        <div className="flex justify-end mt-3 mb-3">
+          <button
+            type="button"
+            onClick={handleClear}
+            className="text-xs px-3 py-1.5 border border-rule text-ink-3 hover:text-crimson hover:border-crimson rounded-lg transition-colors"
+          >
+            ✕ クリアして最初から
+          </button>
+        </div>
+      )}
+
       <div className="bg-white rounded-xl border border-rule p-6">
         <ProductForm
           key={formKey}
