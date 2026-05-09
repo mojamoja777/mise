@@ -131,9 +131,10 @@ body {
   height: 1px;
   background: var(--color-plate);
 }
+/* 上下に二重線の枠を入れる装飾。grid container にも被せて使うため
+   height は固定せず content に合わせる（旧版の height:4px は子要素 overflow の原因だった）*/
 .double-rule {
   position: relative;
-  height: 4px;
   border-top: 1px solid var(--color-rule-strong);
   border-bottom: 1px solid var(--color-rule-strong);
 }
