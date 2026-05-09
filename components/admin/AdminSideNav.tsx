@@ -71,8 +71,11 @@ export function AdminSideNav({ chatUnread = 0 }: Props) {
         <div className="space-y-0.5">{settingsItems.map(renderItem)}</div>
       </nav>
 
-      <div className="border-t border-rule px-4 py-4">
+      <div className="border-t border-rule px-4 py-3 flex items-center justify-between gap-2">
         <LogoutButton />
+        <kbd className="text-[10px] caps text-ink-3 border border-rule rounded px-1.5 py-0.5 whitespace-nowrap" title="グローバル検索">
+          ⌘K
+        </kbd>
       </div>
     </aside>
   );

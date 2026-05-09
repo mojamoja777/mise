@@ -3,6 +3,7 @@
 
 import { Suspense } from "react";
 import { AdminSideNav } from "@/components/admin/AdminSideNav";
+import { CommandPalette } from "@/components/ui/CommandPalette";
 import { requireAdmin } from "@/lib/auth";
 import { countAdminChatUnread } from "@/lib/chat";
 
@@ -26,6 +27,7 @@ export default function AdminLayout({
         <AdminSideNavWithUnread />
       </Suspense>
       <main className="flex-1 overflow-auto">{children}</main>
+      <CommandPalette role="admin" />
     </div>
   );
 }

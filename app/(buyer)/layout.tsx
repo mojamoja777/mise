@@ -5,6 +5,7 @@ import { Suspense } from "react";
 import { CartProvider } from "@/lib/cart-context";
 import { BuyerHeader } from "@/components/buyer/BuyerHeader";
 import { BuyerBottomNav } from "@/components/buyer/BuyerBottomNav";
+import { CommandPalette } from "@/components/ui/CommandPalette";
 import { requireBuyer } from "@/lib/auth";
 import { countBuyerChatUnread } from "@/lib/chat";
 
@@ -64,6 +65,7 @@ export default function BuyerLayout({
         <Suspense fallback={<nav className="fixed bottom-0 left-0 right-0 h-16 bg-white border-t border-rule" />}>
           <BuyerBottomNavWithUnread />
         </Suspense>
+        <CommandPalette role="buyer" />
       </div>
     </CartProvider>
   );
