@@ -1,6 +1,6 @@
 # Mise — Claude Code 引き継ぎ資料
 
-最終更新: 2026-05-09 (夜) / 担当ブランチ: `main` / コミット: `97dadcf` (push 済 → Vercel 本番デプロイ走行中)
+最終更新: 2026-05-10 (深夜) / 担当ブランチ: `main` / コミット: `3a6a666` (push 済 → Vercel 本番デプロイ済)
 
 ---
 
@@ -44,9 +44,39 @@
 
 ```
 working tree: clean (.claude/settings.local.json のみ変更、運用上無視で OK)
-直近のコミット: 973fea2 feat: product soft-delete redesign, cart auto-notify, multi-category AI extract, Plate UI
-push: ✅ origin/main へ反映済 (Vercel 本番デプロイ走行中)
+直近のコミット: 3a6a666 feat: 商品台帳の画像 + 商品名セルを詳細ページへの Link に
+push: ✅ origin/main へ反映済 (Vercel 本番デプロイ済)
 ```
+
+### 5/10 セッションで追加実装
+
+#### Plate デザイン Phase 4 完了
+- 詳細 7 ページに Plate ヘッダー + PlateCorner + ornament 適用
+- components 9 ファイルの inline hex を Plate トークンに統一
+- 背景を SVG `<feTurbulence>` ベース（Pattern 06 和紙）に + 暖色寄り `#fffdf3` paper-cream に
+- `.card-float`（通常）/ `.card-ledger`（帳簿系）の 2 クラスでコンテンツを背景から浮かせる
+- 左サイドバーは `paper-pale #f1ece0`（本文より暗め）
+
+#### 機能追加
+- ⌘K グローバル検索（cmdk + /api/search、admin: 商品+店舗 / buyer: 商品のみ）
+- 商品台帳 → 商品詳細 (read-only) → 編集 の 2 段階フロー
+- 注文一覧専用ページ `/admin/orders` を独立、ダッシュボードは BI 向けプレースホルダ化
+- ダッシュボード KPI strip 各カードを該当ページへの Link に
+- 「販売終了」バッジを過去注文に表示（products.deleted_at 参照）
+- ダッシュ Low-stock シグナル（在庫 ≤ 3 の販売中商品を 4 列カード）
+- buyer カタログ「あなたの嗜好に合う商品」(taste_tags × 商品 fuzzy match)
+- 注文確定時に taste_tags 自動学習（country/region/category/grape_variety）
+- 督促ワークフロー（overdue 請求書 → 1 クリックリマインドメール）
+- 顧客情報更新後に顧客台帳へ自動 redirect
+
+#### 重要な fix
+- `.double-rule` の height:4px 撤廃（grid 子要素 overflow バグ）
+- cmdk `shouldFilter={false}` でサーバ filter 結果をそのまま表示
+
+### memory に追加された feedback（次セッションで自動 load）
+- knowledge_keeping / no_destructive_db / vercel_hook_skills / supabase_pgrst_notify
+- use_server_type_export / nextjs16_render_revalidate / suspense_provider_hydration
+- dedup_test_cleanup / dev_monitor_always_on
 
 ### 動作確認済み（本 session で実機検証）
 
