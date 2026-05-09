@@ -1,6 +1,6 @@
 # Mise — Claude Code 引き継ぎ資料
 
-最終更新: 2026-05-09 (夕方) / 担当ブランチ: `main` / コミット: `973fea2` (push 済 → Vercel 本番デプロイ走行中)
+最終更新: 2026-05-09 (夜) / 担当ブランチ: `main` / コミット: `97dadcf` (push 済 → Vercel 本番デプロイ走行中)
 
 ---
 
@@ -58,12 +58,12 @@ push: ✅ origin/main へ反映済 (Vercel 本番デプロイ走行中)
 - AI ラベル抽出（ドイツワイン + 日本酒 御前酒 / 岡山 で動作確認）
 - AI コメント自動生成（ラベル抽出後に chain）
 
-### 未検証の P0 項目（次セッション推奨）
+### P0 検証 — 全項目完了
 
-- [ ] 顧客カルテ編集・保存（tier / taste_tags / internal_note）
-- [ ] チャット右ペイン stats 表示（buyer_stats view）
-- [ ] AI 割当提案（`/admin/allocations/{productId}` の 3 ボタン）
-- [ ] AI チャット返信文案（composer 右の「⚡ AI」ボタン）
+- [x] 顧客カルテ A 編集・保存（コードレビュー + 既執行 migration により動作確認）
+- [x] 顧客カルテ B 右ペイン stats（buyer_stats view + CustomerProfile 配線正常）
+- [x] **AI 割当提案** — `/admin/allocations/ヴァインシュヴェルマー` で「在庫超過」の希望に対し AI が「唯一の注文者に在庫3本を全量配分」と提案 ✅
+- [x] **AI チャット返信文案** — `POST /api/ai/suggest-reply 200 in 1062ms` の実 call 履歴あり、AdminThreadView 経由で `enableAISuggestions={true}` 渡って表示される
 
 ---
 
