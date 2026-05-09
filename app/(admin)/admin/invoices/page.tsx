@@ -2,7 +2,10 @@ import Link from "next/link";
 import { Download, FileText } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { GenerateInvoicesButton } from "@/components/admin/GenerateInvoicesButton";
+import { RemindInvoiceButton } from "@/components/admin/RemindInvoiceButton";
 import { PlateCorner, Tag } from "@/components/ui";
+import { computeDueDateIso } from "@/lib/invoices";
+import { requireAdmin } from "@/lib/auth";
 
 type Props = {
   searchParams: Promise<{ month?: string }>;
@@ -40,7 +43,27 @@ export default async function AdminInvoicesPage({ searchParams }: Props) {
 
   const { data: invoices, error } = await query;
 
+  // tenant の payment_terms_days を取得して due_date を計算
+  const auth = await requireAdmin();
+  let paymentTermsDays: number | null = null;
+  if (auth.ok) {
+    const { data: me } = await auth.supabase
+      .from("users")
+      .select("tenant_id")
+      .eq("id", auth.user.id)
+      .single();
+    if (me?.tenant_id) {
+      const { data: tenant } = await auth.supabase
+        .from("tenants")
+        .select("payment_terms_days")
+        .eq("id", me.tenant_id)
+        .single();
+      paymentTermsDays = tenant?.payment_terms_days ?? null;
+    }
+  }
+
   const months = Array.from(new Set(invoices?.map((inv) => inv.period_start.slice(0, 7)) ?? []));
+  const todayMs = Date.now();
 
   return (
     <div className="px-10 pt-7 pb-10 relative">
@@ -105,6 +128,7 @@ export default async function AdminInvoicesPage({ searchParams }: Props) {
               <th className="text-right py-3 caps w-32">合計（税込）</th>
               <th className="text-left py-3 caps w-28">発行日</th>
               <th className="text-center py-3 caps w-16">PDF</th>
+              <th className="text-right py-3 caps w-24">督促</th>
             </tr>
           </thead>
           <tbody>
@@ -114,6 +138,11 @@ export default async function AdminInvoicesPage({ searchParams }: Props) {
                 new Date(invoice.updated_at).getTime() -
                   new Date(invoice.issued_at).getTime() >
                 60_000;
+              const dueIso = computeDueDateIso(invoice.period_end, paymentTermsDays);
+              const daysOverdue = dueIso
+                ? Math.floor((todayMs - new Date(dueIso).getTime()) / (1000 * 60 * 60 * 24))
+                : 0;
+              const isOverdue = daysOverdue > 0;
               return (
                 <tr key={invoice.id} className="border-b border-rule hover:bg-paper-2 transition-colors">
                   <td className="py-3.5">
@@ -132,6 +161,11 @@ export default async function AdminInvoicesPage({ searchParams }: Props) {
                       {buyer?.company_name ?? "—"}
                     </Link>
                     {revised && <Tag variant="amber" className="ml-2">修正あり</Tag>}
+                    {isOverdue && (
+                      <Tag variant="crimson" className="ml-2">
+                        {daysOverdue}日超過
+                      </Tag>
+                    )}
                   </td>
                   <td className="text-ink-2 text-xs plate-num">
                     {invoice.period_start} 〜 {invoice.period_end}
@@ -150,6 +184,15 @@ export default async function AdminInvoicesPage({ searchParams }: Props) {
                       <FileText className="w-3.5 h-3.5" />
                       DL
                     </a>
+                  </td>
+                  <td className="text-right">
+                    {isOverdue && buyer && (
+                      <RemindInvoiceButton
+                        invoiceId={invoice.id}
+                        buyerName={buyer.company_name}
+                        daysOverdue={daysOverdue}
+                      />
+                    )}
                   </td>
                 </tr>
               );

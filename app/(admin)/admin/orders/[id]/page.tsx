@@ -40,7 +40,8 @@ export default async function AdminOrderDetailPage({ params }: Props) {
           name,
           producer,
           region,
-          is_allocation
+          is_allocation,
+          deleted_at
         )
       )
     `
@@ -112,6 +113,7 @@ export default async function AdminOrderDetailPage({ params }: Props) {
                 producer: string | null;
                 region: string | null;
                 is_allocation?: boolean;
+                deleted_at?: string | null;
               } | null;
               const finalQty = item.allocated_quantity ?? item.quantity;
               const showRequested =
@@ -119,8 +121,13 @@ export default async function AdminOrderDetailPage({ params }: Props) {
               return (
                 <div key={item.id} className="flex justify-between items-start">
                   <div className="flex-1 pr-3">
-                    <p className="text-sm font-medium text-ink">
+                    <p className="text-sm font-medium text-ink flex items-center gap-2 flex-wrap">
                       {product?.name ?? "—"}
+                      {product?.deleted_at && (
+                        <span className="inline-flex items-center px-1.5 py-0.5 text-[10px] border border-ink-3 text-ink-3 rounded-full">
+                          販売終了
+                        </span>
+                      )}
                     </p>
                     {(product?.producer || product?.region) && (
                       <p className="text-xs text-ink-3">

@@ -1,12 +1,17 @@
 // app/(admin)/admin/invoices/actions.ts
-// 請求書のサーバーアクション（手動生成・編集）
+// 請求書のサーバーアクション（手動生成・編集・督促）
 
 "use server";
 
+import { createElement } from "react";
 import { revalidatePath } from "next/cache";
 import { requireAdmin } from "@/lib/auth";
-import { generateInvoicesForMonth } from "@/lib/invoices";
+import { generateInvoicesForMonth, computeDueDateIso } from "@/lib/invoices";
 import { summarizeTax } from "@/lib/tax";
+import { sendNotificationEmail } from "@/lib/mailer";
+import { InvoiceReminderEmail } from "@/lib/email/InvoiceReminder";
+import { getBuyerEmail } from "@/lib/email/recipients";
+import { appUrl } from "@/lib/url";
 
 /**
  * 指定月の請求書を手動生成する（admin用）
@@ -123,5 +128,86 @@ export async function updateInvoiceAction(
 
   revalidatePath(`/admin/invoices/${invoiceId}`);
   revalidatePath("/admin/invoices");
+  return { ok: true };
+}
+
+/**
+ * 期限超過請求書の督促メールを送信する
+ */
+export async function sendInvoiceReminderAction(
+  invoiceId: string
+): Promise<{ ok: boolean; error?: string }> {
+  const auth = await requireAdmin();
+  if (!auth.ok) return { ok: false, error: auth.error };
+  const supabase = auth.supabase;
+
+  const { data: invoice } = await supabase
+    .from("invoices")
+    .select(
+      `
+      id,
+      buyer_id,
+      period_start,
+      period_end,
+      total_amount,
+      users!inner ( company_name, tenant_id )
+    `
+    )
+    .eq("id", invoiceId)
+    .single();
+
+  if (!invoice) return { ok: false, error: "請求書が見つかりません" };
+
+  const buyer = invoice.users as { company_name: string; tenant_id: string } | null;
+  if (!buyer) return { ok: false, error: "請求先が取得できません" };
+
+  // tenant の payment_terms_days で due_date を計算
+  const { data: tenant } = await supabase
+    .from("tenants")
+    .select("payment_terms_days")
+    .eq("id", buyer.tenant_id)
+    .single();
+
+  const dueDateIso = computeDueDateIso(
+    invoice.period_end,
+    tenant?.payment_terms_days ?? null
+  );
+  if (!dueDateIso) {
+    return { ok: false, error: "支払期限が設定されていません" };
+  }
+  const dueDate = new Date(dueDateIso);
+  const now = new Date();
+  const daysOverdue = Math.floor(
+    (now.getTime() - dueDate.getTime()) / (1000 * 60 * 60 * 24)
+  );
+  if (daysOverdue <= 0) {
+    return { ok: false, error: "支払期限内です" };
+  }
+
+  const buyerEmail = await getBuyerEmail(invoice.buyer_id);
+  if (!buyerEmail) {
+    return { ok: false, error: "送信先メールアドレスが取得できません" };
+  }
+
+  const periodLabel = invoice.period_start.slice(0, 7).replace("-", "年") + "月";
+  const dueDateLabel = dueDate.toLocaleDateString("ja-JP", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  });
+
+  await sendNotificationEmail({
+    to: [buyerEmail],
+    subject: `【お支払いのご確認】${periodLabel} 請求書 ${daysOverdue}日経過`,
+    react: createElement(InvoiceReminderEmail, {
+      buyerName: buyer.company_name,
+      periodLabel,
+      totalAmount: Number(invoice.total_amount),
+      dueDateLabel,
+      daysOverdue,
+      invoiceUrl: appUrl(`/buyer/invoices/${invoice.id}`),
+    }),
+  });
+
   return { ok: true };
 }

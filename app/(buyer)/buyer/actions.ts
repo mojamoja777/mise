@@ -316,7 +316,69 @@ export async function createOrder(
     allocationItems,
   });
 
+  // 嗜好タグの自動学習：注文した商品の country / region / category / grape_variety / type を
+  // users.taste_tags にユニオンで積み増し（最大 30 件で頭打ち）。失敗しても注文成功は維持。
+  await learnTasteTags(supabase, user.id, productIds).catch(() => {
+    // 学習失敗はログにも残さず、注文体験を妨げない
+  });
+
   return { error: null, normalOrderId, allocationOrderId };
+}
+
+/**
+ * 注文した商品の特徴 (country / region / category / grape_variety / type) を
+ * users.taste_tags にユニオンで追加する。
+ *
+ * - 既存タグと重複する値はスキップ
+ * - 全件で 30 件を超えたら古い順に切り詰め（FIFO）
+ * - 短すぎ (< 2 char) や 'その他' / '不明' / null は除外
+ */
+async function learnTasteTags(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  userId: string,
+  productIds: string[]
+): Promise<void> {
+  if (productIds.length === 0) return;
+
+  const [{ data: products }, { data: me }] = await Promise.all([
+    supabase
+      .from("products")
+      .select("country, region, category, grape_variety, type")
+      .in("id", productIds),
+    supabase.from("users").select("taste_tags").eq("id", userId).single(),
+  ]);
+
+  if (!products || products.length === 0) return;
+
+  // 商品から候補タグを収集（grape_variety はカンマ・読点で split）
+  const candidates = new Set<string>();
+  for (const p of products) {
+    const fields = [p.country, p.region, p.category, p.type];
+    for (const f of fields) {
+      if (typeof f === "string" && f.length >= 2 && f !== "その他" && f !== "不明") {
+        candidates.add(f.trim());
+      }
+    }
+    if (typeof p.grape_variety === "string" && p.grape_variety.length > 0) {
+      for (const g of p.grape_variety.split(/[,、]/)) {
+        const trimmed = g.trim();
+        if (trimmed.length >= 2) candidates.add(trimmed);
+      }
+    }
+  }
+
+  if (candidates.size === 0) return;
+
+  const existing = new Set(
+    ((me?.taste_tags ?? []) as string[]).map((t) => t.trim()).filter(Boolean)
+  );
+  const newTags = Array.from(candidates).filter((t) => !existing.has(t));
+  if (newTags.length === 0) return;
+
+  // 既存 + 新規 を最新優先で結合、上限 30 件に切り詰め
+  const merged = [...newTags, ...Array.from(existing)].slice(0, 30);
+
+  await supabase.from("users").update({ taste_tags: merged }).eq("id", userId);
 }
 
 async function notifyAdminsOfNewOrder(

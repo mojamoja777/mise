@@ -61,7 +61,7 @@ export default async function AdminDashboard({ searchParams }: Props) {
   today.setHours(0, 0, 0, 0);
   const todayIso = today.toISOString();
 
-  const [pendingCount, allocPendingCount, todayRevenue] = await Promise.all([
+  const [pendingCount, allocPendingCount, todayRevenue, lowStock] = await Promise.all([
     supabase
       .from("orders")
       .select("id", { count: "exact", head: true })
@@ -75,6 +75,17 @@ export default async function AdminDashboard({ searchParams }: Props) {
       .select("order_items(unit_price, quantity, allocated_quantity)")
       .gte("ordered_at", todayIso)
       .neq("status", "cancelled"),
+    // 在庫 ≤ 3 の販売中商品（割当商品は対象外、希望本数 vs 在庫が独立のため）
+    supabase
+      .from("products")
+      .select("id, name, producer, stock, region, vintage")
+      .is("deleted_at", null)
+      .eq("is_active", true)
+      .eq("status", "published")
+      .eq("is_allocation", false)
+      .lte("stock", 3)
+      .order("stock", { ascending: true })
+      .limit(8),
   ]);
 
   const todayTotal = (todayRevenue.data ?? []).reduce((sum, o) => {
@@ -148,6 +159,48 @@ export default async function AdminDashboard({ searchParams }: Props) {
           <p className="text-xs mt-2 font-italic-serif text-ink-3">サイドバーに表示</p>
         </div>
       </div>
+
+      {/* Low-stock signal — 在庫 ≤ 3 の販売中商品があれば横並びで警告 */}
+      {lowStock.data && lowStock.data.length > 0 && (
+        <section className="mb-10">
+          <div className="flex items-baseline justify-between border-b border-rule pb-3.5 mb-4">
+            <div>
+              <p className="caps text-amber">Plate IV · Low Stock Signal</p>
+              <h2 className="font-serif text-2xl mt-1 text-amber">在庫が少ない商品</h2>
+            </div>
+            <Link href="/admin/products" className="caps text-ink-3 hover:text-plate transition-colors">
+              商品台帳へ →
+            </Link>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            {lowStock.data.map((p) => (
+              <Link
+                key={p.id}
+                href={`/admin/products/${p.id}/edit`}
+                className="card-float p-3 hover:border-amber transition-colors group"
+              >
+                <p className="font-serif text-sm leading-tight truncate">
+                  {p.name}
+                  {p.vintage && (
+                    <span className="text-ink-3 ml-1 plate-num text-xs">{p.vintage}</span>
+                  )}
+                </p>
+                {(p.producer || p.region) && (
+                  <p className="caps mt-1 truncate text-ink-3 text-[10px]">
+                    {[p.producer, p.region].filter(Boolean).join(" · ")}
+                  </p>
+                )}
+                <div className="mt-2 flex items-baseline justify-between">
+                  <span className="caps text-ink-3">残</span>
+                  <span className={`font-serif plate-num text-2xl ${p.stock === 0 ? "text-crimson" : "text-amber"}`}>
+                    {p.stock}
+                  </span>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
 
       <p className="ornament my-10" />
 

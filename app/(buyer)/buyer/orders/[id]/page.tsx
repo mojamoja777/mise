@@ -42,7 +42,8 @@ export default async function OrderDetailPage({ params }: Props) {
           name,
           producer,
           region,
-          is_allocation
+          is_allocation,
+          deleted_at
         )
       )
     `,
@@ -157,15 +158,21 @@ export default async function OrderDetailPage({ params }: Props) {
                 name: string;
                 is_allocation?: boolean;
                 producer?: string | null;
+                deleted_at?: string | null;
               } | null;
               const finalQty = item.allocated_quantity ?? item.quantity;
               const showRequested = isPendingAllocation && product?.is_allocation;
               return (
                 <tr key={item.id} className="border-b border-rule last:border-b-0">
                   <td className="px-5 py-3.5">
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 flex-wrap">
                       <span className="font-serif">{product?.name ?? "—"}</span>
                       {product?.is_allocation && <Tag variant="amber">allocation</Tag>}
+                      {product?.deleted_at && (
+                        <span className="inline-flex items-center px-1.5 py-0.5 text-[10px] border border-ink-3 text-ink-3 rounded-full">
+                          販売終了
+                        </span>
+                      )}
                     </div>
                     {product?.producer && (
                       <p className="caps mt-0.5">{product.producer}</p>
