@@ -1,0 +1,813 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Mise — AI ソムリエ提案 (buyer 側 mock)</title>
+<style>
+  :root {
+    --paper-cream: #fffdf3;
+    --paper-pale: #f1ece0;
+    --paper: #e8e2d4;
+    --paper-2: #ddd5c2;
+    --ink: #1c1a17;
+    --ink-2: #3a342c;
+    --ink-3: #6a6258;
+    --ink-4: #9c917c;
+    --plate: #1c3a5c;
+    --plate-deep: #0e2238;
+    --rule: #c9beaa;
+    --rule-strong: #998d72;
+    --gold: #b8860b;
+    --vermilion: #b94e3d;
+    --forest: #2d6a3d;
+    --forest-bg: #c9d9c8;
+    --amber: #b07515;
+    --amber-bg: #ead7a8;
+    --crimson: #962020;
+    --crimson-bg: #ecc6c0;
+    --violet: #4d2e6e;
+    --violet-bg: #d6c8e0;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { min-height: 100%; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Hiragino Mincho ProN", serif;
+    color: var(--ink);
+    background-color: var(--paper-cream);
+    background-image:
+      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch' seed='3'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0.07 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+    background-size: 200px 200px;
+    background-attachment: fixed;
+  }
+
+  .caps { text-transform: uppercase; font-size: 11px; letter-spacing: 0.18em; color: var(--ink-3); }
+  .italic { font-family: "Times New Roman", serif; font-style: italic; }
+  .num { font-family: "Times New Roman", serif; font-style: italic; }
+  .serif { font-family: "Times New Roman", serif; }
+
+  .card {
+    background: #fbf8ed;
+    border: 1px solid var(--rule);
+    border-radius: 12px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05), 0 4px 12px rgba(0,0,0,0.08);
+  }
+
+  /* === Page banner === */
+  .banner {
+    background: var(--violet-bg);
+    border-bottom: 1px solid var(--violet);
+    padding: 12px 24px;
+    text-align: center;
+    color: var(--violet);
+    font-style: italic;
+    font-family: "Times New Roman", serif;
+    font-size: 13px;
+  }
+
+  /* === 2 view layout === */
+  .views {
+    display: grid;
+    grid-template-columns: 480px 1fr;
+    gap: 30px;
+    padding: 30px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .view-label {
+    text-align: center;
+    font-style: italic;
+    color: var(--ink-3);
+    font-size: 12px;
+    margin-bottom: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+  }
+
+  /* === LEFT: チャット画面（mobile-ish） === */
+  .phone {
+    width: 100%;
+    background: var(--paper-cream);
+    border: 1px solid var(--rule-strong);
+    border-radius: 18px;
+    overflow: hidden;
+    height: 760px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.10);
+  }
+  .phone .header {
+    padding: 14px 18px;
+    background: var(--paper);
+    border-bottom: 1px solid var(--rule);
+  }
+  .phone .header .top {
+    font-size: 10px;
+    color: var(--ink-3);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+  }
+  .phone .header h1 {
+    font-family: "Times New Roman", serif;
+    font-size: 22px;
+    margin-top: 2px;
+    font-weight: normal;
+  }
+  .phone .header .desc {
+    font-size: 11px;
+    color: var(--ink-3);
+    font-style: italic;
+    margin-top: 2px;
+  }
+  .phone .messages {
+    flex: 1;
+    padding: 16px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  /* Chat bubbles */
+  .bubble {
+    max-width: 82%;
+    padding: 10px 14px;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+  .bubble.left {
+    align-self: flex-start;
+    background: var(--paper-pale);
+    border: 1px solid var(--rule);
+    border-radius: 12px 12px 12px 4px;
+  }
+  .bubble.right {
+    align-self: flex-end;
+    background: var(--plate);
+    color: var(--paper-cream);
+    border-radius: 12px 12px 4px 12px;
+  }
+  .bubble.left .meta { color: var(--ink-3); font-size: 10px; margin-top: 4px; }
+  .bubble.right .meta { color: var(--paper-2); font-size: 10px; margin-top: 4px; }
+
+  /* Proposal card embedded in chat */
+  .proposal-card {
+    align-self: stretch;
+    width: 100%;
+    background: #fbf8ed;
+    border: 1px solid var(--rule);
+    border-left: 3px solid var(--violet);
+    border-radius: 6px;
+    padding: 14px 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+  .proposal-card .head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 8px;
+    margin-bottom: 10px;
+  }
+  .proposal-card .head .title {
+    font-family: "Times New Roman", serif;
+    font-size: 15px;
+  }
+  .proposal-card .head .badge {
+    font-size: 9px;
+    color: var(--violet);
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+  }
+  .proposal-card .summary {
+    font-style: italic;
+    color: var(--ink-3);
+    font-size: 12px;
+    line-height: 1.6;
+    margin-bottom: 10px;
+  }
+  .proposal-card .items {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .item {
+    display: grid;
+    grid-template-columns: 22px 1fr auto;
+    gap: 8px;
+    align-items: start;
+    padding: 6px 0;
+    border-top: 1px dashed var(--rule);
+    font-size: 12px;
+  }
+  .item:first-child { border-top: none; }
+  .item .check {
+    width: 16px; height: 16px;
+    border: 1px solid var(--rule-strong);
+    border-radius: 3px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    color: var(--paper-cream);
+    margin-top: 2px;
+  }
+  .item.adopted .check {
+    background: var(--forest);
+    border-color: var(--forest);
+  }
+  .item .body .name {
+    font-family: "Times New Roman", serif;
+    font-size: 13px;
+    line-height: 1.3;
+  }
+  .item .body .why {
+    font-size: 10px;
+    color: var(--ink-3);
+    font-style: italic;
+    margin-top: 2px;
+    line-height: 1.5;
+  }
+  .item .price {
+    font-family: "Times New Roman", serif;
+    font-style: italic;
+    font-size: 13px;
+    color: var(--plate);
+    text-align: right;
+    white-space: nowrap;
+  }
+  .proposal-card .actions {
+    display: flex;
+    gap: 6px;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid var(--rule);
+  }
+  .proposal-card .actions button {
+    flex: 1;
+    border: 1px solid var(--rule-strong);
+    background: transparent;
+    padding: 8px;
+    font-size: 11px;
+    font-family: inherit;
+    cursor: pointer;
+    border-radius: 4px;
+    color: var(--ink-2);
+  }
+  .proposal-card .actions .primary {
+    background: var(--plate);
+    color: var(--paper-cream);
+    border-color: var(--plate);
+    flex: 1.4;
+  }
+  .proposal-card .footer-note {
+    font-size: 10px;
+    color: var(--ink-4);
+    text-align: center;
+    margin-top: 8px;
+    font-style: italic;
+  }
+
+  /* Bottom composer */
+  .phone .composer {
+    border-top: 1px solid var(--rule);
+    padding: 10px 14px;
+    background: var(--paper);
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+  .phone .composer input {
+    flex: 1;
+    border: 1px solid var(--rule-strong);
+    padding: 8px 10px;
+    font-size: 12px;
+    font-family: inherit;
+    background: var(--paper-cream);
+  }
+  .phone .composer .send {
+    background: var(--plate);
+    color: var(--paper-cream);
+    border: none;
+    padding: 8px 12px;
+    font-size: 12px;
+    cursor: pointer;
+  }
+
+  /* Bottom nav (mobile bottom tabs) */
+  .phone .bottom-nav {
+    border-top: 1px solid var(--rule);
+    background: var(--paper-cream);
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    padding: 8px 4px;
+  }
+  .phone .bottom-nav .tab {
+    text-align: center;
+    font-size: 9px;
+    color: var(--ink-3);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 4px 2px;
+  }
+  .phone .bottom-nav .tab.active { color: var(--plate); }
+  .phone .bottom-nav .tab .icon { font-size: 14px; display: block; margin-bottom: 2px; }
+  .phone .bottom-nav .tab.has-badge { position: relative; }
+  .phone .bottom-nav .tab .badge {
+    position: absolute;
+    top: 2px; right: 12px;
+    background: var(--vermilion);
+    color: var(--paper-cream);
+    border-radius: 50%;
+    font-size: 9px;
+    width: 14px;
+    height: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-style: italic;
+    font-family: "Times New Roman", serif;
+  }
+
+  /* === RIGHT: 履歴タブ === */
+  .history-page {
+    background: var(--paper-cream);
+    border: 1px solid var(--rule);
+    border-radius: 12px;
+    height: 760px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+  }
+  .history-header {
+    padding: 22px 28px 18px;
+    border-bottom: 1px solid var(--rule);
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+  }
+  .history-header h2 {
+    font-family: "Times New Roman", serif;
+    font-size: 32px;
+    font-weight: normal;
+    margin-top: 4px;
+  }
+  .history-header .desc {
+    font-size: 12px;
+    color: var(--ink-3);
+    font-style: italic;
+    margin-top: 4px;
+  }
+  .history-header .stats {
+    text-align: right;
+    color: var(--ink-3);
+    font-size: 11px;
+  }
+  .history-header .stats .num-big {
+    font-family: "Times New Roman", serif;
+    font-style: italic;
+    font-size: 28px;
+    color: var(--plate);
+    line-height: 1;
+  }
+
+  .history-body {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 0;
+    overflow: hidden;
+  }
+  .history-list {
+    border-right: 1px solid var(--rule);
+    overflow-y: auto;
+  }
+  .history-list .row {
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--rule);
+    cursor: pointer;
+    transition: background 0.1s;
+  }
+  .history-list .row:hover { background: var(--paper-pale); }
+  .history-list .row.active { background: var(--paper-pale); border-left: 3px solid var(--violet); padding-left: 15px; }
+  .history-list .row .date { font-size: 10px; color: var(--ink-3); text-transform: uppercase; letter-spacing: 0.1em; }
+  .history-list .row .summary { font-family: "Times New Roman", serif; font-size: 14px; margin-top: 2px; }
+  .history-list .row .meta { font-size: 11px; color: var(--ink-3); margin-top: 4px; display: flex; gap: 8px; }
+  .history-list .row .badge {
+    font-size: 9px;
+    padding: 1px 6px;
+    border-radius: 3px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .history-list .row .badge.new { background: var(--vermilion); color: var(--paper-cream); }
+  .history-list .row .badge.adopted { background: var(--forest-bg); color: var(--forest); }
+  .history-list .row .badge.skipped { background: var(--paper-2); color: var(--ink-3); }
+
+  .history-detail {
+    padding: 24px 28px;
+    overflow-y: auto;
+  }
+  .history-detail h3 {
+    font-family: "Times New Roman", serif;
+    font-size: 22px;
+    font-weight: normal;
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 10px;
+    margin-bottom: 14px;
+  }
+  .history-detail .meta-row {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 14px;
+    font-size: 11px;
+    color: var(--ink-3);
+  }
+  .history-detail .meta-row .item {
+    display: block;
+    border: none;
+    padding: 0;
+    grid-template-columns: none;
+  }
+  .history-detail .meta-row .label {
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--ink-3);
+    font-size: 10px;
+  }
+  .history-detail .meta-row .val {
+    font-family: "Times New Roman", serif;
+    font-style: italic;
+    color: var(--plate);
+    font-size: 16px;
+    margin-top: 1px;
+    display: block;
+  }
+
+  .summary-box {
+    background: var(--violet-bg);
+    border-left: 3px solid var(--violet);
+    padding: 12px 16px;
+    margin-bottom: 16px;
+    font-style: italic;
+    font-size: 12px;
+    color: var(--ink-2);
+    line-height: 1.6;
+    border-radius: 0 6px 6px 0;
+  }
+
+  .detail-items { display: flex; flex-direction: column; gap: 10px; }
+  .detail-items .item {
+    display: grid;
+    grid-template-columns: 24px 1fr auto;
+    gap: 10px;
+    padding: 10px;
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    background: #fbf8ed;
+    align-items: start;
+    font-size: 12px;
+  }
+  .detail-items .item .check {
+    width: 18px; height: 18px;
+    border: 1px solid var(--rule-strong);
+    border-radius: 3px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--paper-cream);
+    font-size: 11px;
+    margin-top: 2px;
+  }
+  .detail-items .item.adopted .check { background: var(--forest); border-color: var(--forest); }
+  .detail-items .item.skipped { opacity: 0.5; }
+  .detail-items .name { font-family: "Times New Roman", serif; font-size: 13px; }
+  .detail-items .why { font-size: 10px; color: var(--ink-3); font-style: italic; margin-top: 2px; line-height: 1.5; }
+  .detail-items .price { font-family: "Times New Roman", serif; font-style: italic; color: var(--plate); font-size: 13px; text-align: right; white-space: nowrap; }
+
+  .footer-actions {
+    margin-top: 16px;
+    padding-top: 14px;
+    border-top: 1px solid var(--rule);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .footer-actions .total {
+    font-family: "Times New Roman", serif;
+    font-style: italic;
+    color: var(--ink-3);
+  }
+  .footer-actions .total .num {
+    color: var(--plate);
+    font-size: 18px;
+    margin-left: 6px;
+  }
+  .footer-actions .right { display: flex; gap: 6px; }
+  .footer-actions button {
+    border: 1px solid var(--rule-strong);
+    background: transparent;
+    padding: 8px 14px;
+    font-size: 11px;
+    cursor: pointer;
+    border-radius: 4px;
+    font-family: inherit;
+    color: var(--ink-2);
+  }
+  .footer-actions button.primary {
+    background: var(--plate);
+    color: var(--paper-cream);
+    border-color: var(--plate);
+  }
+</style>
+</head>
+<body>
+
+<div class="banner">
+  ⚡ buyer 視点モック — admin が送った AI 仕入提案がどう届くか（C: チャット投稿 + D: 履歴タブ）
+</div>
+
+<div class="views">
+
+  <!-- ============ LEFT: チャット画面（受信時の見え方） ============ -->
+  <div>
+    <p class="view-label">View C — チャットに届く瞬間</p>
+
+    <div class="phone">
+
+      <div class="header">
+        <p class="top">Plate X · Inquiry</p>
+        <h1>お問い合わせ</h1>
+        <p class="desc">酒屋とのやり取りをここで行います</p>
+      </div>
+
+      <div class="messages">
+
+        <div class="bubble left">
+          いつもお世話になっております。10月のメニュー入れ替えに合わせて、いくつかワインのご提案をまとめました。
+          <p class="meta">14:22 · Mise 店主</p>
+        </div>
+
+        <!-- AI proposal card embedded -->
+        <div class="proposal-card">
+          <div class="head">
+            <span class="title">⚡ 仕入提案 5 本</span>
+            <span class="badge">AI Sommelier</span>
+          </div>
+          <p class="summary">
+            白系統が手薄、特にミネラル系。10月の蟹・松茸メニューに合わせて、不足カテゴリを埋める構成にしました。
+            ご検討ください。
+          </p>
+          <div class="items">
+            <div class="item adopted">
+              <span class="check">✓</span>
+              <div class="body">
+                <p class="name">Donnhoff Riesling GG 2022</p>
+                <p class="why">ミネラル系白を補強・蟹コースに最適</p>
+              </div>
+              <span class="price">¥7,500</span>
+            </div>
+            <div class="item adopted">
+              <span class="check">✓</span>
+              <div class="body">
+                <p class="name">Cassiopée Bourgogne Rouge "Les Argillats" 2022</p>
+                <p class="why">既存ピノに新ヴィンテージを補充</p>
+              </div>
+              <span class="price">¥12,000</span>
+            </div>
+            <div class="item adopted">
+              <span class="check">✓</span>
+              <div class="body">
+                <p class="name">Marie-Courtin Concordance BdN 2018</p>
+                <p class="why">スパーク品切れリスク、自然派の幅も広がる</p>
+              </div>
+              <span class="price">¥9,800</span>
+            </div>
+            <div class="item">
+              <span class="check"></span>
+              <div class="body">
+                <p class="name">Ca' del Vegro Nebbiolo d'Alba 2021</p>
+                <p class="why">松茸との古典ペアリング、イタリア未開拓</p>
+              </div>
+              <span class="price">¥6,500</span>
+            </div>
+            <div class="item adopted">
+              <span class="check">✓</span>
+              <div class="body">
+                <p class="name">シャトー・メルシャン 甲州 グリ・ド・グリ 2023</p>
+                <p class="why">和食ペアリング・国産・店主の語りネタ</p>
+              </div>
+              <span class="price">¥4,200</span>
+            </div>
+          </div>
+          <div class="actions">
+            <button>4 本まとめてカートへ</button>
+            <button class="primary">詳細を見る →</button>
+          </div>
+          <p class="footer-note">この提案を見る・編集する → 「届いた提案」タブへ</p>
+        </div>
+
+        <div class="bubble right">
+          ありがとうございます！4 本まとめてカートに入れました、月末の発注に合わせて確定します。
+          <p class="meta">14:38 · あなた</p>
+        </div>
+
+        <div class="bubble left">
+          かしこまりました。ネッビオーロも興味あれば次回サンプルお持ちします🍷
+          <p class="meta">14:40 · Mise 店主</p>
+        </div>
+
+      </div>
+
+      <div class="composer">
+        <input type="text" placeholder="メッセージを入力" />
+        <button class="send">送信</button>
+      </div>
+
+      <!-- Mobile bottom nav -->
+      <div class="bottom-nav">
+        <div class="tab"><span class="icon">🍷</span>商品</div>
+        <div class="tab has-badge"><span class="icon">🛒</span>カート<span class="badge">4</span></div>
+        <div class="tab"><span class="icon">📋</span>履歴</div>
+        <div class="tab has-badge"><span class="icon">📑</span>提案<span class="badge">2</span></div>
+        <div class="tab active"><span class="icon">💬</span>チャット</div>
+      </div>
+
+    </div>
+
+    <p style="text-align: center; margin-top: 14px; font-size: 12px; color: var(--ink-3); font-style: italic;">
+      ↑ 5 本のうち 4 本にチェック → 「カートへ」で一気に投入。<br />
+      下部ナビに「提案」タブが新設、未読バッジで気づける。
+    </p>
+  </div>
+
+  <!-- ============ RIGHT: 履歴タブ ============ -->
+  <div>
+    <p class="view-label">View D — 提案タブ（履歴 + 詳細）</p>
+
+    <div class="history-page">
+
+      <div class="history-header">
+        <div>
+          <p class="caps">Plate XII · Suggestions</p>
+          <h2>届いた提案</h2>
+          <p class="desc">Mise 店主からの仕入提案を時系列で</p>
+        </div>
+        <div class="stats">
+          <p class="num-big italic">12</p>
+          <p>累計提案</p>
+        </div>
+      </div>
+
+      <div class="history-body">
+
+        <!-- Left list -->
+        <div class="history-list">
+          <div class="row active">
+            <p class="date">2026/10/02 · 14:22</p>
+            <p class="summary">10月メニュー入替 提案</p>
+            <div class="meta">
+              <span>5 本</span>
+              <span class="badge new">未読</span>
+              <span>4/5 採用予定</span>
+            </div>
+          </div>
+          <div class="row">
+            <p class="date">2026/09/03 · 11:15</p>
+            <p class="summary">秋ロゼ・補強提案</p>
+            <div class="meta">
+              <span>3 本</span>
+              <span class="badge adopted">2 採用</span>
+            </div>
+          </div>
+          <div class="row">
+            <p class="date">2026/08/05 · 09:48</p>
+            <p class="summary">夏のクラフトジン提案</p>
+            <div class="meta">
+              <span>4 本</span>
+              <span class="badge adopted">3 採用</span>
+            </div>
+          </div>
+          <div class="row">
+            <p class="date">2026/07/14 · 15:30</p>
+            <p class="summary">梅雨明けシャンパーニュ</p>
+            <div class="meta">
+              <span>5 本</span>
+              <span class="badge adopted">5 採用</span>
+            </div>
+          </div>
+          <div class="row">
+            <p class="date">2026/06/02 · 10:12</p>
+            <p class="summary">夏白の補充</p>
+            <div class="meta">
+              <span>4 本</span>
+              <span class="badge skipped">見送り</span>
+            </div>
+          </div>
+          <div class="row">
+            <p class="date">2026/05/06 · 13:40</p>
+            <p class="summary">5月限定ロゼ提案</p>
+            <div class="meta">
+              <span>3 本</span>
+              <span class="badge adopted">2 採用</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right detail (selected: 10月メニュー入替) -->
+        <div class="history-detail">
+          <h3>10月メニュー入替 提案</h3>
+          <div class="meta-row">
+            <div>
+              <p class="label">届いた</p>
+              <span class="val">10/02 14:22</span>
+            </div>
+            <div>
+              <p class="label">送信元</p>
+              <span class="val">Mise 店主</span>
+            </div>
+            <div>
+              <p class="label">本数</p>
+              <span class="val">5</span>
+            </div>
+            <div>
+              <p class="label">予算上限</p>
+              <span class="val">¥80,000</span>
+            </div>
+          </div>
+
+          <div class="summary-box">
+            白系統が手薄、特にミネラル系。10月の蟹・松茸メニューに合わせて、不足カテゴリを埋める構成です。
+            ブルゴーニュとシャンパーニュは在庫期間が 3 ヶ月超のため新ヴィンテージを補充、
+            tier に合わせて生産者を 1 段階上げています。
+          </div>
+
+          <div class="detail-items">
+            <div class="item adopted">
+              <span class="check">✓</span>
+              <div>
+                <p class="name">Donnhoff Riesling GG 2022</p>
+                <p class="why">ミネラル系白を補強・蟹コースに最適 ・ Donnhoff（ナーエ・ドイツ）</p>
+              </div>
+              <span class="price">¥7,500</span>
+            </div>
+            <div class="item adopted">
+              <span class="check">✓</span>
+              <div>
+                <p class="name">Cassiopée Bourgogne Rouge "Les Argillats" 2022</p>
+                <p class="why">既存ピノに新ヴィンテージを補充 ・ コート・ド・ボーヌ</p>
+              </div>
+              <span class="price">¥12,000</span>
+            </div>
+            <div class="item adopted">
+              <span class="check">✓</span>
+              <div>
+                <p class="name">Marie-Courtin "Concordance" BdN 2018</p>
+                <p class="why">スパーク品切れリスク、自然派の幅 ・ コート・デ・バール</p>
+              </div>
+              <span class="price">¥9,800</span>
+            </div>
+            <div class="item skipped">
+              <span class="check"></span>
+              <div>
+                <p class="name">Ca' del Vegro Nebbiolo d'Alba 2021</p>
+                <p class="why">松茸との古典ペアリング、イタリア未開拓 ・ ピエモンテ</p>
+              </div>
+              <span class="price">¥6,500</span>
+            </div>
+            <div class="item adopted">
+              <span class="check">✓</span>
+              <div>
+                <p class="name">シャトー・メルシャン 甲州 グリ・ド・グリ 2023</p>
+                <p class="why">和食ペアリング・国産 ・ 山梨</p>
+              </div>
+              <span class="price">¥4,200</span>
+            </div>
+          </div>
+
+          <div class="footer-actions">
+            <p class="total italic">採用 4 本 <span class="num">¥34,500</span></p>
+            <div class="right">
+              <button>店主へ返信</button>
+              <button>カートへ追加</button>
+              <button class="primary">注文確定へ進む →</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <p style="text-align: center; margin-top: 14px; font-size: 12px; color: var(--ink-3); font-style: italic;">
+      ↑ 過去の全提案がここに溜まる。<br />
+      左の一覧で時系列、右で詳細。「採用 / 見送り」が一目で分かる。
+    </p>
+  </div>
+
+</div>
+
+</body>
+</html>
