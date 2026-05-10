@@ -122,9 +122,10 @@ export async function createBuyerAction(
   const password = generatePassword();
 
   // Supabase Auth アカウントを作成（ロールを app_metadata にセット）
+  // email は必ず小文字化（Supabase Auth は大文字混じりを invalid format として弾く）
   const { data: authResult, error: authError } =
     await serviceClient.auth.admin.createUser({
-      email: input.email.trim(),
+      email: email,
       password,
       email_confirm: true,
       app_metadata: { role: "buyer" },
