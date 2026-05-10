@@ -1,0 +1,502 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Mise — 店舗情報取込（Instagram のみ）</title>
+<style>
+  :root {
+    --paper-cream: #fffdf3;
+    --paper-pale: #f1ece0;
+    --paper: #e8e2d4;
+    --paper-2: #ddd5c2;
+    --ink: #1c1a17;
+    --ink-2: #3a342c;
+    --ink-3: #6a6258;
+    --ink-4: #9c917c;
+    --plate: #1c3a5c;
+    --plate-deep: #0e2238;
+    --rule: #c9beaa;
+    --rule-strong: #998d72;
+    --gold: #b8860b;
+    --vermilion: #b94e3d;
+    --forest: #2d6a3d;
+    --forest-bg: #c9d9c8;
+    --amber: #b07515;
+    --amber-bg: #ead7a8;
+    --crimson: #962020;
+    --violet: #4d2e6e;
+    --violet-bg: #d6c8e0;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { min-height: 100%; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Hiragino Mincho ProN", serif;
+    color: var(--ink);
+    background-color: var(--paper-cream);
+    background-image:
+      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch' seed='3'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0.07 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+    background-size: 200px 200px;
+    background-attachment: fixed;
+  }
+
+  .page { max-width: 1280px; margin: 0 auto; padding: 32px 40px 80px; position: relative; }
+  .corner {
+    position: absolute; top: 28px; right: 40px;
+    border: 1px solid var(--ink); padding: 2px 10px;
+    font-family: "Times New Roman", serif; font-style: italic; font-size: 14px;
+  }
+
+  .caps { text-transform: uppercase; font-size: 11px; letter-spacing: 0.18em; color: var(--ink-3); }
+  .italic { font-family: "Times New Roman", serif; font-style: italic; }
+  .card {
+    background: #fbf8ed;
+    border: 1px solid var(--rule);
+    border-radius: 12px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05), 0 4px 12px rgba(0,0,0,0.08);
+  }
+
+  .real-data-banner {
+    background: var(--forest-bg);
+    border: 1px solid var(--forest);
+    color: var(--forest);
+    padding: 10px 18px;
+    font-family: "Times New Roman", serif;
+    font-style: italic;
+    font-size: 13px;
+    margin-bottom: 14px;
+    border-radius: 4px;
+  }
+  .warning-banner {
+    background: var(--amber-bg);
+    border: 1px solid var(--amber);
+    color: var(--amber);
+    padding: 10px 18px;
+    font-family: "Times New Roman", serif;
+    font-style: italic;
+    font-size: 13px;
+    margin-bottom: 24px;
+    border-radius: 4px;
+  }
+
+  header.top {
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 22px;
+    margin-bottom: 24px;
+  }
+  header.top .breadcrumb { font-size: 12px; color: var(--ink-3); margin-bottom: 8px; }
+  header.top h1 {
+    font-family: "Times New Roman", serif;
+    font-size: 48px; font-weight: normal;
+    letter-spacing: -0.01em; margin-top: 4px;
+  }
+  header.top .desc { font-style: italic; color: var(--ink-3); font-size: 14px; margin-top: 6px; }
+  header.top .buyer-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    margin-top: 12px; padding: 6px 14px;
+    border: 1px solid var(--rule-strong); border-radius: 4px;
+    background: var(--paper-pale);
+    font-family: "Times New Roman", serif; font-size: 14px;
+  }
+  header.top .buyer-badge .tier { font-size: 10px; color: var(--gold); text-transform: uppercase; letter-spacing: 0.15em; }
+
+  .completeness {
+    background: var(--paper-pale);
+    border: 1px solid var(--rule-strong);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 28px;
+  }
+  .completeness .top { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 12px; }
+  .completeness .top h2 { font-family: "Times New Roman", serif; font-size: 16px; font-weight: normal; }
+  .completeness .top .pct { font-family: "Times New Roman", serif; font-style: italic; font-size: 28px; color: var(--plate); }
+  .completeness .meter { height: 8px; background: var(--paper-2); border-radius: 4px; overflow: hidden; margin-bottom: 14px; }
+  .completeness .fill { height: 100%; background: linear-gradient(90deg, var(--forest), var(--gold)); width: 55%; }
+  .completeness .tiers { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+  .completeness .tier-item {
+    text-align: left; padding: 8px 10px;
+    background: var(--paper-cream); border: 1px solid var(--rule); border-radius: 4px; font-size: 11px;
+  }
+  .completeness .tier-item.done { background: var(--forest-bg); border-color: var(--forest); }
+  .completeness .tier-item.partial { background: #fdf0d3; border-color: var(--gold); }
+  .completeness .tier-item.empty { opacity: 0.6; border-style: dashed; }
+  .completeness .tier-item .label { color: var(--ink-3); text-transform: uppercase; letter-spacing: 0.1em; font-size: 9px; }
+  .completeness .tier-item .name { font-family: "Times New Roman", serif; margin-top: 2px; }
+  .completeness .tier-item .status { font-style: italic; margin-top: 4px; font-size: 10px; }
+  .completeness .tier-item.done .status { color: var(--forest); }
+  .completeness .tier-item.partial .status { color: var(--gold); }
+  .completeness .tier-item.empty .status { color: var(--ink-4); }
+
+  .grid { display: grid; grid-template-columns: 1fr 1.4fr; gap: 24px; }
+
+  .input-block { padding: 22px 24px; }
+  .input-block h3 { font-family: "Times New Roman", serif; font-size: 20px; font-weight: normal; margin-bottom: 4px; }
+  .input-block .sub { font-style: italic; color: var(--ink-3); font-size: 12px; margin-bottom: 18px; line-height: 1.6; }
+
+  .field { margin-bottom: 16px; }
+  .field .label { font-size: 11px; color: var(--ink-3); text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 4px; }
+  .field input {
+    width: 100%; padding: 10px 12px;
+    border: 1px solid var(--rule); background: var(--paper-cream);
+    font-family: inherit; font-size: 12px;
+  }
+  .field .status { font-size: 11px; margin-top: 4px; color: var(--ink-3); font-style: italic; }
+  .field .status.warn { color: var(--amber); }
+  .field .status.empty { color: var(--ink-4); }
+  .field .status.ok { color: var(--forest); }
+
+  .vision-upload {
+    margin-top: 20px;
+    padding: 16px;
+    border: 2px dashed var(--violet);
+    border-radius: 8px;
+    background: var(--violet-bg);
+    text-align: center;
+  }
+  .vision-upload .icon { font-size: 28px; color: var(--violet); }
+  .vision-upload h4 {
+    font-family: "Times New Roman", serif;
+    font-size: 16px;
+    font-weight: normal;
+    margin: 6px 0;
+    color: var(--violet);
+  }
+  .vision-upload p {
+    font-size: 11px;
+    color: var(--ink-2);
+    font-style: italic;
+    line-height: 1.6;
+    margin-bottom: 10px;
+  }
+  .vision-upload .upload-btn {
+    background: var(--violet);
+    color: var(--paper-cream);
+    border: none;
+    padding: 8px 18px;
+    font-family: inherit;
+    font-size: 12px;
+    cursor: pointer;
+    border-radius: 4px;
+  }
+  .vision-upload .uploaded {
+    margin-top: 10px;
+    padding: 6px 10px;
+    background: var(--paper-cream);
+    border: 1px solid var(--violet);
+    border-radius: 4px;
+    font-size: 11px;
+    color: var(--violet);
+    font-family: "Times New Roman", serif;
+    font-style: italic;
+  }
+
+  .preview-block { padding: 22px 24px; }
+  .preview-header { display: flex; align-items: baseline; justify-content: space-between; border-bottom: 1px solid var(--rule); padding-bottom: 12px; margin-bottom: 18px; }
+  .preview-header h3 { font-family: "Times New Roman", serif; font-size: 22px; font-weight: normal; }
+  .preview-header .meta { font-size: 11px; color: var(--ink-3); text-align: right; }
+  .preview-header .meta .badge {
+    display: inline-block; background: var(--violet-bg); color: var(--violet);
+    padding: 2px 8px; border-radius: 3px; font-size: 10px;
+    font-style: italic; font-family: "Times New Roman", serif; margin-bottom: 2px;
+  }
+
+  .extract-row { padding: 12px 0; border-bottom: 1px dashed var(--rule); }
+  .extract-row:last-child { border-bottom: none; }
+  .extract-row .row-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; }
+  .extract-row .key { font-size: 11px; color: var(--ink-3); text-transform: uppercase; letter-spacing: 0.15em; }
+  .extract-row .source {
+    font-size: 9px; padding: 1px 6px; border-radius: 3px;
+    font-style: italic; font-family: "Times New Roman", serif;
+  }
+  .extract-row .source.ig-bio { background: #fdf0e6; color: #b94e3d; }
+  .extract-row .source.ig-vision { background: var(--violet-bg); color: var(--violet); }
+  .extract-row .source.gp { background: var(--violet-bg); color: var(--violet); }
+  .extract-row .source.inferred { background: var(--paper-2); color: var(--ink-3); border: 1px dashed var(--ink-4); }
+  .extract-row .value { font-family: "Times New Roman", serif; font-size: 16px; color: var(--ink); }
+  .extract-row .value.list {
+    display: flex; flex-wrap: wrap; gap: 6px; font-size: 12px; margin-top: 4px;
+  }
+  .extract-row .value.list span {
+    background: var(--paper-pale); border: 1px solid var(--rule-strong);
+    padding: 3px 8px; border-radius: 3px; font-style: italic;
+  }
+  .extract-row .value.long { font-size: 13px; color: var(--ink-2); line-height: 1.7; font-style: italic; margin-top: 4px; }
+  .extract-row .value.confident { color: var(--ink); }
+  .extract-row .value.guess { color: var(--ink-3); font-style: italic; }
+  .extract-row .value.guess::before { content: '【推測】 '; color: var(--ink-4); font-size: 10px; font-style: normal; text-transform: uppercase; letter-spacing: 0.1em; }
+
+  .note-row {
+    margin-top: 18px; padding: 14px 18px;
+    background: var(--violet-bg); border-left: 3px solid var(--violet);
+    border-radius: 0 6px 6px 0;
+  }
+  .note-row .head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 6px; }
+  .note-row h4 { font-family: "Times New Roman", serif; font-size: 14px; font-weight: normal; color: var(--violet); }
+  .note-row .badge { font-size: 9px; color: var(--violet); text-transform: uppercase; letter-spacing: 0.18em; }
+  .note-row p { font-size: 12px; color: var(--ink-2); line-height: 1.7; font-style: italic; }
+
+  .preview-footer {
+    margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--rule);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .preview-footer .left { font-size: 11px; color: var(--ink-3); font-style: italic; }
+  .preview-footer .right { display: flex; gap: 8px; }
+  .preview-footer button {
+    padding: 8px 16px; border: 1px solid var(--rule-strong);
+    background: transparent; cursor: pointer; font-size: 12px;
+    font-family: inherit; color: var(--ink-2); border-radius: 4px;
+  }
+  .preview-footer .primary { background: var(--plate); color: var(--paper-cream); border-color: var(--plate); }
+
+  .legend {
+    margin-top: 18px; padding: 12px 16px;
+    background: var(--paper-pale); border-radius: 6px;
+    font-size: 11px; color: var(--ink-3);
+    display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+  }
+  .legend .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 4px; vertical-align: middle; }
+  .legend .dot.ig-bio { background: var(--vermilion); }
+  .legend .dot.ig-vision { background: var(--violet); }
+  .legend .dot.inferred { background: var(--ink-4); border: 1px dashed var(--ink-3); }
+</style>
+</head>
+<body>
+
+<div class="page">
+  <div class="corner">№ 07</div>
+
+  <div class="real-data-banner">
+    🎯 Instagram <code style="font-family: monospace; font-size: 11px;">@winestandmatsumoto</code> のスクショ + bio から実データ抽出
+  </div>
+  <div class="warning-banner">
+    ⚠ Instagram は API/スクレイピングがブロックされているため、HP のような全自動取込は不可。bio とスクショアップロードによる AI Vision 解析の組み合わせで補完します
+  </div>
+
+  <header class="top">
+    <p class="breadcrumb">← 顧客台帳に戻る</p>
+    <p class="caps">Plate VII · Buyer Profile · Auto-Enrichment</p>
+    <h1>店舗情報の自動取込</h1>
+    <p class="desc">公開情報から業態・看板料理・季節傾向を取り込んで、AI 提案の精度を上げます</p>
+    <div class="buyer-badge">
+      <span class="italic">ワインスタンド 松本</span>
+      <span class="tier">tier silver</span>
+    </div>
+  </header>
+
+  <!-- 充実度 55% -->
+  <div class="completeness">
+    <div class="top">
+      <h2>プロファイル充実度</h2>
+      <span class="pct">55%</span>
+    </div>
+    <div class="meter"><div class="fill"></div></div>
+    <div class="tiers">
+      <div class="tier-item done">
+        <p class="label">Tier 0</p>
+        <p class="name">基本情報</p>
+        <p class="status">✓ 業態 / 客単価</p>
+      </div>
+      <div class="tier-item done">
+        <p class="label">Tier 1</p>
+        <p class="name">取引履歴</p>
+        <p class="status">✓ 5 件</p>
+      </div>
+      <div class="tier-item done">
+        <p class="label">Tier 2</p>
+        <p class="name">同業態クラスタ</p>
+        <p class="status">✓ ワインバー 8 店</p>
+      </div>
+      <div class="tier-item partial">
+        <p class="label">Tier 3</p>
+        <p class="name">公開情報</p>
+        <p class="status">△ IG bio + Vision のみ</p>
+      </div>
+      <div class="tier-item empty">
+        <p class="label">Tier 4</p>
+        <p class="name">ヒアリング</p>
+        <p class="status">— 0 件</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid">
+
+    <!-- LEFT: URL 入力 + Vision アップロード -->
+    <section class="card input-block">
+      <h3>情報源を登録</h3>
+      <p class="sub">
+        この店舗は HP がなく Instagram のみのため、bio + スクショ AI 解析で情報を補完します。
+      </p>
+
+      <div class="field">
+        <label class="label">公式 HP</label>
+        <input type="url" placeholder="https://..." />
+        <p class="status empty">未登録（HP なしの店舗）</p>
+      </div>
+
+      <div class="field">
+        <label class="label">Instagram</label>
+        <input type="url" value="https://www.instagram.com/winestandmatsumoto/" />
+        <p class="status warn">△ bio のみ取得可（投稿内容は API 制限のため要スクショ）</p>
+      </div>
+
+      <div class="field">
+        <label class="label">Google Maps URL</label>
+        <input type="url" placeholder="「ワインスタンド 松本」で検索" />
+        <p class="status empty">未登録 ・ 自動検索可能</p>
+      </div>
+
+      <!-- Vision upload -->
+      <div class="vision-upload">
+        <p class="icon">📸</p>
+        <h4>Instagram スクショから AI 解析</h4>
+        <p>
+          プロフィール画面・投稿一覧のスクショをアップすると、<br />
+          AI Vision が業態・料理・雰囲気を読み取ります
+        </p>
+        <button class="upload-btn">スクショをアップロード</button>
+        <div class="uploaded">
+          ✓ profile-screenshot.png（1 枚アップロード済）
+        </div>
+      </div>
+    </section>
+
+    <!-- RIGHT: 抽出結果 -->
+    <section class="card preview-block">
+      <div class="preview-header">
+        <div>
+          <p class="caps">Result · Editable</p>
+          <h3>AI が読み取った内容</h3>
+        </div>
+        <div class="meta">
+          <p class="badge">⚡ claude-sonnet-4-6 + Vision</p>
+          <p>3.6s · IG bio + 1 枚解析</p>
+        </div>
+      </div>
+
+      <div class="extract-row">
+        <div class="row-head">
+          <span class="key">店舗名</span>
+          <span class="source ig-bio">IG bio</span>
+        </div>
+        <p class="value">ワインスタンド 松本</p>
+      </div>
+
+      <div class="extract-row">
+        <div class="row-head">
+          <span class="key">⭐ 業態 / コンセプト</span>
+          <span class="source ig-bio">IG bio</span>
+        </div>
+        <p class="value">ナチュラルワインとつまみの店（ワインスタンド形式）</p>
+      </div>
+
+      <div class="extract-row">
+        <div class="row-head">
+          <span class="key">営業時間</span>
+          <span class="source ig-bio">IG bio</span>
+        </div>
+        <p class="value">月-土 17:00-24:00 ／ 祝 13:00-18:00</p>
+      </div>
+
+      <div class="extract-row">
+        <div class="row-head">
+          <span class="key">客層・規模感</span>
+          <span class="source inferred">推定</span>
+        </div>
+        <p class="value guess">フォロワー 4,227 人 / 投稿 37 件 → 中規模で固定客がついている、感度の高いワイン好きが集まる店</p>
+      </div>
+
+      <div class="extract-row">
+        <div class="row-head">
+          <span class="key">店舗開業時期</span>
+          <span class="source ig-vision">Vision（投稿）</span>
+        </div>
+        <p class="value">2025 年 4 月開業（1st anniversary 2026.4.18 投稿から逆算）</p>
+      </div>
+
+      <div class="extract-row">
+        <div class="row-head">
+          <span class="key">⭐ 投稿傾向</span>
+          <span class="source ig-vision">Vision（直近投稿）</span>
+        </div>
+        <p class="value list">
+          <span>チーズ写真多数（Aperi Cheese / Pinta de Mulo）</span>
+          <span>1st Anniversary パーティ（2026.4.18）</span>
+          <span>地域コラボ（COFFEE SHOP MIHARU 3rd Anniversary）</span>
+          <span>花の店内装写真</span>
+        </p>
+      </div>
+
+      <div class="extract-row">
+        <div class="row-head">
+          <span class="key">看板つまみ（推定）</span>
+          <span class="source ig-vision">Vision</span>
+        </div>
+        <p class="value list">
+          <span>Aperi Cheese</span>
+          <span>Pinta de Mulo（スペイン産ハードチーズ）</span>
+          <span>季節のチーズ盛り合わせ</span>
+        </p>
+      </div>
+
+      <div class="extract-row">
+        <div class="row-head">
+          <span class="key">価格帯（推定）</span>
+          <span class="source inferred">推定</span>
+        </div>
+        <p class="value guess">ワインスタンド形式 + ナチュラル系 → グラス ¥1,000-1,800、つまみ ¥800-1,500、客単価 ¥4,000-6,000 と推定</p>
+      </div>
+
+      <div class="extract-row">
+        <div class="row-head">
+          <span class="key">雰囲気・利用シーン</span>
+          <span class="source inferred">推定</span>
+        </div>
+        <p class="value guess">立ち飲み + カウンター中心。1-2 名のサクッと利用、地域コミュニティと繋がりが強い（コラボ投稿あり）。週末は混雑想定</p>
+      </div>
+
+      <div class="extract-row">
+        <div class="row-head">
+          <span class="key">所在地</span>
+          <span class="source inferred">未取得</span>
+        </div>
+        <p class="value guess">IG bio に住所記載なし → Google Maps URL 登録 or 手動入力推奨</p>
+      </div>
+
+      <!-- AI からの提案メモ -->
+      <div class="note-row">
+        <div class="head">
+          <h4>提案にあたっての注意点</h4>
+          <span class="badge">⚡ AI のメモ</span>
+        </div>
+        <p>
+          <strong>ナチュラルワイン専門のワインスタンド</strong>。明確に「自然派 × チーズ」のキャラクターが立っており、
+          グラス売り中心と思われるため、<strong>1 本売り切り想定の小ロット仕入</strong>に強み。
+          チーズ強調から推定すると、<strong>イタリア・スペインの土着品種 や ジュラの自然派</strong> が刺さる可能性。
+          1st anniversary を 2026.4 に迎えたばかりで、新たなセラー充実フェーズの可能性大。
+          まずは Google Maps URL 取得 → 口コミから単価帯と人気銘柄を補強推奨。
+        </p>
+      </div>
+
+      <div class="preview-footer">
+        <p class="left">取込内容は手動で編集可能。【推測】部分は admin が確認・修正してください。</p>
+        <div class="right">
+          <button>キャンセル</button>
+          <button class="primary">プロファイルに反映 ✓</button>
+        </div>
+      </div>
+
+      <div class="legend">
+        <span><span class="dot ig-bio"></span>IG bio 由来</span>
+        <span><span class="dot ig-vision"></span>IG スクショ Vision 由来</span>
+        <span><span class="dot inferred"></span>AI 推定（要確認）</span>
+        <span style="margin-left: auto; font-style: italic;">Google Maps 追加で精度↑</span>
+      </div>
+    </section>
+
+  </div>
+</div>
+
+</body>
+</html>
