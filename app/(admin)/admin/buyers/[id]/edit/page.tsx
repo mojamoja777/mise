@@ -4,7 +4,9 @@ import { ChevronLeft } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { createServiceClient } from "@/lib/supabase/service";
 import { BuyerForm } from "@/components/admin/BuyerForm";
+import { BuyerEnrichmentSection } from "@/components/admin/BuyerEnrichmentSection";
 import { PlateCorner, Tag } from "@/components/ui";
+import type { BuyerProfileEnriched } from "@/types/buyer-enrichment";
 
 type Props = {
   params: Promise<{ id: string }>;
@@ -17,7 +19,7 @@ export default async function EditBuyerPage({ params }: Props) {
   const { data: buyer, error } = await supabase
     .from("users")
     .select(
-      "id, role, company_name, customer_code, postal_code, address, phone, is_active, tier, taste_tags, internal_note",
+      "id, role, company_name, customer_code, postal_code, address, phone, is_active, tier, taste_tags, internal_note, hp_url, instagram_url, gmaps_url, profile_enriched, profile_enriched_at",
     )
     .eq("id", id)
     .eq("role", "buyer")
@@ -63,6 +65,20 @@ export default async function EditBuyerPage({ params }: Props) {
           internal_note: buyer.internal_note,
         }}
       />
+
+      {/* 店舗情報の自動取込（Phase 1: HP のみ） */}
+      <div className="card-float p-6 mt-6">
+        <BuyerEnrichmentSection
+          buyerId={buyer.id}
+          initialHpUrl={buyer.hp_url ?? null}
+          initialInstagramUrl={buyer.instagram_url ?? null}
+          initialGmapsUrl={buyer.gmaps_url ?? null}
+          initialEnriched={
+            (buyer.profile_enriched as BuyerProfileEnriched | null) ?? null
+          }
+          initialEnrichedAt={buyer.profile_enriched_at ?? null}
+        />
+      </div>
 
       <p className="ornament mt-10" />
     </div>

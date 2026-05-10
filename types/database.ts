@@ -24,6 +24,11 @@ export type Database = {
           tier: "gold" | "silver" | "bronze";
           taste_tags: string[];
           internal_note: string | null;
+          hp_url: string | null;
+          instagram_url: string | null;
+          gmaps_url: string | null;
+          profile_enriched: unknown | null;
+          profile_enriched_at: string | null;
         };
         Insert: {
           id: string;
@@ -40,6 +45,11 @@ export type Database = {
           tier?: "gold" | "silver" | "bronze";
           taste_tags?: string[];
           internal_note?: string | null;
+          hp_url?: string | null;
+          instagram_url?: string | null;
+          gmaps_url?: string | null;
+          profile_enriched?: unknown | null;
+          profile_enriched_at?: string | null;
         };
         Update: {
           role?: "admin" | "buyer";
@@ -54,6 +64,11 @@ export type Database = {
           tier?: "gold" | "silver" | "bronze";
           taste_tags?: string[];
           internal_note?: string | null;
+          hp_url?: string | null;
+          instagram_url?: string | null;
+          gmaps_url?: string | null;
+          profile_enriched?: unknown | null;
+          profile_enriched_at?: string | null;
         };
         Relationships: [
           {

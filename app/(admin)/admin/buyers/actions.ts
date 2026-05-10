@@ -227,3 +227,82 @@ export async function toggleBuyerActiveAction(
   revalidatePath(`/admin/buyers/${buyerId}/edit`);
   return { ok: true };
 }
+
+/**
+ * buyer の URL（HP / IG / Gmaps）を保存する。enrich は別アクション。
+ */
+export async function updateBuyerUrlsAction(
+  buyerId: string,
+  input: { hp_url?: string | null; instagram_url?: string | null; gmaps_url?: string | null }
+): Promise<{ ok: boolean; error?: string }> {
+  const guard = await requireAdmin();
+  if (!guard.ok) return { ok: false, error: guard.error };
+  const { supabase, tenantId } = guard;
+
+  const { data: target } = await supabase
+    .from("users")
+    .select("tenant_id, role")
+    .eq("id", buyerId)
+    .single();
+  if (!target || target.tenant_id !== tenantId || target.role !== "buyer") {
+    return { ok: false, error: "対象の飲食店が見つかりません" };
+  }
+
+  const patch: Record<string, string | null> = {};
+  if (input.hp_url !== undefined) patch.hp_url = normalize(input.hp_url) ?? null;
+  if (input.instagram_url !== undefined) patch.instagram_url = normalize(input.instagram_url) ?? null;
+  if (input.gmaps_url !== undefined) patch.gmaps_url = normalize(input.gmaps_url) ?? null;
+
+  const { error } = await supabase.from("users").update(patch).eq("id", buyerId);
+  if (error) return { ok: false, error: `URL 保存に失敗: ${error.message}` };
+
+  revalidatePath(`/admin/buyers/${buyerId}/edit`);
+  return { ok: true };
+}
+
+/**
+ * buyer の HP URL を fetch → AI 抽出 → profile_enriched (jsonb) に保存。
+ * Phase 1 では HP のみ対応。
+ */
+export async function enrichBuyerProfileAction(
+  buyerId: string
+): Promise<{ ok: boolean; error?: string }> {
+  const guard = await requireAdmin();
+  if (!guard.ok) return { ok: false, error: guard.error };
+  const { supabase, tenantId } = guard;
+
+  const { data: target } = await supabase
+    .from("users")
+    .select("tenant_id, role, hp_url")
+    .eq("id", buyerId)
+    .single();
+  if (!target || target.tenant_id !== tenantId || target.role !== "buyer") {
+    return { ok: false, error: "対象の飲食店が見つかりません" };
+  }
+  if (!target.hp_url) {
+    return { ok: false, error: "HP URL が登録されていません" };
+  }
+
+  // dynamic import で client bundle を肥大化させない
+  const { enrichFromHp } = await import("@/lib/ai/buyer-enrich");
+
+  let enriched;
+  try {
+    enriched = await enrichFromHp(target.hp_url);
+  } catch (e) {
+    return { ok: false, error: e instanceof Error ? e.message : "取込に失敗しました" };
+  }
+
+  const { error } = await supabase
+    .from("users")
+    .update({
+      profile_enriched: enriched.data,
+      profile_enriched_at: new Date().toISOString(),
+    })
+    .eq("id", buyerId);
+
+  if (error) return { ok: false, error: `保存に失敗: ${error.message}` };
+
+  revalidatePath(`/admin/buyers/${buyerId}/edit`);
+  return { ok: true };
+}
