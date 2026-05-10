@@ -1,6 +1,12 @@
 # Mise — Claude Code 引き継ぎ資料
 
-最終更新: 2026-05-10 (深夜) / 担当ブランチ: `main` / コミット: `3a6a666` (push 済 → Vercel 本番デプロイ済)
+最終更新: 2026-05-10 (夕方) / 担当ブランチ: `main` / コミット: `596ae7c` (push 済 → Vercel 本番デプロイ済)
+
+> 🔴 **次セッション開始時の最優先タスク**
+> - **未実行マイグレーション 2 本** を Supabase Dashboard で流す（下記「未実行 DB マイグレーション」参照）
+>   - `outputs/db/migration_buyer_enrichment.sql`（飲食店プロファイル取込）
+>   - `outputs/db/migration_buyer_soft_delete.sql`（顧客ソフト削除）
+> - 森田屋さんからのフィードバック確認 → Phase 2 (Google Places) / Phase 3 (AI ソムリエ提案) の優先度判断
 
 ---
 
@@ -44,9 +50,79 @@
 
 ```
 working tree: clean (.claude/settings.local.json のみ変更、運用上無視で OK)
-直近のコミット: 3a6a666 feat: 商品台帳の画像 + 商品名セルを詳細ページへの Link に
+直近のコミット: 596ae7c feat: 顧客（buyer）のソフト削除を実装
 push: ✅ origin/main へ反映済 (Vercel 本番デプロイ済)
 ```
+
+### 5/10 後半セッションで追加実装（夕方〜）
+
+#### 設計モック（outputs/design-mockups/）— 4 枚追加
+- `sommelier-suggest.html` — AI ソムリエ仕入提案 (admin 視点)
+- `sommelier-buyer.html` — buyer 視点 2 ビュー（C チャット投稿 + D 提案タブ）
+- `buyer-info-fetch.html` — 店舗情報の自動取込（充実度バー + 4 ソース）
+- `buyer-info-fetch-empty.html` — 公開情報なし時のフォールバック（同業態クラスタ + ヒアリング）
+- `buyer-info-naru.html` — 実データ版（narusoba.com を WebFetch して抽出）
+- `buyer-info-instagram.html` — Instagram のみ店舗（@winestandmatsumoto 実データ + Vision UI）
+
+#### Phase 1: 飲食店プロファイル自動取込 ✅ 実装済
+- DB: `users` に `hp_url / instagram_url / gmaps_url / profile_enriched (jsonb) / profile_enriched_at`
+- Server Action: `updateBuyerUrlsAction` / `enrichBuyerProfileAction`
+- AI: `lib/ai/buyer-enrich.ts` — HP fetch (10s timeout) + HTML テキスト化 + claude-sonnet-4-6
+- UI: `BuyerEnrichmentSection` を顧客カルテに section 配置
+- ⚠ **migration 未実行**: `outputs/db/migration_buyer_enrichment.sql` を Supabase で要実行
+
+#### 顧客（buyer）のソフト削除 ✅ 実装済
+- DB: `users.deleted_at` 追加 + 部分インデックス
+- Server Action: `deleteBuyerAction` — soft delete + Auth ban 100 年
+- UI: `DeleteBuyerButton` (赤枠、確認モーダル)、edit ページ最下部の Danger zone
+- 一覧 (`/admin/buyers`) は `WHERE deleted_at IS NULL` でフィルタ
+- 重複チェックで「過去に削除済」を別文言で案内
+- ⚠ **migration 未実行**: `outputs/db/migration_buyer_soft_delete.sql` を Supabase で要実行
+
+#### 顧客新規登録の UX 改善
+- 重複時に「○○ として登録済」+ 既存の編集ページへの直リンク表示
+- email を小文字化してから Auth に渡す（大文字混じりが invalid format で弾かれる Supabase 仕様への対応）
+
+### 未実行 DB マイグレーション
+
+次セッションの最初に Supabase Dashboard SQL Editor で実行してください。両方とも末尾に `NOTIFY pgrst, 'reload schema'` 込み、べき等。
+
+```sql
+-- migration_buyer_enrichment.sql
+ALTER TABLE public.users
+  ADD COLUMN IF NOT EXISTS hp_url              text,
+  ADD COLUMN IF NOT EXISTS instagram_url       text,
+  ADD COLUMN IF NOT EXISTS gmaps_url           text,
+  ADD COLUMN IF NOT EXISTS profile_enriched    jsonb,
+  ADD COLUMN IF NOT EXISTS profile_enriched_at timestamptz;
+NOTIFY pgrst, 'reload schema';
+```
+
+```sql
+-- migration_buyer_soft_delete.sql
+ALTER TABLE public.users
+  ADD COLUMN IF NOT EXISTS deleted_at TIMESTAMPTZ NULL;
+CREATE INDEX IF NOT EXISTS idx_users_active
+  ON public.users (created_at DESC)
+  WHERE deleted_at IS NULL;
+NOTIFY pgrst, 'reload schema';
+```
+
+実行後、Cmd+Shift+R して以下動作確認：
+- `/admin/buyers/{naru の id}/edit` で「店舗情報の自動取込」section が表示 → HP に `https://www.narusoba.com` を入れて取込テスト
+- 顧客 edit 最下部に「Danger zone — 顧客を削除」ボタン
+
+### 次セッションで進める Phase 2 / 3
+
+| Phase | 内容 | 前提 |
+|---|---|---|
+| **Phase 2** | Google Places API 統合（口コミから雰囲気・人気メニュー抽出） | API キー取得（無料枠で月 11,000 リクエスト） |
+| **Phase 3** | AI ソムリエ仕入提案（admin で生成 → buyer のチャット + 提案タブで届く） | 森田屋さんの方針確認、buyer 側 UI 設計確認 |
+
+森田屋さんと相談すべきポイント：
+1. Google Places API キーは森田屋側 Google Cloud アカウントで取得するか、Mise 側で持つか
+2. AI 提案を buyer に送る最終確認 UI（送信前 admin プレビュー必須か）
+3. 提案頻度（手動 / 月次 / イベント駆動）
 
 ### 5/10 セッションで追加実装
 
