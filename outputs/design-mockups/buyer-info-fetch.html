@@ -1,0 +1,620 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Mise — 店舗情報の自動取込 (admin mock)</title>
+<style>
+  :root {
+    --paper-cream: #fffdf3;
+    --paper-pale: #f1ece0;
+    --paper: #e8e2d4;
+    --paper-2: #ddd5c2;
+    --ink: #1c1a17;
+    --ink-2: #3a342c;
+    --ink-3: #6a6258;
+    --ink-4: #9c917c;
+    --plate: #1c3a5c;
+    --plate-deep: #0e2238;
+    --rule: #c9beaa;
+    --rule-strong: #998d72;
+    --gold: #b8860b;
+    --vermilion: #b94e3d;
+    --forest: #2d6a3d;
+    --forest-bg: #c9d9c8;
+    --amber: #b07515;
+    --amber-bg: #ead7a8;
+    --crimson: #962020;
+    --crimson-bg: #ecc6c0;
+    --violet: #4d2e6e;
+    --violet-bg: #d6c8e0;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { min-height: 100%; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Hiragino Mincho ProN", serif;
+    color: var(--ink);
+    background-color: var(--paper-cream);
+    background-image:
+      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch' seed='3'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 0.07 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+    background-size: 200px 200px;
+    background-attachment: fixed;
+  }
+
+  .page { max-width: 1280px; margin: 0 auto; padding: 32px 40px 80px; position: relative; }
+
+  .corner {
+    position: absolute;
+    top: 28px; right: 40px;
+    border: 1px solid var(--ink);
+    padding: 2px 10px;
+    font-family: "Times New Roman", serif;
+    font-style: italic;
+    font-size: 14px;
+  }
+
+  .caps { text-transform: uppercase; font-size: 11px; letter-spacing: 0.18em; color: var(--ink-3); }
+  .italic { font-family: "Times New Roman", serif; font-style: italic; }
+  .num { font-family: "Times New Roman", serif; font-style: italic; }
+  .serif { font-family: "Times New Roman", serif; }
+
+  .card {
+    background: #fbf8ed;
+    border: 1px solid var(--rule);
+    border-radius: 12px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05), 0 4px 12px rgba(0,0,0,0.08);
+  }
+
+  /* === Top header === */
+  header.top {
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 22px;
+    margin-bottom: 24px;
+  }
+  header.top .breadcrumb { font-size: 12px; color: var(--ink-3); margin-bottom: 8px; }
+  header.top .breadcrumb a { color: var(--ink-3); text-decoration: none; }
+  header.top h1 {
+    font-family: "Times New Roman", serif;
+    font-size: 48px;
+    font-weight: normal;
+    letter-spacing: -0.01em;
+    margin-top: 4px;
+  }
+  header.top .desc { font-style: italic; color: var(--ink-3); font-size: 14px; margin-top: 6px; }
+  header.top .buyer-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 12px;
+    padding: 6px 14px;
+    border: 1px solid var(--rule-strong);
+    border-radius: 4px;
+    background: var(--paper-pale);
+    font-family: "Times New Roman", serif;
+    font-size: 14px;
+  }
+  header.top .buyer-badge .tier { font-size: 10px; color: var(--gold); text-transform: uppercase; letter-spacing: 0.15em; }
+
+  /* === データ充実度バー === */
+  .completeness {
+    background: var(--paper-pale);
+    border: 1px solid var(--rule-strong);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 28px;
+  }
+  .completeness .top {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+  .completeness .top h2 {
+    font-family: "Times New Roman", serif;
+    font-size: 16px;
+    font-weight: normal;
+  }
+  .completeness .top .pct {
+    font-family: "Times New Roman", serif;
+    font-style: italic;
+    font-size: 28px;
+    color: var(--plate);
+  }
+  .completeness .meter {
+    height: 8px;
+    background: var(--paper-2);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 14px;
+  }
+  .completeness .fill { height: 100%; background: linear-gradient(90deg, var(--forest), var(--gold)); width: 60%; }
+  .completeness .tiers { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+  .completeness .tier-item {
+    text-align: left;
+    padding: 8px 10px;
+    background: var(--paper-cream);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    font-size: 11px;
+  }
+  .completeness .tier-item.done { background: var(--forest-bg); border-color: var(--forest); }
+  .completeness .tier-item .label { color: var(--ink-3); text-transform: uppercase; letter-spacing: 0.1em; font-size: 9px; }
+  .completeness .tier-item .name { font-family: "Times New Roman", serif; margin-top: 2px; }
+  .completeness .tier-item .status { font-style: italic; color: var(--ink-2); margin-top: 4px; font-size: 10px; }
+  .completeness .tier-item.done .status { color: var(--forest); }
+
+  /* === 2 columns: input / preview === */
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1.4fr;
+    gap: 24px;
+  }
+
+  /* Input section */
+  .input-block { padding: 22px 24px; }
+  .input-block h3 {
+    font-family: "Times New Roman", serif;
+    font-size: 20px;
+    font-weight: normal;
+    margin-bottom: 4px;
+  }
+  .input-block .sub {
+    font-style: italic;
+    color: var(--ink-3);
+    font-size: 12px;
+    margin-bottom: 18px;
+    line-height: 1.6;
+  }
+
+  .field { margin-bottom: 16px; }
+  .field .label {
+    font-size: 11px;
+    color: var(--ink-3);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .field .label .source-tag {
+    font-size: 9px;
+    padding: 1px 6px;
+    background: var(--paper-2);
+    border-radius: 3px;
+    color: var(--ink-3);
+    text-transform: none;
+    letter-spacing: 0;
+    font-style: italic;
+    font-family: "Times New Roman", serif;
+  }
+  .field .source-tag.gp { background: var(--violet-bg); color: var(--violet); }
+  .field .source-tag.hp { background: var(--forest-bg); color: var(--forest); }
+  .field input[type="url"], .field input[type="text"] {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--rule);
+    background: var(--paper-cream);
+    font-family: inherit;
+    font-size: 13px;
+  }
+  .field input:focus { outline: none; border-color: var(--plate); }
+  .field .status {
+    font-size: 11px;
+    margin-top: 4px;
+    color: var(--ink-3);
+    font-style: italic;
+  }
+  .field .status.ok { color: var(--forest); }
+  .field .status.warn { color: var(--amber); }
+
+  .fetch-btn {
+    width: 100%;
+    background: var(--plate);
+    color: var(--paper-cream);
+    border: none;
+    padding: 14px;
+    font-family: "Times New Roman", serif;
+    font-size: 15px;
+    cursor: pointer;
+    border-radius: 6px;
+    margin-top: 8px;
+    letter-spacing: 0.05em;
+  }
+  .fetch-btn .icon { color: var(--amber-bg); }
+
+  .hint {
+    margin-top: 18px;
+    padding: 12px 14px;
+    background: var(--paper-pale);
+    border-left: 3px solid var(--ink-3);
+    font-size: 11px;
+    color: var(--ink-2);
+    line-height: 1.6;
+    font-style: italic;
+  }
+  .hint strong { font-style: normal; color: var(--ink); }
+
+  /* Preview section */
+  .preview-block { padding: 22px 24px; }
+  .preview-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 12px;
+    margin-bottom: 18px;
+  }
+  .preview-header h3 {
+    font-family: "Times New Roman", serif;
+    font-size: 22px;
+    font-weight: normal;
+  }
+  .preview-header .meta { font-size: 11px; color: var(--ink-3); text-align: right; }
+  .preview-header .meta .badge {
+    display: inline-block;
+    background: var(--violet-bg);
+    color: var(--violet);
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-size: 10px;
+    font-style: italic;
+    font-family: "Times New Roman", serif;
+    margin-bottom: 2px;
+  }
+
+  .extract-row {
+    padding: 12px 0;
+    border-bottom: 1px dashed var(--rule);
+  }
+  .extract-row:last-child { border-bottom: none; }
+  .extract-row .row-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 6px;
+  }
+  .extract-row .key {
+    font-size: 11px;
+    color: var(--ink-3);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+  }
+  .extract-row .source {
+    font-size: 9px;
+    padding: 1px 6px;
+    border-radius: 3px;
+    font-style: italic;
+    font-family: "Times New Roman", serif;
+  }
+  .extract-row .source.hp { background: var(--forest-bg); color: var(--forest); }
+  .extract-row .source.gp { background: var(--violet-bg); color: var(--violet); }
+  .extract-row .source.manual { background: var(--paper-2); color: var(--ink-3); }
+  .extract-row .value {
+    font-family: "Times New Roman", serif;
+    font-size: 16px;
+    color: var(--ink);
+  }
+  .extract-row .value.list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    font-size: 12px;
+    margin-top: 4px;
+  }
+  .extract-row .value.list span {
+    background: var(--paper-pale);
+    border: 1px solid var(--rule-strong);
+    padding: 3px 8px;
+    border-radius: 3px;
+    font-style: italic;
+  }
+  .extract-row .value.long {
+    font-size: 13px;
+    color: var(--ink-2);
+    line-height: 1.7;
+    font-style: italic;
+    margin-top: 4px;
+  }
+
+  .preview-footer {
+    margin-top: 18px;
+    padding-top: 14px;
+    border-top: 1px solid var(--rule);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .preview-footer .left {
+    font-size: 11px;
+    color: var(--ink-3);
+    font-style: italic;
+  }
+  .preview-footer .right { display: flex; gap: 8px; }
+  .preview-footer button {
+    padding: 8px 16px;
+    border: 1px solid var(--rule-strong);
+    background: transparent;
+    cursor: pointer;
+    font-size: 12px;
+    font-family: inherit;
+    color: var(--ink-2);
+    border-radius: 4px;
+  }
+  .preview-footer .primary {
+    background: var(--plate);
+    color: var(--paper-cream);
+    border-color: var(--plate);
+  }
+
+  /* Source legend */
+  .legend {
+    margin-top: 20px;
+    padding: 12px 16px;
+    background: var(--paper-pale);
+    border-radius: 6px;
+    font-size: 11px;
+    color: var(--ink-3);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+  .legend .dot {
+    display: inline-block;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    margin-right: 4px;
+    vertical-align: middle;
+  }
+  .legend .dot.hp { background: var(--forest); }
+  .legend .dot.gp { background: var(--violet); }
+  .legend .dot.manual { background: var(--ink-3); }
+
+  /* Hearing question card (Tier 5) */
+  .hearing {
+    margin-top: 24px;
+    padding: 18px 22px;
+    background: var(--violet-bg);
+    border-left: 3px solid var(--violet);
+    border-radius: 0 6px 6px 0;
+  }
+  .hearing .head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  .hearing h4 {
+    font-family: "Times New Roman", serif;
+    font-size: 16px;
+    font-weight: normal;
+  }
+  .hearing .ai-tag {
+    font-size: 9px;
+    color: var(--violet);
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+  }
+  .hearing ol { margin-left: 18px; font-size: 12px; line-height: 1.8; color: var(--ink-2); }
+  .hearing li { font-style: italic; }
+</style>
+</head>
+<body>
+
+<div class="page">
+  <div class="corner">№ 07</div>
+
+  <header class="top">
+    <p class="breadcrumb"><a href="#">← 顧客台帳に戻る</a></p>
+    <p class="caps">Plate VII · Buyer Profile · Auto-Enrichment</p>
+    <h1>店舗情報の自動取込</h1>
+    <p class="desc">公開情報から業態・看板料理・季節傾向を取り込んで、AI 提案の精度を上げます</p>
+    <div class="buyer-badge">
+      <span class="italic">マルブルジャム 銀座</span>
+      <span class="tier">tier gold</span>
+    </div>
+  </header>
+
+  <!-- 充実度バー -->
+  <div class="completeness">
+    <div class="top">
+      <h2>プロファイル充実度</h2>
+      <span class="pct">60%</span>
+    </div>
+    <div class="meter"><div class="fill"></div></div>
+    <div class="tiers">
+      <div class="tier-item done">
+        <p class="label">Tier 0</p>
+        <p class="name">基本情報</p>
+        <p class="status">✓ 業態 / 客単価 / tier</p>
+      </div>
+      <div class="tier-item done">
+        <p class="label">Tier 1</p>
+        <p class="name">取引履歴</p>
+        <p class="status">✓ 14 件 / 嗜好 9 タグ</p>
+      </div>
+      <div class="tier-item done">
+        <p class="label">Tier 2</p>
+        <p class="name">同業態クラスタ</p>
+        <p class="status">✓ 12 店から類推</p>
+      </div>
+      <div class="tier-item">
+        <p class="label">Tier 3</p>
+        <p class="name">公開情報</p>
+        <p class="status">○ HP / Google 未取込</p>
+      </div>
+      <div class="tier-item">
+        <p class="label">Tier 4</p>
+        <p class="name">ヒアリング</p>
+        <p class="status">○ 0 件</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2 column -->
+  <div class="grid">
+
+    <!-- LEFT: 入力 -->
+    <section class="card input-block">
+      <h3>情報源を登録</h3>
+      <p class="sub">
+        URL を貼り付けて「読み取る」を押すと、AI が公開情報から業態・看板料理・雰囲気などを抽出します。
+        無くても Tier 0-2 で提案は動きます（精度は控えめ）。
+      </p>
+
+      <div class="field">
+        <label class="label">
+          公式 HP
+          <span class="source-tag hp">HP 由来</span>
+        </label>
+        <input type="url" placeholder="https://marble-jam.example.jp" value="https://marble-jam-ginza.com" />
+        <p class="status ok">✓ 200 OK ・ 最終取得 2 時間前</p>
+      </div>
+
+      <div class="field">
+        <label class="label">
+          Instagram
+          <span class="source-tag hp">HP 由来</span>
+        </label>
+        <input type="url" placeholder="https://instagram.com/your-restaurant" value="https://instagram.com/marblejam_ginza" />
+        <p class="status ok">✓ 直近 30 投稿を解析</p>
+      </div>
+
+      <div class="field">
+        <label class="label">
+          Google Maps URL
+          <span class="source-tag gp">Google Places</span>
+        </label>
+        <input type="url" placeholder="https://maps.app.goo.gl/..." value="https://maps.app.goo.gl/xKj8..." />
+        <p class="status ok">✓ Place ID 取得済 ・ 口コミ 247 件</p>
+      </div>
+
+      <button class="fetch-btn">
+        <span class="icon">⚡</span> AI で店舗情報を読み取る（再取得）
+      </button>
+
+      <div class="hint">
+        <strong>HP / SNS が無い飲食店でも</strong> — 業態・客単価・取引履歴・同業態クラスタ（Tier 0-2）から
+        基本的な提案は出せます。Google Maps URL だけ登録すれば口コミから雰囲気・人気メニューが拾え、
+        さらに精度が上がります。
+      </div>
+    </section>
+
+    <!-- RIGHT: 取込結果プレビュー -->
+    <section class="card preview-block">
+      <div class="preview-header">
+        <div>
+          <p class="caps">Result · Editable</p>
+          <h3>AI が読み取った内容</h3>
+        </div>
+        <div class="meta">
+          <p class="badge">⚡ claude-sonnet-4-6</p>
+          <p>2.8s · 入力 5,420 token / 出力 980 token</p>
+        </div>
+      </div>
+
+      <div class="extract-row">
+        <div class="row-head">
+          <span class="key">業態</span>
+          <span class="source hp">HP</span>
+        </div>
+        <p class="value">フレンチ × 割烹（モダン懐石）</p>
+      </div>
+
+      <div class="extract-row">
+        <div class="row-head">
+          <span class="key">看板料理 / 主要食材</span>
+          <span class="source hp">HP + Instagram</span>
+        </div>
+        <p class="value list">
+          <span>松茸土瓶蒸し（秋）</span>
+          <span>蟹のクリームコロッケ</span>
+          <span>鴨のロースト 赤ワインソース</span>
+          <span>北海道直送のウニ</span>
+          <span>九州の黒毛和牛</span>
+        </p>
+      </div>
+
+      <div class="extract-row">
+        <div class="row-head">
+          <span class="key">季節フォーカス</span>
+          <span class="source hp">Instagram 投稿傾向</span>
+        </div>
+        <p class="value long">
+          10-11 月は松茸・蟹・栗を強調した投稿が増える。冬季は牡蠣・河豚も。
+          季節食材を毎月メニューに反映するスタイル。
+        </p>
+      </div>
+
+      <div class="extract-row">
+        <div class="row-head">
+          <span class="key">価格帯（推定）</span>
+          <span class="source gp">Google Places</span>
+        </div>
+        <p class="value">$$$$ ・ ディナー ¥18,000 - ¥25,000 / 人</p>
+      </div>
+
+      <div class="extract-row">
+        <div class="row-head">
+          <span class="key">客層 / 雰囲気</span>
+          <span class="source gp">Google 口コミ要約</span>
+        </div>
+        <p class="value long">
+          30-50 代の落ち着いたカウンター中心。記念日・接待利用が多く、シェフとの距離が近いことが評価されている。
+          ワインリストの説明が丁寧との口コミが複数。
+        </p>
+      </div>
+
+      <div class="extract-row">
+        <div class="row-head">
+          <span class="key">よく言及されるワイン傾向</span>
+          <span class="source gp">Google + Instagram</span>
+        </div>
+        <p class="value list">
+          <span>ブルゴーニュ</span>
+          <span>シャンパーニュ</span>
+          <span>自然派</span>
+          <span>ペアリング推し</span>
+        </p>
+      </div>
+
+      <div class="preview-footer">
+        <p class="left">取込内容は手動で編集可能。AI 提案の根拠として参照されます。</p>
+        <div class="right">
+          <button>キャンセル</button>
+          <button class="primary">プロファイルに反映 ✓</button>
+        </div>
+      </div>
+
+      <!-- Source legend -->
+      <div class="legend">
+        <span><span class="dot hp"></span>HP / SNS 由来</span>
+        <span><span class="dot gp"></span>Google Places 由来</span>
+        <span><span class="dot manual"></span>admin 手入力</span>
+        <span style="margin-left: auto; font-style: italic;">月次 cron で自動再取得</span>
+      </div>
+
+      <!-- Tier 5: AI が次に admin に聞いてほしいこと -->
+      <div class="hearing">
+        <div class="head">
+          <h4>次回のヒアリング推奨</h4>
+          <span class="ai-tag">⚡ AI が補強したい情報</span>
+        </div>
+        <p style="font-size: 11px; color: var(--ink-3); margin-bottom: 8px; font-style: italic;">
+          訪問・お電話の際に、これらを伺うと精度がさらに上がります：
+        </p>
+        <ol>
+          <li>11 月のコースで使う予定の主要食材は？</li>
+          <li>お客様からのワインリクエストで最近多いものは？</li>
+          <li>他の酒屋さんで仕入れる傾向（種類別の比率）は？</li>
+        </ol>
+      </div>
+    </section>
+
+  </div>
+</div>
+
+</body>
+</html>
