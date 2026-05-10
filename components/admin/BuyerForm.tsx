@@ -49,6 +49,9 @@ export function BuyerForm({ mode, initial }: Props) {
   const [generatedPassword, setGeneratedPassword] = useState<string | null>(
     null
   );
+  const [duplicateExistingId, setDuplicateExistingId] = useState<string | null>(
+    null
+  );
 
   const update = (key: keyof typeof form, value: string) => {
     setForm((prev) => ({ ...prev, [key]: value }));
@@ -63,6 +66,7 @@ export function BuyerForm({ mode, initial }: Props) {
     startTransition(async () => {
       setMessage(null);
       setGeneratedPassword(null);
+      setDuplicateExistingId(null);
 
       if (mode === "create") {
         const result = await createBuyerAction({
@@ -78,6 +82,9 @@ export function BuyerForm({ mode, initial }: Props) {
           setMessage("登録しました。下記の初期パスワードを顧客にお伝えください。");
         } else {
           setMessage(`エラー：${result.error}`);
+          if (result.existingUserId) {
+            setDuplicateExistingId(result.existingUserId);
+          }
         }
       } else if (mode === "edit" && initial) {
         const result = await updateBuyerAction(initial.id, {
@@ -316,13 +323,23 @@ export function BuyerForm({ mode, initial }: Props) {
         )}
 
         {message && (
-          <span
-            className={`text-sm ${
-              message.startsWith("エラー") ? "text-crimson" : "text-green-600"
-            }`}
-          >
-            {message}
-          </span>
+          <div className="flex flex-col gap-1.5">
+            <span
+              className={`text-sm ${
+                message.startsWith("エラー") ? "text-crimson" : "text-green-600"
+              }`}
+            >
+              {message}
+            </span>
+            {duplicateExistingId && (
+              <a
+                href={`/admin/buyers/${duplicateExistingId}/edit`}
+                className="text-sm text-plate underline hover:no-underline"
+              >
+                → 既存の登録を開いて編集する
+              </a>
+            )}
+          </div>
         )}
       </div>
     </div>

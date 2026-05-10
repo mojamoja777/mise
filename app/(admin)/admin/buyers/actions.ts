@@ -71,7 +71,7 @@ export async function createBuyerAction(
   input: BuyerInput
 ): Promise<
   | { ok: true; userId: string; password: string }
-  | { ok: false; error: string }
+  | { ok: false; error: string; existingUserId?: string }
 > {
   const guard = await requireAdmin();
   if (!guard.ok) return { ok: false, error: guard.error };
@@ -82,6 +82,43 @@ export async function createBuyerAction(
     return { ok: false, error: "会社名は必須です" };
 
   const serviceClient = createServiceClient();
+
+  // 重複チェック先回り：既に同じメアドが auth に居れば、編集ページへ案内する
+  const email = input.email.trim().toLowerCase();
+  {
+    // service クライアントで public.users + auth.users を join せず
+    // auth.admin.listUsers + email filter で軽く確認
+    const { data: existing } = await serviceClient
+      .from("users")
+      .select("id, company_name, tenant_id, role")
+      .eq("role", "buyer")
+      .limit(50);
+    // 同テナント内の重複だけが意味あるので、手元にメアドが分かる auth ID で照合する
+    const { data: authList } = await serviceClient.auth.admin.listUsers({
+      page: 1,
+      perPage: 200,
+    });
+    const matchedAuthUser = authList?.users?.find(
+      (u) => (u.email ?? "").toLowerCase() === email
+    );
+    if (matchedAuthUser) {
+      const matchedPublic = existing?.find(
+        (u) => u.id === matchedAuthUser.id && u.tenant_id === tenantId
+      );
+      if (matchedPublic) {
+        return {
+          ok: false,
+          error: `このメールアドレスは既に「${matchedPublic.company_name}」として登録されています。編集する場合は顧客台帳から開いてください。`,
+          existingUserId: matchedPublic.id,
+        };
+      }
+      return {
+        ok: false,
+        error: `このメールアドレスは既に別の店舗で使用されています。別のメアドをお使いください。`,
+      };
+    }
+  }
+
   const password = generatePassword();
 
   // Supabase Auth アカウントを作成（ロールを app_metadata にセット）
@@ -94,6 +131,14 @@ export async function createBuyerAction(
     });
 
   if (authError || !authResult.user) {
+    // 万一すり抜けた場合のフォールバック
+    const msg = (authError?.message ?? "unknown").toLowerCase();
+    if (msg.includes("already") || msg.includes("registered") || msg.includes("duplicate")) {
+      return {
+        ok: false,
+        error: `このメールアドレスは既に登録されています。顧客台帳でお探しください。`,
+      };
+    }
     return {
       ok: false,
       error: `Auth アカウント作成に失敗: ${authError?.message ?? "unknown"}`,
