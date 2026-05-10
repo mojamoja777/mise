@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import { createServiceClient } from "@/lib/supabase/service";
 import { BuyerForm } from "@/components/admin/BuyerForm";
 import { BuyerEnrichmentSection } from "@/components/admin/BuyerEnrichmentSection";
+import { DeleteBuyerButton } from "@/components/admin/DeleteBuyerButton";
 import { PlateCorner, Tag } from "@/components/ui";
 import type { BuyerProfileEnriched } from "@/types/buyer-enrichment";
 
@@ -78,6 +79,15 @@ export default async function EditBuyerPage({ params }: Props) {
           }
           initialEnrichedAt={buyer.profile_enriched_at ?? null}
         />
+      </div>
+
+      {/* 危険ゾーン */}
+      <div className="mt-8 pt-6 border-t border-rule">
+        <p className="caps text-crimson mb-2">Danger zone</p>
+        <p className="text-xs text-ink-3 font-italic-serif mb-3">
+          削除しても過去の注文・請求書・チャット履歴は保持されます。誤削除した場合は DB から復元可能です。
+        </p>
+        <DeleteBuyerButton buyerId={buyer.id} buyerName={buyer.company_name} />
       </div>
 
       <p className="ornament mt-10" />

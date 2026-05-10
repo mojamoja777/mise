@@ -19,6 +19,7 @@ export default async function AdminBuyersPage({ searchParams }: Props) {
       "id, company_name, customer_code, postal_code, address, phone, is_active, created_at",
     )
     .eq("role", "buyer")
+    .is("deleted_at", null)
     .order("created_at", { ascending: false });
 
   const activeFilter = status ?? "active";

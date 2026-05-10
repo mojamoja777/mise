@@ -90,9 +90,9 @@ export async function createBuyerAction(
     // auth.admin.listUsers + email filter で軽く確認
     const { data: existing } = await serviceClient
       .from("users")
-      .select("id, company_name, tenant_id, role")
+      .select("id, company_name, tenant_id, role, deleted_at")
       .eq("role", "buyer")
-      .limit(50);
+      .limit(200);
     // 同テナント内の重複だけが意味あるので、手元にメアドが分かる auth ID で照合する
     const { data: authList } = await serviceClient.auth.admin.listUsers({
       page: 1,
@@ -105,16 +105,19 @@ export async function createBuyerAction(
       const matchedPublic = existing?.find(
         (u) => u.id === matchedAuthUser.id && u.tenant_id === tenantId
       );
-      if (matchedPublic) {
+      if (matchedPublic && !matchedPublic.deleted_at) {
         return {
           ok: false,
           error: `このメールアドレスは既に「${matchedPublic.company_name}」として登録されています。編集する場合は顧客台帳から開いてください。`,
           existingUserId: matchedPublic.id,
         };
       }
+      // 削除済 buyer か別テナントが Auth に占有してる状態
       return {
         ok: false,
-        error: `このメールアドレスは既に別の店舗で使用されています。別のメアドをお使いください。`,
+        error: matchedPublic?.deleted_at
+          ? `このメールアドレスは過去に削除した「${matchedPublic.company_name}」が使用していました。別のメアドをお使いください（または DB から完全削除すれば再利用可能）。`
+          : `このメールアドレスは既に別の店舗で使用されています。別のメアドをお使いください。`,
       };
     }
   }
@@ -271,6 +274,53 @@ export async function toggleBuyerActiveAction(
 
   revalidatePath("/admin/buyers");
   revalidatePath(`/admin/buyers/${buyerId}/edit`);
+  return { ok: true };
+}
+
+/**
+ * buyer をソフト削除する（deleted_at をセット + Auth ユーザーを ban）
+ * 過去の orders / invoices / chat 等は参照を維持。
+ */
+export async function deleteBuyerAction(
+  buyerId: string
+): Promise<{ ok: boolean; error?: string }> {
+  const guard = await requireAdmin();
+  if (!guard.ok) return { ok: false, error: guard.error };
+  const { supabase, tenantId } = guard;
+
+  const { data: target } = await supabase
+    .from("users")
+    .select("tenant_id, role, deleted_at, company_name")
+    .eq("id", buyerId)
+    .single();
+
+  if (!target || target.tenant_id !== tenantId || target.role !== "buyer") {
+    return { ok: false, error: "対象の飲食店が見つかりません" };
+  }
+  if (target.deleted_at) {
+    return { ok: false, error: "既に削除済みです" };
+  }
+
+  // soft delete + 無効化（is_active=false で UI 上の重複制御）
+  const { error: updateError } = await supabase
+    .from("users")
+    .update({
+      deleted_at: new Date().toISOString(),
+      is_active: false,
+    })
+    .eq("id", buyerId);
+
+  if (updateError) {
+    return { ok: false, error: `削除に失敗: ${updateError.message}` };
+  }
+
+  // Supabase Auth 側でも ban して以降ログイン不可に
+  const serviceClient = createServiceClient();
+  await serviceClient.auth.admin.updateUserById(buyerId, {
+    ban_duration: "876000h", // 100 年（事実上の永久 ban、復元時に解除）
+  });
+
+  revalidatePath("/admin/buyers");
   return { ok: true };
 }
 

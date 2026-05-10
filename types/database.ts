@@ -29,6 +29,7 @@ export type Database = {
           gmaps_url: string | null;
           profile_enriched: unknown | null;
           profile_enriched_at: string | null;
+          deleted_at: string | null;
         };
         Insert: {
           id: string;
@@ -50,6 +51,7 @@ export type Database = {
           gmaps_url?: string | null;
           profile_enriched?: unknown | null;
           profile_enriched_at?: string | null;
+          deleted_at?: string | null;
         };
         Update: {
           role?: "admin" | "buyer";
@@ -69,6 +71,7 @@ export type Database = {
           gmaps_url?: string | null;
           profile_enriched?: unknown | null;
           profile_enriched_at?: string | null;
+          deleted_at?: string | null;
         };
         Relationships: [
           {
